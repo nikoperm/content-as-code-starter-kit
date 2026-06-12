@@ -1,0 +1,31 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "command": "cd \"$PROJECT_DIR\" && .venv/bin/python scripts/validate_workspace.py --quick --file \"$FILEPATH\" 2>/dev/null || true"
+      },
+      {
+        "matcher": "Edit|Write",
+        "command": "cd \"$PROJECT_DIR\" && AGENT_ID=agent:claude .venv/bin/python scripts/log_activity.py EDIT \"$FILEPATH\" 2>/dev/null || true"
+      }
+    ]
+  },
+  "permissions": {
+    "allow": [
+      "Bash(python scripts/validate_workspace.py*)",
+      "Bash(python scripts/build_presentation.py*)",
+      "Bash(python scripts/build_html.py*)",
+      "Bash(make *)",
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git add *)",
+      "Bash(git commit*)",
+      "Bash(git branch*)",
+      "Bash(wc -l *)",
+      "Bash(find *)",
+      "Bash(grep *)"
+    ]
+  }
+}
