@@ -1,0 +1,4143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strategy 20:30 — From Turnaround to Transformation</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;0,800;0,900;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+    <style>
+        :root {
+            --tg-dark-blue: #070452;
+            --tg-mid-blue: #1C16C5;
+            --tg-telenor-blue: #00C8FF;
+            --tg-blue: #2954FF;
+            --tg-light-cyan: #EBFFFF;
+            --tg-light-blue: #B4FFFF;
+            --tg-off-white: #E8FDFF;
+            --tg-white: #FFFFFF;
+            --tg-accent-green: #B0FBB8;
+            --tg-accent-pink: #FFB8D7;
+            --tg-accent-yellow: #FEF6B8;
+            --font: 'DM Sans', Arial, sans-serif;
+        }
+
+        /* ---- Scroll-triggered animations ---- */
+        .anim {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .anim.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        .anim-fade { transform: none; }
+        .anim-scale { transform: translateY(16px) scale(0.96); }
+        .anim-d1 { transition-delay: 0.12s; }
+        .anim-d2 { transition-delay: 0.24s; }
+        .anim-d3 { transition-delay: 0.36s; }
+        .anim-d4 { transition-delay: 0.48s; }
+        .anim-d5 { transition-delay: 0.60s; }
+
+        .photo-bg-anim {
+            transform: scale(1.06);
+            transition: transform 1.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .photo-bg-anim.visible { transform: scale(1); }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { font-size: 16px; -webkit-font-smoothing: antialiased; }
+        body {
+            font-family: var(--font);
+            scroll-snap-type: y mandatory;
+            overflow-y: scroll;
+            height: 100vh;
+            background: var(--tg-dark-blue);
+        }
+
+        /* ============================================================
+           GLOBAL SLIDE
+           ============================================================ */
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            scroll-snap-align: start;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .slide-footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 3vw;
+            font-size: 0.7rem;
+            font-weight: 600;
+            opacity: 0.35;
+            z-index: 10;
+        }
+        .slide-footer img { width: 18px; height: 18px; vertical-align: middle; margin-right: 6px; opacity: 0.6; }
+        .slide-footer-dark { color: var(--tg-white); }
+        .slide-footer-light { color: var(--tg-dark-blue); }
+
+        /* ============================================================
+           PROGRESS & NAVIGATION
+           ============================================================ */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--tg-mid-blue), var(--tg-telenor-blue));
+            z-index: 100;
+            transition: width 0.3s ease;
+            box-shadow: 0 0 10px rgba(0, 200, 255, 0.5);
+        }
+        .nav-counter {
+            position: fixed;
+            bottom: 20px;
+            left: 24px;
+            background: rgba(7, 4, 82, 0.85);
+            backdrop-filter: blur(8px);
+            color: var(--tg-telenor-blue);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            z-index: 100;
+            border: 1px solid rgba(0, 200, 255, 0.2);
+        }
+        .nav-logo {
+            position: fixed;
+            bottom: 18px;
+            right: 24px;
+            z-index: 100;
+            opacity: 0.5;
+        }
+        .nav-logo img {
+            width: 36px;
+            height: 36px;
+        }
+
+        /* ============================================================
+           SLIDE 1 — TITLE
+           ============================================================ */
+        .slide-title {
+            background: var(--tg-mid-blue);
+            color: var(--tg-white);
+            padding: 0;
+            display: grid !important;
+            grid-template-columns: 55% 45%;
+            justify-content: unset;
+            align-items: unset;
+        }
+        .slide-title .title-content {
+            padding: 10vh 5vw 8vh 7vw;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
+        }
+        .slide-title .badge {
+            display: inline-flex;
+            align-self: flex-start;
+            background: rgba(0, 200, 255, 0.12);
+            border: 1px solid rgba(0, 200, 255, 0.3);
+            color: var(--tg-telenor-blue);
+            padding: 8px 22px;
+            border-radius: 50px;
+            font-size: 0.68rem;
+            font-weight: 800;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+        }
+        .slide-title h1 {
+            font-size: clamp(2.8rem, 5vw, 4.5rem);
+            font-weight: 900;
+            font-style: italic;
+            line-height: 1.05;
+            letter-spacing: -2px;
+        }
+        .slide-title h1 span { color: var(--tg-telenor-blue); }
+        .slide-title .subtitle {
+            font-size: 1rem;
+            font-weight: 500;
+            opacity: 0.55;
+            margin-top: 1.5rem;
+            max-width: 85%;
+            line-height: 1.6;
+        }
+        .slide-title .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-top: auto;
+            padding-top: 2rem;
+        }
+        .slide-title .logo-area span {
+            font-size: 0.82rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            opacity: 0.5;
+        }
+        .slide-title .title-visual {
+            display: flex;
+            flex-direction: row;
+            align-items: stretch;
+        }
+        .tg-band { flex: 1; min-height: 100%; }
+        .tg-band-1 { background: var(--tg-dark-blue); flex: 1.2; }
+        .tg-band-2 { background: var(--tg-telenor-blue); flex: 0.9; }
+        .tg-band-3 { background: var(--tg-light-blue); flex: 0.8; }
+        .tg-band-4 { background: var(--tg-light-cyan); flex: 0.7; }
+        .slide-title .year-mark {
+            position: absolute;
+            top: 8vh;
+            right: 5vw;
+            font-size: clamp(3.5rem, 7vw, 6rem);
+            font-weight: 900;
+            font-style: italic;
+            color: rgba(255, 255, 255, 0.04);
+            letter-spacing: -3px;
+            z-index: 3;
+        }
+
+        /* ============================================================
+           SLIDE 2 — CONTEXT: The Turnaround Story
+           ============================================================ */
+        .slide-context {
+            background: var(--tg-light-cyan);
+            color: var(--tg-dark-blue);
+            padding: 6vh 6vw;
+        }
+        .slide-context .layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            width: 100%;
+            max-width: 1300px;
+        }
+        .slide-context .left h2 {
+            font-size: clamp(2rem, 3.5vw, 3rem);
+            font-weight: 900;
+            font-style: italic;
+            line-height: 1.1;
+            letter-spacing: -1.5px;
+            margin-bottom: 1.5rem;
+        }
+        .slide-context .left h2 span { color: var(--tg-mid-blue); }
+        .slide-context .left p {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #4a5568;
+            margin-bottom: 0.8rem;
+        }
+        .slide-context .left .governing {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--tg-dark-blue);
+            line-height: 1.5;
+            margin-bottom: 1.2rem;
+        }
+        .slide-context .left .governing strong {
+            color: var(--tg-telenor-blue);
+        }
+        .slide-context .left .callout {
+            background: var(--tg-white);
+            border-left: 4px solid var(--tg-telenor-blue);
+            padding: 1rem 1.25rem;
+            border-radius: 0 12px 12px 0;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--tg-dark-blue);
+            margin-top: 1.2rem;
+        }
+        .right-col {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+        .turnaround-chart-card {
+            background: var(--tg-white);
+            border-radius: 20px;
+            padding: 1.5rem 1.8rem 1.2rem;
+            box-shadow: 0 8px 30px rgba(7, 4, 82, 0.06);
+            border: 1px solid rgba(0, 200, 255, 0.08);
+            flex: 1;
+        }
+        .tcc-title {
+            font-size: 0.82rem;
+            font-weight: 800;
+            color: var(--tg-dark-blue);
+            letter-spacing: 0.5px;
+            margin-bottom: 0.8rem;
+        }
+        .tcc-chart {
+            position: relative;
+            height: 220px;
+        }
+        .turnaround-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+        }
+        .ts-card {
+            background: var(--tg-white);
+            border-radius: 16px;
+            padding: 1.2rem 1rem;
+            box-shadow: 0 4px 20px rgba(7, 4, 82, 0.05);
+            border: 1px solid rgba(0, 200, 255, 0.08);
+            text-align: center;
+        }
+        .ts-num {
+            font-size: 2.2rem;
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: -1px;
+            line-height: 1;
+            display: inline;
+        }
+        .ts-unit {
+            font-size: 1rem;
+            font-weight: 700;
+            display: inline;
+            margin-left: 2px;
+            opacity: 0.5;
+        }
+        .ts-label {
+            font-size: 0.85rem;
+            color: #637381;
+            margin-top: 0.5rem;
+            line-height: 1.4;
+            font-weight: 600;
+        }
+        .ts-label strong {
+            color: var(--tg-telenor-blue);
+        }
+
+        /* ============================================================
+           SLIDE 3 — THE GAP (+603M)
+           ============================================================ */
+        .slide-gap {
+            background: var(--tg-dark-blue);
+            color: var(--tg-white);
+            padding: 6vh 8vw;
+            align-items: flex-start;
+            justify-content: center;
+        }
+        .slide-gap::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0;
+            width: 45vw; height: 100%;
+            background: linear-gradient(160deg, var(--tg-mid-blue) 0%, transparent 70%);
+            opacity: 0.2;
+            clip-path: polygon(30% 0, 100% 0, 100% 100%, 0% 100%);
+        }
+        .slide-gap .kicker {
+            font-size: 0.75rem;
+            font-weight: 800;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--tg-telenor-blue);
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+        .slide-gap .headline {
+            font-size: clamp(3.5rem, 8vw, 6.5rem);
+            font-weight: 900;
+            font-style: italic;
+            color: var(--tg-telenor-blue);
+            letter-spacing: -3px;
+            line-height: 0.95;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+        .slide-gap .headline-sub {
+            font-size: 1.2rem;
+            font-weight: 700;
+            opacity: 0.5;
+            margin-bottom: 3rem;
+            position: relative;
+            z-index: 1;
+        }
+        .gap-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            width: 100%;
+            max-width: 900px;
+            position: relative;
+            z-index: 1;
+        }
+        .gap-card {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.5rem 1.75rem;
+            transition: all 0.3s ease;
+        }
+        .gap-card:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-3px);
+        }
+        .gap-card h3 {
+            font-size: 0.95rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            color: var(--tg-telenor-blue);
+        }
+        .gap-card p {
+            font-size: 0.82rem;
+            line-height: 1.55;
+            opacity: 0.6;
+        }
+
+        /* ============================================================
+           SLIDE 4 — CUSTOMER REALITY: 4 Battles
+           ============================================================ */
+        .slide-battles {
+            background: var(--tg-light-cyan);
+            color: var(--tg-dark-blue);
+            padding: 5vh 5vw;
+        }
+        .slide-battles .layout {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 3rem;
+            align-items: center;
+            width: 100%;
+            max-width: 1300px;
+        }
+        .slide-battles .left h2 {
+            font-size: clamp(1.8rem, 3vw, 2.5rem);
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: -1px;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+        }
+        .slide-battles .left h2 span { color: var(--tg-mid-blue); }
+        .slide-battles .left p {
+            font-size: 0.9rem;
+            line-height: 1.7;
+            color: #4a5568;
+            margin-bottom: 0.75rem;
+        }
+        .slide-battles .left .insight-box {
+            background: var(--tg-white);
+            border-left: 4px solid var(--tg-mid-blue);
+            padding: 1rem 1.25rem;
+            border-radius: 0 12px 12px 0;
+            margin-top: 1rem;
+        }
+        .slide-battles .left .insight-box .ib-label {
+            font-size: 0.78rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--tg-mid-blue);
+            margin-bottom: 0.4rem;
+        }
+        .slide-battles .left .insight-box p {
+            font-size: 0.95rem;
+            color: var(--tg-dark-blue);
+            font-weight: 600;
+            margin: 0;
+        }
+        .battle-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
+        }
+        .battle-card {
+            background: var(--tg-white);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 6px 24px rgba(7, 4, 82, 0.06);
+            border: 1px solid rgba(0, 200, 255, 0.08);
+            transition: all 0.3s ease;
+        }
+        .battle-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 40px rgba(7, 4, 82, 0.1);
+        }
+        .battle-card .bc-icon {
+            background: var(--tg-off-white);
+            padding: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .battle-card .bc-icon img { width: 56px; height: 56px; }
+        .battle-card .bc-text {
+            padding: 1rem 1.25rem 1.25rem;
+        }
+        .battle-card h4 {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--tg-dark-blue);
+            margin-bottom: 0.3rem;
+            letter-spacing: -0.2px;
+        }
+        .battle-card .bc-pain {
+            font-size: 0.88rem;
+            color: #e53e3e;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+        .battle-card .bc-need {
+            font-size: 0.88rem;
+            color: #637381;
+            line-height: 1.45;
+        }
+
+        /* ============================================================
+           SLIDE 5 — GP COMBO CHART (dark background)
+           ============================================================ */
+        .slide-gp-combo {
+            background: var(--tg-mid-blue);
+            color: var(--tg-white);
+            padding: 4.5vh 5vw 3vh;
+        }
+        .gp-combo-header {
+            text-align: center;
+            margin-bottom: 2vh;
+            position: relative;
+            z-index: 1;
+        }
+        .gp-combo-header .kicker {
+            font-size: 0.82rem;
+            font-weight: 800;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            opacity: 0.5;
+            margin-bottom: 0.5rem;
+        }
+        .gp-combo-header h2 {
+            font-size: clamp(2.2rem, 4vw, 3.2rem);
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: -2px;
+        }
+        .gp-combo-header h2 span { color: var(--tg-telenor-blue); }
+        .gpc-layout {
+            display: flex;
+            gap: 2.5rem;
+            align-items: stretch;
+            flex: 1;
+            min-height: 0;
+        }
+        .gpc-chart-side {
+            flex: 0 0 58%;
+            display: flex;
+            flex-direction: column;
+        }
+        .gpc-chart-label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            opacity: 0.6;
+            margin-bottom: 0.8rem;
+        }
+        .gpc-chart-area {
+            flex: 1;
+            position: relative;
+            min-height: 300px;
+        }
+        .gpc-legend {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.8rem;
+            padding-top: 0.6rem;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            flex-wrap: wrap;
+        }
+        .gcl-item {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.78rem;
+            font-weight: 600;
+            opacity: 0.6;
+        }
+        .gcl-swatch {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border-radius: 3px;
+        }
+        .gcl-swatch.gcl-line {
+            background: none !important;
+            width: 20px;
+            height: 0;
+            border-bottom: 3px solid;
+            border-radius: 0;
+            vertical-align: middle;
+        }
+        .gpc-insights {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 0;
+        }
+        .gpc-governing {
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.5;
+            color: rgba(255,255,255,0.9);
+            padding-bottom: 1.2rem;
+        }
+        .gpc-governing span {
+            color: var(--tg-telenor-blue);
+            font-weight: 900;
+            font-style: italic;
+        }
+        .gpc-divider {
+            height: 1px;
+            background: linear-gradient(90deg, var(--tg-telenor-blue), transparent);
+            margin-bottom: 1rem;
+        }
+        .gpc-bullet {
+            display: flex;
+            gap: 0.8rem;
+            align-items: flex-start;
+            padding: 0.6rem 0;
+        }
+        .gpc-bullet-marker {
+            flex-shrink: 0;
+            width: 10px;
+            height: 10px;
+            border-radius: 3px;
+            margin-top: 5px;
+        }
+        .gpc-bullet-title {
+            font-size: 1rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 0.15rem;
+        }
+        .gpc-bullet p {
+            font-size: 0.92rem;
+            line-height: 1.5;
+            color: rgba(255,255,255,0.5);
+            margin: 0;
+        }
+
+        /* ---- GP BASELINE premium slide ---- */
+        .slide-gp-baseline {
+            background: var(--tg-mid-blue);
+            color: var(--tg-white);
+            padding: 4.5vh 5vw 3vh;
+        }
+        .gpb-header {
+            text-align: center;
+            margin-bottom: 2.5vh;
+        }
+        .gpb-header .kicker {
+            font-size: 0.78rem;
+            font-weight: 800;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            opacity: 0.5;
+            margin-bottom: 0.5rem;
+        }
+        .gpb-header h2 {
+            font-size: clamp(2.4rem, 4.5vw, 3.5rem);
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: -2px;
+            line-height: 1.1;
+        }
+        .gpb-header h2 span { color: var(--tg-telenor-blue); }
+        .gpb-layout {
+            display: flex;
+            gap: 2.5rem;
+            align-items: stretch;
+            flex: 1;
+            min-height: 0;
+        }
+        .gpb-chart-card {
+            flex: 0 0 58%;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 1.5rem 2rem 1.2rem;
+            display: flex;
+            flex-direction: column;
+        }
+        .gpb-chart-title {
+            font-size: 0.82rem;
+            font-weight: 700;
+            opacity: 0.7;
+            margin-bottom: 1rem;
+        }
+        .gpb-chart-title span {
+            font-weight: 500;
+            opacity: 0.5;
+            margin-left: 0.3rem;
+        }
+        .gpb-chart-area {
+            flex: 1;
+            position: relative;
+            min-height: 280px;
+        }
+        .gpb-legend {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1rem;
+            padding-top: 0.8rem;
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+        .gpb-leg-item {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            opacity: 0.6;
+        }
+        .gpb-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 3px;
+            display: inline-block;
+        }
+        .gpb-insights {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 0;
+        }
+        .gpb-governing {
+            font-size: 1.25rem;
+            font-weight: 700;
+            line-height: 1.5;
+            color: rgba(255,255,255,0.9);
+            padding-bottom: 1.4rem;
+        }
+        .gpb-governing span {
+            color: var(--tg-telenor-blue);
+            font-weight: 900;
+            font-style: italic;
+        }
+        .gpb-divider {
+            height: 1px;
+            background: linear-gradient(90deg, var(--tg-telenor-blue), transparent);
+            margin-bottom: 1.2rem;
+        }
+        .gpb-bullet {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+            padding: 0.7rem 0;
+        }
+        .gpb-bullet-marker {
+            flex-shrink: 0;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: rgba(0,200,255,0.12);
+            color: var(--tg-telenor-blue);
+            font-size: 0.8rem;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 2px;
+        }
+        .gpb-bullet-title {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 0.2rem;
+        }
+        .gpb-bullet p {
+            font-size: 0.92rem;
+            line-height: 1.5;
+            color: rgba(255,255,255,0.55);
+            margin: 0;
+        }
+        .gpb-governing .neg {
+            color: #ff6b6b;
+            font-weight: 900;
+            font-style: italic;
+        }
+        .gpb-cagr-bar {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            margin-top: auto;
+            background: rgba(255,255,255,0.05);
+            border-radius: 14px;
+            padding: 1rem 2rem;
+        }
+        .gpb-cagr-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.2rem;
+        }
+        .gpb-cagr-num {
+            font-size: 1.8rem;
+            font-weight: 900;
+            font-style: italic;
+            color: rgba(255,255,255,0.7);
+        }
+        .gpb-cagr-num.neg { color: #ff6b6b; }
+        .gpb-cagr-num.target { color: var(--tg-telenor-blue); }
+        .gpb-cagr-label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            opacity: 0.4;
+        }
+        .gpb-cagr-sep {
+            width: 1px;
+            height: 2.8rem;
+            background: rgba(255,255,255,0.12);
+            flex-shrink: 0;
+        }
+
+        /* Reusable chart card (used by headcount and others) */
+        .slide-chart {
+            background: var(--tg-light-cyan);
+            color: var(--tg-dark-blue);
+            padding: 5vh 5vw;
+            align-items: stretch;
+        }
+        .slide-chart .slide-header {
+            margin-bottom: 2vh;
+        }
+        .slide-chart .slide-header h2 {
+            font-size: clamp(1.8rem, 3vw, 2.5rem);
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: -1px;
+        }
+        .slide-chart .slide-header h2 span { color: var(--tg-mid-blue); }
+        .chart-layout {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 2rem;
+            flex: 1;
+            min-height: 0;
+        }
+        .chart-card {
+            background: var(--tg-white);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 30px rgba(7, 4, 82, 0.06);
+            border: 1px solid rgba(0, 200, 255, 0.08);
+            display: flex;
+            flex-direction: column;
+        }
+        .chart-card h3 {
+            font-size: 0.85rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--tg-mid-blue);
+            margin-bottom: 1rem;
+        }
+        .insight-panel {
+            background: var(--tg-white);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 30px rgba(7, 4, 82, 0.06);
+            border: 1px solid rgba(0, 200, 255, 0.08);
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+        .insight-panel h3 {
+            font-size: 0.85rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--tg-mid-blue);
+        }
+        .insight-item {
+            padding: 1rem;
+            background: var(--tg-off-white);
+            border-radius: 12px;
+            border-left: 4px solid var(--tg-mid-blue);
+        }
+        .insight-item .num {
+            font-size: 1.6rem;
+            font-weight: 900;
+            color: var(--tg-mid-blue);
+            letter-spacing: -1px;
+        }
+        .insight-item .desc {
+            font-size: 0.88rem;
+            color: #637381;
+            margin-top: 4px;
+            font-weight: 600;
+        }
+
+        /* ============================================================
+           SLIDE 6 — FIVE PILLARS OVERVIEW
+           ============================================================ */
+        .slide-pillars {
+            background: var(--tg-mid-blue);
+            color: var(--tg-white);
+            padding: 5vh 5vw;
+            align-items: stretch;
+        }
+        .slide-pillars::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0;
+            width: 35vw; height: 100%;
+            background: linear-gradient(135deg, transparent, rgba(0, 200, 255, 0.08));
+        }
+        .slide-pillars .slide-header {
+            margin-bottom: 3vh;
+            position: relative;
+            z-index: 1;
+        }
+        .slide-pillars .slide-header .kicker {
+            font-size: 0.75rem;
+            font-weight: 800;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            opacity: 0.6;
+            margin-bottom: 0.5rem;
+        }
+        .slide-pillars .slide-header h2 {
+            font-size: clamp(2rem, 3.5vw, 3rem);
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: -1.5px;
+        }
+        .slide-pillars .slide-header h2 span { color: var(--tg-telenor-blue); }
+        .pillars-row {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1.25rem;
+            flex: 1;
+            align-content: center;
+            position: relative;
+            z-index: 1;
+        }
+        .pillar-card {
+            background: var(--tg-white);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .pillar-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+        }
+        .pillar-card .pc-icon {
+            background: var(--tg-off-white);
+            padding: 1.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .pillar-card .pc-icon img { width: 64px; height: 64px; }
+        .pillar-card .pc-text {
+            padding: 1.25rem 1.5rem 1.5rem;
+        }
+        .pillar-card .pc-text .pc-gp {
+            font-size: 1.8rem;
+            font-weight: 900;
+            font-style: italic;
+            color: var(--tg-mid-blue);
+            letter-spacing: -1px;
+            margin-bottom: 0.3rem;
+        }
+        .pillar-card .pc-text h3 {
+            font-size: 0.9rem;
+            font-weight: 800;
+            color: var(--tg-dark-blue);
+            margin-bottom: 0.4rem;
+            letter-spacing: -0.2px;
+        }
+        .pillar-card .pc-text p {
+            font-size: 0.85rem;
+            color: #637381;
+            line-height: 1.5;
+        }
+
+        /* ============================================================
+           SLIDE 7-10 — TWO-COLUMN DEEP DIVE (reusable)
+           ============================================================ */
+        .slide-deepdive {
+            background: var(--tg-light-cyan);
+            color: var(--tg-dark-blue);
+            padding: 5vh 6vw;
+        }
+        .slide-deepdive .dd-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+            width: 100%;
+            max-width: 1300px;
+        }
+        .dd-customer-need {
+            background: rgba(0,200,255,0.06);
+            border-left: 3px solid var(--tg-telenor-blue);
+            padding: 0.75rem 1.2rem;
+            border-radius: 0 10px 10px 0;
+            margin: 0.8rem 0 0.6rem;
+            font-size: 1.05rem;
+            font-weight: 600;
+            font-style: italic;
+            color: var(--tg-dark-blue);
+            line-height: 1.5;
+        }
+        .dd-customer-need .cn-source {
+            font-size: 0.82rem;
+            font-style: normal;
+            opacity: 0.4;
+            font-weight: 700;
+            margin-top: 0.25rem;
+        }
+        .slide-deepdive .dd-left .kicker {
+            font-size: 0.82rem;
+            font-weight: 800;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--tg-mid-blue);
+            margin-bottom: 0.75rem;
+        }
+        .slide-deepdive .dd-left h2 {
+            font-size: clamp(1.8rem, 3vw, 2.5rem);
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: -1px;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+        }
+        .slide-deepdive .dd-left h2 span { color: var(--tg-mid-blue); }
+        .slide-deepdive .dd-left p {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: #4a5568;
+            margin-bottom: 0.75rem;
+        }
+        .dd-battle-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            background: var(--tg-white);
+            border-radius: 12px;
+            margin-bottom: 0.6rem;
+            border: 1px solid rgba(0, 200, 255, 0.08);
+        }
+        .dd-battle-row .dbr-icon { width: 36px; height: 36px; flex-shrink: 0; }
+        .dd-battle-row .dbr-detail {
+            font-size: 0.82rem; opacity: 0.5; margin-top: 2px; line-height: 1.4;
+        }
+        .dd-battle-row .dbr-label {
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: var(--tg-dark-blue);
+        }
+        .dd-battle-row .dbr-value {
+            margin-left: auto;
+            font-size: 0.92rem;
+            font-weight: 800;
+            color: var(--tg-mid-blue);
+        }
+        .dd-chart-card {
+            background: var(--tg-white);
+            border-radius: 20px;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 8px 30px rgba(7, 4, 82, 0.06);
+            border: 1px solid rgba(0, 200, 255, 0.08);
+        }
+        .dd-chart-card h3 {
+            font-size: 0.82rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--tg-mid-blue);
+            margin-bottom: 1rem;
+        }
+        .dd-stat-row {
+            display: flex;
+            gap: 1.25rem;
+            margin-top: 1rem;
+        }
+        .dd-stat {
+            flex: 1;
+            text-align: center;
+            padding: 0.75rem;
+            background: var(--tg-off-white);
+            border-radius: 12px;
+        }
+        .dd-stat .ds-num {
+            font-size: 1.6rem;
+            font-weight: 900;
+            color: var(--tg-mid-blue);
+            letter-spacing: -0.5px;
+        }
+        .dd-stat .ds-label {
+            font-size: 0.78rem;
+            color: #637381;
+            font-weight: 600;
+            margin-top: 2px;
+        }
+
+        /* Sub-pillar cards for Efficient Admin */
+        .sub-pillar-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        .sub-pillar-card {
+            background: var(--tg-white);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 6px 20px rgba(7, 4, 82, 0.06);
+            border: 1px solid rgba(0, 200, 255, 0.08);
+            transition: all 0.3s ease;
+        }
+        .sub-pillar-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(7, 4, 82, 0.1);
+        }
+        .sub-pillar-card .spc-icon {
+            background: var(--tg-off-white);
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .sub-pillar-card .spc-icon img { width: 44px; height: 44px; }
+        .sub-pillar-card .spc-text {
+            padding: 0.75rem 1rem 1rem;
+        }
+        .sub-pillar-card .spc-text h4 {
+            font-size: 0.92rem;
+            font-weight: 800;
+            color: var(--tg-dark-blue);
+            margin-bottom: 0.2rem;
+        }
+        .sub-pillar-card .spc-text p {
+            font-size: 0.85rem;
+            color: #637381;
+            line-height: 1.4;
+            margin: 0;
+        }
+
+        /* ============================================================
+           SLIDE 11 — THE LEGACY TRAP
+           ============================================================ */
+        .slide-legacy {
+            background: var(--tg-dark-blue);
+            color: var(--tg-white);
+            padding: 6vh 8vw;
+        }
+        .slide-legacy::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0;
+            width: 40vw; height: 100%;
+            background: linear-gradient(160deg, var(--tg-mid-blue) 0%, transparent 70%);
+            opacity: 0.15;
+            clip-path: polygon(30% 0, 100% 0, 100% 100%, 0% 100%);
+        }
+        .slide-legacy .legacy-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            width: 100%;
+            max-width: 1200px;
+            position: relative;
+            z-index: 1;
+        }
+        .slide-legacy .ll-left .kicker {
+            font-size: 0.75rem;
+            font-weight: 800;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--tg-telenor-blue);
+            margin-bottom: 1rem;
+        }
+        .slide-legacy .ll-left h2 {
+            font-size: clamp(2.5rem, 4vw, 3.5rem);
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: -2px;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+        }
+        .slide-legacy .ll-left h2 span { color: var(--tg-telenor-blue); }
+        .slide-legacy .ll-left p {
+            font-size: 0.92rem;
+            line-height: 1.7;
+            opacity: 0.55;
+            max-width: 90%;
+        }
+        .donut-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .donut-container canvas { max-width: 320px; max-height: 320px; }
+        .donut-legend {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        .donut-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.78rem;
+            font-weight: 600;
+            opacity: 0.7;
+        }
+        .donut-legend-item .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        /* ============================================================
+           SLIDE 12 — TRANSFORMATION ENGINE
+           ============================================================ */
+        .slide-engine {
+            background: var(--tg-light-cyan);
+            color: var(--tg-dark-blue);
+            padding: 6vh 6vw;
+        }
+        .slide-engine .slide-header {
+            margin-bottom: 3vh;
+            text-align: center;
+            width: 100%;
+        }
+        .slide-engine .slide-header .kicker {
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--tg-mid-blue);
+            margin-bottom: 0.5rem;
+        }
+        .slide-engine .slide-header h2 {
+            font-size: clamp(2rem, 3.5vw, 3rem);
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: -1.5px;
+        }
+        .slide-engine .slide-header h2 span { color: var(--tg-mid-blue); }
+        .engine-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            width: 100%;
+            max-width: 1200px;
+        }
+        .engine-card {
+            background: var(--tg-white);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(7, 4, 82, 0.06);
+            border: 1px solid rgba(0, 200, 255, 0.08);
+            transition: all 0.3s ease;
+        }
+        .engine-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 50px rgba(7, 4, 82, 0.12);
+        }
+        .engine-card .ec-icon {
+            background: var(--tg-off-white);
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .engine-card .ec-icon img { width: 80px; height: 80px; }
+        .engine-card .ec-text {
+            padding: 1.5rem 2rem 2rem;
+        }
+        .engine-card .ec-text h3 {
+            font-size: 1.1rem;
+            font-weight: 900;
+            color: var(--tg-dark-blue);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.3px;
+        }
+        .engine-card .ec-text p {
+            font-size: 0.85rem;
+            color: #637381;
+            line-height: 1.6;
+        }
+        .engine-card .ec-text .ec-stat {
+            margin-top: 0.75rem;
+            padding: 0.6rem 0.75rem;
+            background: var(--tg-off-white);
+            border-radius: 8px;
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--tg-mid-blue);
+        }
+
+        /* ============================================================
+           SLIDE 12b — THE 20:30 MODEL DEEP DIVE
+           ============================================================ */
+        .slide-2030 {
+            background: var(--tg-light-cyan);
+            color: var(--tg-dark-blue);
+            padding: 4vh 5vw 3vh;
+        }
+        .s2030-header {
+            text-align: center; margin-bottom: 1.5vh;
+        }
+        .s2030-header .kicker {
+            font-size: 0.82rem; font-weight: 800; letter-spacing: 4px;
+            text-transform: uppercase; color: var(--tg-mid-blue); opacity: 0.5;
+            margin-bottom: 0.5rem;
+        }
+        .s2030-header h2 {
+            font-size: clamp(2.2rem, 4vw, 3.2rem); font-weight: 900;
+            font-style: italic; letter-spacing: -2px;
+        }
+        .s2030-header h2 span { color: var(--tg-mid-blue); }
+
+        /* Governing thought */
+        .s2030-governing {
+            text-align: center; max-width: 800px; margin: 0 auto 2.5vh;
+            font-size: 1.1rem; font-weight: 600; line-height: 1.6; color: #637381;
+        }
+        .s2030-governing strong { color: var(--tg-dark-blue); font-weight: 700; }
+        .s2030-governing em { color: var(--tg-mid-blue); font-weight: 800; font-style: italic; }
+
+        /* Two-row layout: goal on top, enablers below */
+        .s2030-goal-row {
+            display: grid; grid-template-columns: 100px 1fr;
+            gap: 1.5rem; align-items: center;
+            margin-bottom: 2rem; padding: 1.2rem 2rem;
+            background: var(--tg-white); border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(7,4,82,0.06);
+            border: 1px solid rgba(0,200,255,0.08);
+        }
+        .s2030-goal-icon {
+            width: 100px; height: 100px;
+            background: var(--tg-off-white); border-radius: 20px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .s2030-goal-icon img { width: 64px; height: 64px; }
+        .s2030-goal-text h3 {
+            font-size: 1.2rem; font-weight: 900; font-style: italic;
+            margin-bottom: 0.3rem;
+        }
+        .s2030-goal-text h3 span { color: var(--tg-mid-blue); }
+        .s2030-goal-text p {
+            font-size: 0.95rem; color: #637381; line-height: 1.55; margin: 0;
+        }
+        .s2030-goal-text p strong { color: var(--tg-dark-blue); }
+        .s2030-goal-nums {
+            display: flex; gap: 2rem; margin-top: 0.6rem;
+        }
+        .s2030-gn { display: flex; align-items: baseline; gap: 0.4rem; }
+        .s2030-gn-val {
+            font-size: 1.6rem; font-weight: 900; font-style: italic;
+            color: var(--tg-mid-blue); letter-spacing: -1px;
+        }
+        .s2030-gn-label { font-size: 0.82rem; font-weight: 600; color: #637381; }
+
+        /* Enabler columns */
+        .s2030-enabler-label {
+            font-size: 0.82rem; font-weight: 800; letter-spacing: 3px;
+            text-transform: uppercase; color: var(--tg-mid-blue); opacity: 0.35;
+            margin-bottom: 1rem; padding-left: 0.5rem;
+        }
+        .s2030-enablers {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+        .s2030-enabler {
+            display: flex; flex-direction: column; gap: 0.6rem;
+        }
+        .s2030-en-icon {
+            width: 100px; height: 100px;
+            background: var(--tg-off-white); border-radius: 20px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .s2030-en-icon img { width: 64px; height: 64px; }
+        .s2030-en-title {
+            font-size: 1.1rem; font-weight: 900; font-style: italic;
+            letter-spacing: -0.3px;
+        }
+        .s2030-en-shift {
+            font-size: 0.88rem; color: #637381;
+        }
+        .s2030-en-shift strong {
+            color: var(--tg-mid-blue); font-weight: 700;
+        }
+        .s2030-en-desc {
+            font-size: 0.92rem; color: #637381; line-height: 1.5;
+        }
+        .s2030-en-desc strong { color: var(--tg-dark-blue); }
+        .s2030-en-stat {
+            margin-top: auto; padding: 0.5rem 0.8rem;
+            background: var(--tg-off-white); border-radius: 8px;
+            font-size: 0.88rem; font-weight: 700; color: var(--tg-mid-blue);
+        }
+
+        /* ============================================================
+           SLIDE 13 — HEADCOUNT CHART
+           ============================================================ */
+        /* Uses .slide-chart styles from slide 5 */
+
+        /* ============================================================
+           SLIDE 14 — PHOTO DIVIDER
+           ============================================================ */
+        .slide-photo {
+            padding: 0;
+        }
+        .slide-photo .photo-bg {
+            position: absolute;
+            inset: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+        }
+        .slide-photo .photo-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(7, 4, 82, 0.75) 0%, rgba(28, 22, 197, 0.4) 100%);
+        }
+        .slide-photo .photo-content {
+            position: relative;
+            z-index: 1;
+            color: var(--tg-white);
+            padding: 0 10vw;
+            text-align: center;
+        }
+        .slide-photo .photo-content h2 {
+            font-size: clamp(3rem, 6vw, 5rem);
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: -2px;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+        }
+        .slide-photo .photo-content h2 span { color: var(--tg-telenor-blue); }
+        .slide-photo .photo-content p {
+            font-size: 1.15rem;
+            opacity: 0.65;
+            font-weight: 500;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* ============================================================
+           SLIDE 15 — ROADMAP TIMELINE
+           ============================================================ */
+        .slide-roadmap {
+            background: var(--tg-light-cyan);
+            color: var(--tg-dark-blue);
+            padding: 6vh 5vw;
+        }
+        .slide-roadmap .slide-header {
+            margin-bottom: 3vh;
+            text-align: center;
+            width: 100%;
+        }
+        .slide-roadmap .slide-header h2 {
+            font-size: clamp(2rem, 3.5vw, 2.8rem);
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: -1.5px;
+        }
+        .slide-roadmap .slide-header h2 span { color: var(--tg-mid-blue); }
+        .timeline {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            width: 100%;
+            max-width: 1200px;
+            position: relative;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 44px;
+            left: 5%;
+            width: 90%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--tg-mid-blue), var(--tg-telenor-blue), var(--tg-light-blue), var(--tg-accent-green));
+            border-radius: 2px;
+        }
+        .timeline-phase {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+        .timeline-phase .tp-dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--tg-mid-blue);
+            border: 4px solid var(--tg-light-cyan);
+            box-shadow: 0 0 0 2px var(--tg-mid-blue);
+            position: relative;
+            z-index: 1;
+            margin-bottom: 1.5rem;
+        }
+        .timeline-phase:nth-child(2) .tp-dot { background: var(--tg-telenor-blue); box-shadow: 0 0 0 2px var(--tg-telenor-blue); }
+        .timeline-phase:nth-child(3) .tp-dot { background: var(--tg-blue); box-shadow: 0 0 0 2px var(--tg-blue); }
+        .timeline-phase:nth-child(4) .tp-dot { background: #059669; box-shadow: 0 0 0 2px #059669; }
+        .timeline-phase .tp-card {
+            background: var(--tg-white);
+            border-radius: 16px;
+            padding: 1.25rem 1.5rem;
+            box-shadow: 0 6px 24px rgba(7, 4, 82, 0.06);
+            border: 1px solid rgba(0, 200, 255, 0.08);
+            width: 100%;
+            text-align: left;
+        }
+        .timeline-phase .tp-card .tp-year {
+            font-size: 0.82rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--tg-mid-blue);
+            margin-bottom: 0.5rem;
+        }
+        .timeline-phase:nth-child(2) .tp-card .tp-year { color: var(--tg-telenor-blue); }
+        .timeline-phase:nth-child(3) .tp-card .tp-year { color: var(--tg-blue); }
+        .timeline-phase:nth-child(4) .tp-card .tp-year { color: #059669; }
+        .timeline-phase .tp-card h3 {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: var(--tg-dark-blue);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.2px;
+        }
+        .timeline-phase .tp-card ul {
+            list-style: none;
+            padding: 0;
+        }
+        .timeline-phase .tp-card ul li {
+            font-size: 0.88rem;
+            color: #637381;
+            line-height: 1.5;
+            padding: 0.2rem 0;
+            padding-left: 0.75rem;
+            position: relative;
+        }
+        .timeline-phase .tp-card ul li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.55rem;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: var(--tg-mid-blue);
+        }
+
+        /* ============================================================
+           SLIDE 16 — RISK TABLE
+           ============================================================ */
+        .slide-risk {
+            background: var(--tg-light-cyan);
+            color: var(--tg-dark-blue);
+            padding: 6vh 6vw;
+        }
+        .slide-risk .slide-header {
+            margin-bottom: 3vh;
+            width: 100%;
+            max-width: 1200px;
+        }
+        .slide-risk .slide-header h2 {
+            font-size: clamp(1.8rem, 3vw, 2.5rem);
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: -1px;
+        }
+        .slide-risk .slide-header h2 span { color: var(--tg-mid-blue); }
+        .risk-table {
+            width: 100%;
+            max-width: 1200px;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: var(--tg-white);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(7, 4, 82, 0.06);
+        }
+        .risk-table thead th {
+            background: var(--tg-dark-blue);
+            color: var(--tg-white);
+            padding: 1.25rem 1.5rem;
+            text-align: left;
+            font-size: 0.85rem;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+        .risk-table tbody td {
+            padding: 1.25rem 1.5rem;
+            font-size: 0.95rem;
+            color: #4a5568;
+            line-height: 1.55;
+            border-bottom: 1px solid rgba(0, 200, 255, 0.06);
+            vertical-align: top;
+        }
+        .risk-table tbody tr:last-child td { border-bottom: none; }
+        .risk-table tbody tr:hover { background: var(--tg-off-white); }
+        .risk-table .risk-id {
+            font-weight: 900;
+            color: var(--tg-mid-blue);
+            font-size: 0.95rem;
+        }
+        .risk-table .risk-high {
+            color: #e53e3e;
+            font-weight: 700;
+        }
+        .risk-table .risk-med {
+            color: #d69e2e;
+            font-weight: 700;
+        }
+
+        /* ============================================================
+           SLIDE 17 — CLOSING
+           ============================================================ */
+        .slide-closing {
+            background: var(--tg-mid-blue);
+            color: var(--tg-white);
+            padding: 8vh 10vw;
+            align-items: flex-start;
+        }
+        .slide-closing::before {
+            content: '';
+            position: absolute;
+            top: -20%;
+            right: -5%;
+            width: 50vh;
+            height: 50vh;
+            background: var(--tg-telenor-blue);
+            border-radius: 50%;
+            opacity: 0.08;
+        }
+        .slide-closing::after {
+            content: '';
+            position: absolute;
+            bottom: -10%;
+            left: 30%;
+            width: 35vh;
+            height: 35vh;
+            background: var(--tg-blue);
+            border-radius: 50%;
+            opacity: 0.1;
+        }
+        .slide-closing h2 {
+            font-size: clamp(3rem, 6vw, 5rem);
+            font-weight: 900;
+            font-style: italic;
+            line-height: 1.08;
+            letter-spacing: -2.5px;
+            max-width: 70%;
+            position: relative;
+            z-index: 1;
+        }
+        .slide-closing h2 span { color: var(--tg-telenor-blue); }
+        .slide-closing .closing-sub {
+            margin-top: 2rem;
+            font-size: 1rem;
+            font-weight: 500;
+            opacity: 0.45;
+            max-width: 50%;
+            line-height: 1.65;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ============================================================
+           SLIDE 11b — LEGACY TRAP DETAIL (value stream FTE chart)
+           ============================================================ */
+        .slide-legacy-detail {
+            background: var(--tg-mid-blue);
+            color: var(--tg-white);
+            padding: 4vh 4vw;
+        }
+        .slide-legacy-detail .ld-header {
+            text-align: center;
+            margin-bottom: 2vh;
+            position: relative;
+            z-index: 1;
+        }
+        .slide-legacy-detail .ld-header h2 {
+            font-size: clamp(1.8rem, 3vw, 2.5rem);
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: -1.5px;
+        }
+        .slide-legacy-detail .ld-header h2 span { color: var(--tg-telenor-blue); }
+        .slide-legacy-detail .ld-header .ld-sub {
+            font-size: 0.88rem;
+            opacity: 0.55;
+            margin-top: 0.5rem;
+            font-weight: 500;
+            max-width: 750px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+        .ld-chart-wrap {
+            background: rgba(255,255,255,0.06);
+            border-radius: 20px;
+            padding: 1.25rem 1.5rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            width: 100%;
+            max-width: 1200px;
+            position: relative;
+            height: 340px;
+        }
+        .ld-summary-bar {
+            display: flex;
+            width: 100%;
+            max-width: 1200px;
+            margin-top: 1.25rem;
+            border-radius: 12px;
+            overflow: hidden;
+            height: 48px;
+        }
+        .ld-summary-seg {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.78rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+        .ld-summary-seg.seg-keep { background: #001430; color: var(--tg-white); }
+        .ld-summary-seg.seg-legacy { background: var(--tg-telenor-blue); color: var(--tg-dark-blue); }
+        .ld-summary-seg.seg-future { background: var(--tg-white); color: var(--tg-dark-blue); }
+        .ld-legend {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+        .ld-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            opacity: 0.8;
+        }
+        .ld-legend-item .ld-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 4px;
+        }
+
+        /* ============================================================
+           AGENTIC WoW SLIDES
+           ============================================================ */
+        .slide-agentic {
+            background: var(--tg-light-cyan);
+            color: var(--tg-dark-blue);
+            padding: 5vh 5vw;
+        }
+        .slide-agentic .ag-header {
+            text-align: center;
+            margin-bottom: 3vh;
+            position: relative;
+            z-index: 1;
+        }
+        .slide-agentic .ag-header .kicker {
+            font-size: 0.75rem;
+            font-weight: 800;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--tg-mid-blue);
+            margin-bottom: 0.5rem;
+        }
+        .slide-agentic .ag-header h2 {
+            font-size: clamp(2rem, 3.5vw, 3rem);
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: -1.5px;
+        }
+        .slide-agentic .ag-header h2 span { color: var(--tg-mid-blue); }
+
+        /* Content-as-Code comparison */
+        .cac-compare {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            width: 100%;
+            max-width: 1100px;
+            margin-bottom: 2.5rem;
+        }
+        .cac-box {
+            background: var(--tg-white);
+            border-radius: 16px;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 8px 30px rgba(7, 4, 82, 0.06);
+            border: 1px solid rgba(0, 200, 255, 0.08);
+        }
+        .cac-box.cac-old { border-left: 4px solid #e53e3e; }
+        .cac-box.cac-new { border-left: 4px solid #059669; }
+        .cac-box h3 {
+            font-size: 0.9rem;
+            font-weight: 800;
+            margin-bottom: 0.75rem;
+            color: var(--tg-dark-blue);
+        }
+        .cac-old h3 { color: #c53030; }
+        .cac-new h3 { color: #059669; }
+        .cac-flow {
+            font-size: 0.8rem;
+            color: #637381;
+            line-height: 1.6;
+            margin-bottom: 0.5rem;
+        }
+        .cac-time {
+            font-size: 1.2rem;
+            font-weight: 900;
+            font-style: italic;
+        }
+        .cac-old .cac-time { color: #c53030; }
+        .cac-new .cac-time { color: #059669; }
+
+        /* 3-phase architecture */
+        .cac-phases {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr auto 1fr;
+            gap: 0;
+            align-items: center;
+            width: 100%;
+            max-width: 1100px;
+        }
+        .cac-phase {
+            background: var(--tg-white);
+            border-radius: 16px;
+            padding: 1.25rem 1.5rem;
+            text-align: center;
+            box-shadow: 0 6px 24px rgba(7, 4, 82, 0.06);
+            border: 1px solid rgba(0, 200, 255, 0.08);
+        }
+        .cac-phase.phase-human { border-top: 4px solid var(--tg-telenor-blue); }
+        .cac-phase.phase-agent { border-top: 4px solid var(--tg-mid-blue); }
+        .cac-phase.phase-system { border-top: 4px solid #059669; }
+        .cac-phase h4 {
+            font-size: 0.68rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+        .phase-human h4 { color: var(--tg-telenor-blue); }
+        .phase-agent h4 { color: var(--tg-mid-blue); }
+        .phase-system h4 { color: #059669; }
+        .cac-phase p {
+            font-size: 0.78rem;
+            color: #4a5568;
+            line-height: 1.5;
+        }
+        .cac-phase .phase-tags {
+            margin-top: 0.5rem;
+            display: flex;
+            gap: 0.4rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .phase-tag {
+            font-size: 0.62rem;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 20px;
+            background: var(--tg-off-white);
+            border: 1px solid rgba(0, 200, 255, 0.1);
+            color: var(--tg-dark-blue);
+        }
+        .cac-arrow {
+            font-size: 1.5rem;
+            color: var(--tg-mid-blue);
+            opacity: 0.4;
+            text-align: center;
+            padding: 0 0.5rem;
+        }
+
+        /* Agentic Team Model */
+        .ag-team-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.25rem;
+            width: 100%;
+            max-width: 1100px;
+            margin-bottom: 2rem;
+        }
+        .ag-team-card {
+            background: var(--tg-white);
+            border-radius: 16px;
+            padding: 1.5rem 1.75rem;
+            box-shadow: 0 8px 30px rgba(7, 4, 82, 0.06);
+            border: 1px solid rgba(0, 200, 255, 0.08);
+            text-align: center;
+        }
+        .ag-team-card.atc-strategic { border-top: 4px solid #059669; }
+        .ag-team-card.atc-legacy { border-top: 4px solid #d97706; }
+        .ag-team-card.atc-digital { border-top: 4px solid var(--tg-mid-blue); }
+        .ag-team-card h3 {
+            font-size: 0.9rem;
+            font-weight: 800;
+            color: var(--tg-dark-blue);
+            margin-bottom: 0.4rem;
+        }
+        .atc-strategic h3 { color: #059669; }
+        .atc-legacy h3 { color: #d97706; }
+        .atc-digital h3 { color: var(--tg-mid-blue); }
+        .ag-team-card .atc-fte {
+            font-size: 2rem;
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: -1px;
+            margin-bottom: 0.3rem;
+        }
+        .atc-strategic .atc-fte { color: #059669; }
+        .atc-legacy .atc-fte { color: #d97706; }
+        .atc-digital .atc-fte { color: var(--tg-mid-blue); }
+        .ag-team-card p {
+            font-size: 0.78rem;
+            color: #637381;
+            line-height: 1.5;
+        }
+        .ag-benchmarks {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            width: 100%;
+            max-width: 1100px;
+        }
+        .ag-bench-card {
+            background: var(--tg-white);
+            border: 1px solid rgba(0, 200, 255, 0.08);
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            box-shadow: 0 6px 20px rgba(7, 4, 82, 0.06);
+        }
+        .ag-bench-card h4 {
+            font-size: 0.78rem;
+            font-weight: 800;
+            color: var(--tg-mid-blue);
+            margin-bottom: 0.3rem;
+        }
+        .ag-bench-card p {
+            font-size: 0.75rem;
+            color: #637381;
+            line-height: 1.5;
+        }
+
+        /* 4-Phase Agentic Rollout */
+        .ag-rollout {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            width: 100%;
+            max-width: 1200px;
+            position: relative;
+        }
+        .ag-rollout::before {
+            content: '';
+            position: absolute;
+            top: 44px;
+            left: 5%;
+            width: 90%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--tg-mid-blue), var(--tg-telenor-blue), var(--tg-light-blue), var(--tg-accent-green));
+            border-radius: 2px;
+        }
+        .ag-phase {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+        .ag-phase .agp-dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 4px solid var(--tg-light-cyan);
+            position: relative;
+            z-index: 1;
+            margin-bottom: 1.25rem;
+        }
+        .ag-phase:nth-child(1) .agp-dot { background: var(--tg-mid-blue); box-shadow: 0 0 0 2px var(--tg-mid-blue); }
+        .ag-phase:nth-child(2) .agp-dot { background: var(--tg-telenor-blue); box-shadow: 0 0 0 2px var(--tg-telenor-blue); }
+        .ag-phase:nth-child(3) .agp-dot { background: var(--tg-blue); box-shadow: 0 0 0 2px var(--tg-blue); }
+        .ag-phase:nth-child(4) .agp-dot { background: #059669; box-shadow: 0 0 0 2px #059669; }
+        .ag-phase .agp-card {
+            background: var(--tg-white);
+            border: 1px solid rgba(0, 200, 255, 0.08);
+            border-radius: 16px;
+            padding: 1.25rem 1.5rem;
+            width: 100%;
+            text-align: left;
+            box-shadow: 0 6px 24px rgba(7, 4, 82, 0.06);
+        }
+        .ag-phase .agp-card .agp-time {
+            font-size: 0.68rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 0.4rem;
+        }
+        .ag-phase:nth-child(1) .agp-card .agp-time { color: var(--tg-mid-blue); }
+        .ag-phase:nth-child(2) .agp-card .agp-time { color: var(--tg-telenor-blue); }
+        .ag-phase:nth-child(3) .agp-card .agp-time { color: var(--tg-blue); }
+        .ag-phase:nth-child(4) .agp-card .agp-time { color: #059669; }
+        .ag-phase .agp-card h3 {
+            font-size: 0.9rem;
+            font-weight: 800;
+            color: var(--tg-dark-blue);
+            margin-bottom: 0.4rem;
+        }
+        .ag-phase .agp-card p {
+            font-size: 0.75rem;
+            color: #637381;
+            line-height: 1.5;
+        }
+
+        /* ============================================================
+           SLIDE 13: FROM 10 HOURS TO 10 MINUTES
+           ============================================================ */
+        .slide-before-after {
+            background: var(--tg-light-cyan);
+            color: var(--tg-dark-blue);
+            padding: 4vh 5vw 3vh;
+        }
+        .ba-header {
+            text-align: center;
+            margin-bottom: 1.5vh;
+        }
+        .ba-header .kicker {
+            font-size: 0.78rem; font-weight: 800; letter-spacing: 4px;
+            text-transform: uppercase; opacity: 0.4; margin-bottom: 0.5rem;
+        }
+        .ba-header h2 {
+            font-size: clamp(2.2rem, 4vw, 3.2rem); font-weight: 900;
+            font-style: italic; letter-spacing: -2px;
+        }
+        .ba-header h2 span { color: var(--tg-mid-blue); }
+
+        /* Top hero — before/after side by side, NO white cards */
+        .ba-hero {
+            display: grid; grid-template-columns: 1fr auto 1fr;
+            gap: 0; align-items: center;
+            margin-bottom: 2.5rem;
+            padding: 0 3vw;
+        }
+        .ba-side {
+            display: flex; flex-direction: column; align-items: center;
+            text-align: center; gap: 0.6rem;
+            padding: 1.5rem;
+        }
+        .ba-side .ba-icon {
+            width: 100px; height: 100px;
+            border-radius: 24px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .ba-side.ba-old-side .ba-icon { background: rgba(229,62,62,0.08); }
+        .ba-side.ba-new-side .ba-icon { background: rgba(0,200,255,0.12); }
+        .ba-side .ba-icon img { width: 64px; height: 64px; }
+        .ba-side h3 {
+            font-size: 0.85rem; font-weight: 800; letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+        .ba-side.ba-old-side h3 { color: #e53e3e; }
+        .ba-side.ba-new-side h3 { color: var(--tg-mid-blue); }
+        .ba-side p { font-size: 1rem; line-height: 1.5; color: #637381; margin: 0; max-width: 320px; }
+        .ba-side .ba-metric {
+            font-size: 3.5rem; font-weight: 900; font-style: italic;
+            letter-spacing: -2px; line-height: 1;
+        }
+        .ba-side.ba-old-side .ba-metric { color: #e53e3e; }
+        .ba-side.ba-new-side .ba-metric { color: var(--tg-mid-blue); }
+        .ba-arrow-col {
+            display: flex; align-items: center; justify-content: center;
+            padding: 0 2.5rem;
+        }
+        .ba-arrow-graphic {
+            width: 72px; height: 72px;
+            background: var(--tg-mid-blue);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; font-size: 1.8rem; font-weight: 900;
+            box-shadow: 0 4px 20px rgba(28,22,197,0.3);
+        }
+
+        /* Bottom — 4-step example flow, open layout */
+        .ba-flow {
+            padding: 0 3vw;
+        }
+        .ba-flow-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 1.2rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid rgba(28,22,197,0.08);
+        }
+        .ba-flow-header h3 {
+            font-size: 0.88rem; font-weight: 800; letter-spacing: 3px;
+            text-transform: uppercase; color: var(--tg-mid-blue);
+        }
+        .ba-flow-result {
+            background: rgba(28,22,197,0.06);
+            border-radius: 8px;
+            padding: 0.5rem 1.2rem;
+            font-size: 0.92rem; font-weight: 800;
+            color: var(--tg-mid-blue);
+        }
+        .ba-steps {
+            display: grid; grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+        }
+        .ba-step-card {
+            display: flex; flex-direction: column; align-items: flex-start;
+            position: relative;
+        }
+        .ba-sc-icon {
+            width: 64px; height: 64px;
+            background: rgba(0,200,255,0.08);
+            border-radius: 16px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 0.75rem;
+        }
+        .ba-sc-icon img { width: 40px; height: 40px; }
+        .ba-step-card:last-child .ba-sc-icon { background: rgba(176,251,184,0.15); }
+        .ba-sc-num {
+            font-size: 0.78rem; font-weight: 900; color: var(--tg-telenor-blue);
+            text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 0.3rem;
+        }
+        .ba-step-card p {
+            font-size: 0.95rem; line-height: 1.5; color: #4a5568; margin: 0;
+        }
+        .ba-step-card strong { color: var(--tg-mid-blue); }
+
+        /* ============================================================
+           SLIDE 14: THE CAPACITY EQUATION
+           ============================================================ */
+        .slide-capacity {
+            background: var(--tg-light-cyan);
+            color: var(--tg-dark-blue);
+            padding: 4.5vh 5vw 3vh;
+        }
+        /* Slide 14 — open capacity layout */
+        .slide-capacity-open {
+            background: var(--tg-light-cyan);
+            color: var(--tg-dark-blue);
+            padding: 4vh 5vw 3vh;
+        }
+        .cap-o-header {
+            text-align: center; margin-bottom: 1.5vh;
+        }
+        .cap-o-header .kicker {
+            font-size: 0.82rem; font-weight: 800; letter-spacing: 4px;
+            text-transform: uppercase; opacity: 0.4; margin-bottom: 0.5rem;
+        }
+        .cap-o-header h2 {
+            font-size: clamp(2.2rem, 4vw, 3.2rem); font-weight: 900;
+            font-style: italic; letter-spacing: -2px;
+        }
+        .cap-o-header h2 span { color: var(--tg-mid-blue); }
+        .cap-o-layout {
+            display: grid; grid-template-columns: 1.3fr 1fr;
+            gap: 4rem; flex: 1; align-items: stretch;
+            padding: 0 2vw;
+        }
+        .cap-o-chart {
+            display: flex; flex-direction: column;
+        }
+        .cap-o-chart-label {
+            font-size: 0.88rem; font-weight: 800; letter-spacing: 2px;
+            text-transform: uppercase; color: var(--tg-mid-blue);
+            margin-bottom: 1rem; opacity: 0.6;
+        }
+        .cap-o-governing {
+            font-size: 1.1rem; font-weight: 600; line-height: 1.55;
+            color: var(--tg-dark-blue); padding-bottom: 1rem;
+            border-bottom: 2px solid rgba(28,22,197,0.08);
+        }
+        .cap-o-governing strong {
+            color: var(--tg-mid-blue); font-weight: 800;
+        }
+        .cap-o-proof {
+            display: flex; flex-direction: column; gap: 1.4rem;
+        }
+        .cap-o-item {
+            display: flex; flex-direction: column; gap: 0.3rem;
+            padding-left: 1.2rem;
+            border-left: 3px solid rgba(28,22,197,0.12);
+        }
+        .cap-o-num {
+            font-size: 2rem; font-weight: 900; font-style: italic;
+            letter-spacing: -1px; line-height: 1;
+        }
+        .cap-o-text {
+            font-size: 0.95rem; line-height: 1.5; color: #637381;
+        }
+        .cap-o-text strong { color: var(--tg-dark-blue); }
+
+        /* ============================================================
+           SLIDE 15: THE TRANSFORMATION TIMELINE
+           ============================================================ */
+        .slide-timeline-new {
+            background: var(--tg-light-cyan);
+            color: var(--tg-dark-blue);
+            padding: 4vh 5vw 3vh;
+            justify-content: flex-start;
+        }
+        .tl-header {
+            text-align: center; margin-bottom: 2vh;
+        }
+        .tl-header .kicker {
+            font-size: 0.82rem; font-weight: 800; letter-spacing: 4px;
+            text-transform: uppercase; opacity: 0.4; margin-bottom: 0.5rem;
+        }
+        .tl-header h2 {
+            font-size: clamp(2.2rem, 4vw, 3.2rem); font-weight: 900;
+            font-style: italic; letter-spacing: -2px;
+        }
+        .tl-header h2 span { color: var(--tg-mid-blue); }
+
+        /* 2026 detail — open 3-column, no cards */
+        .tl-year-label {
+            font-size: 0.88rem; font-weight: 800; letter-spacing: 3px;
+            text-transform: uppercase; opacity: 0.35; margin-bottom: 1.2rem;
+            padding-left: 0.5rem;
+        }
+        .tl-2026 {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 3rem; margin-bottom: 2rem;
+            width: 100%; padding: 0 1vw;
+        }
+        .tl-2026-col {
+            border-left: 3px solid rgba(28,22,197,0.1);
+            padding-left: 1.5rem;
+        }
+        .tl-2026-col:nth-child(1) { border-left-color: var(--tg-telenor-blue); }
+        .tl-2026-col:nth-child(2) { border-left-color: var(--tg-blue); }
+        .tl-2026-col:nth-child(3) { border-left-color: var(--tg-accent-green); }
+        .tl-2026-time {
+            font-size: 0.85rem; font-weight: 800; letter-spacing: 2px;
+            text-transform: uppercase; color: var(--tg-telenor-blue);
+            margin-bottom: 0.3rem;
+        }
+        .tl-2026-col:nth-child(2) .tl-2026-time { color: var(--tg-blue); }
+        .tl-2026-col:nth-child(3) .tl-2026-time { color: #059669; }
+        .tl-2026-col h3 {
+            font-size: 1.3rem; font-weight: 900; font-style: italic;
+            margin-bottom: 0.6rem; letter-spacing: -0.5px;
+        }
+        .tl-2026-col ul {
+            list-style: none; padding: 0; margin: 0;
+        }
+        .tl-2026-col ul li {
+            font-size: 0.95rem; line-height: 1.55; color: #637381;
+            padding: 0.25rem 0 0.25rem 1rem; position: relative;
+        }
+        .tl-2026-col ul li::before {
+            content: ''; position: absolute; left: 0; top: 0.7rem;
+            width: 5px; height: 5px; border-radius: 50%;
+            background: rgba(7,4,82,0.2);
+        }
+        .tl-2026-col ul li strong {
+            color: var(--tg-dark-blue); font-weight: 700;
+        }
+
+        /* 2027-2029 compact strip — open style */
+        .tl-horizon {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 3rem; align-items: flex-start;
+            width: 100%; margin-bottom: 1.5rem;
+            padding: 1.5rem 1vw 0;
+            border-top: 2px solid rgba(28,22,197,0.06);
+        }
+        .tl-horizon-col {
+            text-align: left;
+        }
+        .tl-horizon-year {
+            font-size: 1.6rem; font-weight: 900; font-style: italic;
+            color: var(--tg-mid-blue); letter-spacing: -1px;
+            margin-bottom: 0.2rem;
+        }
+        .tl-horizon-col p {
+            font-size: 0.92rem; line-height: 1.5; color: #637381; margin: 0;
+        }
+
+        /* Outcome metrics */
+        .tl-outcomes {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 2rem; width: 100%; padding: 0 1vw;
+        }
+        .tl-outcome {
+            text-align: left;
+        }
+        .tl-outcome-num {
+            font-size: 2.5rem; font-weight: 900; font-style: italic;
+            color: var(--tg-mid-blue); letter-spacing: -1px;
+        }
+        .tl-outcome-label {
+            font-size: 0.82rem; font-weight: 700; opacity: 0.4;
+            text-transform: uppercase; letter-spacing: 1px; margin-top: 0.1rem;
+        }
+
+        /* ============================================================
+           CONTENT-AS-CODE OPERATING SYSTEM SLIDE (legacy — kept for reference)
+           ============================================================ */
+        .slide-cac-os {
+            background: var(--tg-mid-blue);
+            color: var(--tg-white);
+            padding: 5vh 5vw;
+        }
+        .slide-cac-os .cac-os-header {
+            margin-bottom: 3vh;
+            position: relative;
+            z-index: 1;
+        }
+        .slide-cac-os .cac-os-header .kicker {
+            font-size: 0.75rem;
+            font-weight: 800;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            opacity: 0.6;
+            margin-bottom: 0.5rem;
+        }
+        .slide-cac-os .cac-os-header h2 {
+            font-size: clamp(2rem, 3.5vw, 3rem);
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: -1.5px;
+        }
+        .slide-cac-os .cac-os-header h2 em { color: var(--tg-telenor-blue); font-style: italic; }
+        .cac-os-flow {
+            display: grid;
+            grid-template-columns: 2fr auto 3fr;
+            gap: 0;
+            align-items: center;
+            width: 100%;
+            max-width: 1100px;
+            margin-bottom: 2rem;
+        }
+        .cac-os-instruction {
+            background: var(--tg-white);
+            color: var(--tg-dark-blue);
+            border-radius: 16px;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+        }
+        .cac-os-instruction p {
+            font-size: 0.88rem;
+            font-weight: 600;
+            line-height: 1.6;
+            color: var(--tg-dark-blue);
+        }
+        .cac-os-instruction .cac-os-label {
+            font-size: 0.68rem;
+            font-weight: 700;
+            color: #637381;
+            margin-top: 0.75rem;
+        }
+        .cac-os-arrow {
+            font-size: 2rem;
+            text-align: center;
+            padding: 0 1.5rem;
+            opacity: 0.5;
+        }
+        .cac-os-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .cac-os-step {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            padding: 0.75rem 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .cac-os-step-num {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--tg-telenor-blue);
+            color: var(--tg-dark-blue);
+            font-size: 0.75rem;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .cac-os-step-text strong {
+            font-size: 0.82rem;
+            font-weight: 800;
+            display: block;
+            margin-bottom: 2px;
+        }
+        .cac-os-step-text span {
+            font-size: 0.72rem;
+            opacity: 0.6;
+            line-height: 1.4;
+        }
+        .cac-os-principle {
+            background: rgba(0, 200, 255, 0.12);
+            border: 1px solid rgba(0, 200, 255, 0.3);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            text-align: center;
+            width: 100%;
+            max-width: 1100px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            font-style: italic;
+            opacity: 0.85;
+            line-height: 1.5;
+        }
+
+        /* ============================================================
+           CONTENT-AS-CODE REAL EXAMPLE SLIDE
+           ============================================================ */
+        .slide-cac-example {
+            background: var(--tg-light-cyan);
+            color: var(--tg-dark-blue);
+            padding: 5vh 5vw;
+        }
+        .slide-cac-example .cac-ex-header {
+            margin-bottom: 2.5vh;
+            text-align: center;
+            width: 100%;
+        }
+        .slide-cac-example .cac-ex-header .kicker {
+            font-size: 0.75rem;
+            font-weight: 800;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--tg-mid-blue);
+            margin-bottom: 0.5rem;
+        }
+        .slide-cac-example .cac-ex-header h2 {
+            font-size: clamp(2rem, 3.5vw, 3rem);
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: -1.5px;
+        }
+        .slide-cac-example .cac-ex-header h2 span { color: var(--tg-mid-blue); }
+        .cac-ex-columns {
+            display: grid;
+            grid-template-columns: 1fr 1.8fr 1fr;
+            gap: 1.25rem;
+            width: 100%;
+            max-width: 1200px;
+        }
+        .cac-ex-col-heading {
+            font-size: 0.68rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-align: center;
+            margin-bottom: 0.75rem;
+        }
+        .cac-ex-col-heading.col-menneske { color: var(--tg-telenor-blue); }
+        .cac-ex-col-heading.col-agent { color: var(--tg-mid-blue); }
+        .cac-ex-col-heading.col-system { color: #059669; }
+        .cac-ex-bubble {
+            background: var(--tg-white);
+            border-radius: 16px;
+            padding: 0.85rem 1.1rem;
+            margin-bottom: 0.6rem;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--tg-dark-blue);
+            box-shadow: 0 4px 16px rgba(7, 4, 82, 0.06);
+            border: 1px solid rgba(0, 200, 255, 0.08);
+            position: relative;
+            line-height: 1.45;
+        }
+        .cac-ex-bubble::after {
+            content: '\2193';
+            display: block;
+            text-align: center;
+            color: var(--tg-mid-blue);
+            opacity: 0.3;
+            font-size: 0.9rem;
+            margin-top: 0.3rem;
+        }
+        .cac-ex-bubble:last-child::after { display: none; }
+        .cac-ex-step {
+            background: var(--tg-white);
+            border-radius: 12px;
+            padding: 0.65rem 1rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--tg-dark-blue);
+            box-shadow: 0 4px 16px rgba(7, 4, 82, 0.06);
+            border: 1px solid rgba(0, 200, 255, 0.08);
+            line-height: 1.4;
+        }
+        .cac-ex-auto {
+            background: var(--tg-off-white);
+            border-radius: 12px;
+            padding: 0.65rem 1rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--tg-dark-blue);
+            border: 1px solid rgba(0, 200, 255, 0.08);
+            line-height: 1.4;
+        }
+        .cac-ex-footer-note {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--tg-mid-blue);
+        }
+
+        /* Capability breakdown cards */
+        .cap-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+        .cap-card {
+            background: var(--tg-white);
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            border: 1px solid rgba(0, 200, 255, 0.08);
+        }
+        .cap-card h4 {
+            font-size: 0.78rem;
+            font-weight: 800;
+            color: var(--tg-dark-blue);
+            margin-bottom: 0.2rem;
+        }
+        .cap-card p {
+            font-size: 0.72rem;
+            color: #637381;
+            line-height: 1.4;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress" style="width:5%"></div>
+<div class="nav-counter" id="counter">1 / 21</div>
+<div class="nav-logo"><img src="../reference/images/telenor_symbol_blue_RGB_Refresh.svg" alt="Telenor"></div>
+
+<!-- ================================================================
+     SLIDE 1: TITLE — Split: Mid Blue + Telegrafen bands
+     ================================================================ -->
+<div class="slide slide-title">
+    <div class="title-content">
+        <span class="badge">Vision Document</span>
+        <h1>Strategy 20:30<br>From Turnaround<br>to <span>Transformation</span></h1>
+        <p class="subtitle">We transformed from a position of strength. Now we build the commercial engine that turns market dominance into lasting value creation.</p>
+        <div class="logo-area">
+            <img src="../reference/images/telenor_symbol_blue_RGB_Refresh.svg" style="width:22px;height:22px;opacity:0.6;">
+            <span>Telenor Norge B2B Mobile</span>
+        </div>
+    </div>
+    <div class="title-visual">
+        <div class="tg-band tg-band-1"></div>
+        <div class="tg-band tg-band-2"></div>
+        <div class="tg-band tg-band-3"></div>
+        <div class="tg-band tg-band-4"></div>
+    </div>
+    <span class="year-mark">20:30</span>
+</div>
+
+<!-- ================================================================
+     SLIDE 2: THE TURNAROUND PROOF — Data-driven paradox
+     ================================================================ -->
+<div class="slide slide-context">
+    <div class="layout">
+        <div class="left">
+            <h2 class="anim">The <span>Turnaround</span> Proof</h2>
+            <p class="governing anim anim-d1">We adjusted subscriber base in 2025 — and grew revenue share to <strong>XX%.</strong></p>
+            <p>While competitors chase volume, we proved that value wins. Our B2B ARPU is 33% higher than Telia's and the gap is widening. Ice captured 90% of all net new subscribers in 2025 — yet our revenue share climbed.</p>
+            <p>But the market is saturating. Total net growth halved from 32K to 20K in one year. The volume game is ending for everyone.</p>
+            <div class="callout anim anim-d2">The turnaround proved we can win on value. Strategy 20:30 asks: can we build an engine that makes this permanent?</div>
+        </div>
+        <div class="right-col">
+            <div class="turnaround-chart-card anim anim-d2">
+                <div class="tcc-title">Subscription Share vs Revenue Share</div>
+                <div class="tcc-chart"><canvas id="turnaroundChart"></canvas></div>
+            </div>
+            <div class="turnaround-stats anim anim-d3">
+                <div class="ts-card">
+                    <div class="ts-num" style="color:var(--tg-mid-blue);">312</div>
+                    <div class="ts-unit">NOK</div>
+                    <div class="ts-label">B2B ARPU<br><strong>+33%</strong> vs Telia</div>
+                </div>
+                <div class="ts-card">
+                    <div class="ts-num" style="color:#ff6b6b;">-2.6K</div>
+                    <div class="ts-unit"></div>
+                    <div class="ts-label">Net subs 2025<br>Volume is gone</div>
+                </div>
+                <div class="ts-card">
+                    <div class="ts-num" style="color:#059669;">97</div>
+                    <div class="ts-unit">MNOK</div>
+                    <div class="ts-label">Revenue growth 2025<br><strong>86%</strong> of market growth</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ================================================================
+     SLIDE 3: THE GROWTH GAP — Chart with bridges + McKinsey insights
+     ================================================================ -->
+<div class="slide slide-gp-baseline">
+    <div class="gpb-header anim">
+        <div class="kicker">Financial Trajectory</div>
+        <h2>The Growth <span>Gap</span></h2>
+    </div>
+    <div class="gpb-layout anim anim-d2">
+        <div class="gpb-chart-card">
+            <div class="gpb-chart-title">Gross Profit 2025–2029 <span>mNOK</span></div>
+            <div class="gpb-chart-area">
+                <canvas id="gpBarChart"></canvas>
+            </div>
+            <div class="gpb-legend">
+                <div class="gpb-leg-item"><span class="gpb-dot" style="background:#070452;border:1px solid rgba(41,84,255,0.4);"></span>Baseline (without BOs)</div>
+                <div class="gpb-leg-item"><span class="gpb-dot" style="background:#00C8FF;"></span>Growth to market expectation</div>
+                <div class="gpb-leg-item"><span class="gpb-dot" style="background:none;border-bottom:2px dashed #ff6b6b;width:16px;height:0;border-radius:0;"></span>BOs independent of transformation</div>
+            </div>
+        </div>
+        <div class="gpb-insights">
+            <div class="gpb-governing">The market expects <span>+3.2% CAGR.</span> Our baseline delivers <span class="neg">-1.1% CAGR</span> — hitting a wall in 2027 and declining from there.</div>
+            <div class="gpb-divider"></div>
+            <div class="gpb-bullet">
+                <div class="gpb-bullet-marker">1</div>
+                <div>
+                    <div class="gpb-bullet-title">Volume logic is dead</div>
+                    <p>Customers don't want more data — they want business outcomes. Enterprise ARPU is XXX NOK vs. XXX NOK in mass market.</p>
+                </div>
+            </div>
+            <div class="gpb-bullet">
+                <div class="gpb-bullet-marker">2</div>
+                <div>
+                    <div class="gpb-bullet-title">Too complex to buy</div>
+                    <p>Our value proposition is too complicated to understand and hard to purchase. We need a simple, platform-based portfolio.</p>
+                </div>
+            </div>
+            <div class="gpb-bullet">
+                <div class="gpb-bullet-marker">3</div>
+                <div>
+                    <div class="gpb-bullet-title">Value locked in contracts</div>
+                    <p>Value is captured at contract signing, not delivered in daily operations. AI and agents must drive continuous value creation.</p>
+                </div>
+            </div>
+            <div class="gpb-bullet">
+                <div class="gpb-bullet-marker">4</div>
+                <div>
+                    <div class="gpb-bullet-title">Order processing eats innovation</div>
+                    <p>We are trapped in manual order handling. License-based scaling frees capacity for growth.</p>
+                </div>
+            </div>
+            <div class="gpb-cagr-bar">
+                <div class="gpb-cagr-item"><span class="gpb-cagr-num neg">-1.1%</span><span class="gpb-cagr-label">Baseline CAGR</span></div>
+                <div class="gpb-cagr-sep"></div>
+                <div class="gpb-cagr-item"><span class="gpb-cagr-num target">+3.2%</span><span class="gpb-cagr-label">Expected CAGR</span></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ================================================================
+     SLIDE 4: CUSTOMER REALITY — 4 Battles
+     ================================================================ -->
+<div class="slide slide-battles">
+    <div class="layout">
+        <div class="left">
+            <h2>The <span>4 Battles</span> Our Customers Fight Every Day</h2>
+            <p>Every strategic initiative must trace back to a real customer pain. These are the four battles that define our commercial opportunity — each one a space where Telenor has unique "right to play."</p>
+            <p>We are not selling technology. We are selling peace of mind, operational continuity, and the freedom to focus on what matters.</p>
+            <div class="insight-box">
+                <div class="ib-label">Strategic Insight</div>
+                <p>Customers who buy bundled security + connectivity show 3x lower churn and 2.5x higher lifetime value than pure connectivity buyers.</p>
+            </div>
+        </div>
+        <div class="battle-cards">
+            <div class="battle-card">
+                <div class="bc-icon"><img src="../reference/icons/Security_expanded.svg" alt="Security"></div>
+                <div class="bc-text">
+                    <h4>Cyber Exposure</h4>
+                    <div class="bc-pain">Employees are the largest attack surface</div>
+                    <div class="bc-need">Always-on protection without internal expertise (NIS2, identity, AI-safe workplaces)</div>
+                </div>
+            </div>
+            <div class="battle-card">
+                <div class="bc-icon"><img src="../reference/icons/CellTower_expanded.svg" alt="Network"></div>
+                <div class="bc-text">
+                    <h4>Network Reliability</h4>
+                    <div class="bc-pain">Critical ops depend on "best effort" networks</div>
+                    <div class="bc-need">SLA-backed 5G slices that replace expensive local OT networks</div>
+                </div>
+            </div>
+            <div class="battle-card">
+                <div class="bc-icon"><img src="../reference/icons/CustomerService_expanded.svg" alt="Voice"></div>
+                <div class="bc-text">
+                    <h4>Communication Chaos</h4>
+                    <div class="bc-pain">Voice is disconnected from digital workflows</div>
+                    <div class="bc-need">AI-native MBN with real-time transcription and CRM integration</div>
+                </div>
+            </div>
+            <div class="battle-card">
+                <div class="bc-icon"><img src="../reference/icons/Computer_expanded.svg" alt="Admin"></div>
+                <div class="bc-text">
+                    <h4>Admin Overhead</h4>
+                    <div class="bc-pain">Manual device/invoice management drains IT teams</div>
+                    <div class="bc-need">Zero-touch provisioning, DaaS, and automated cost allocation</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ================================================================
+     SLIDE 5: FIVE PILLARS OVERVIEW — Cards on Mid Blue
+     ================================================================ -->
+<div class="slide slide-pillars">
+    <div class="slide-header anim">
+        <div class="kicker">Growth Strategy</div>
+        <h2>Five Pillars to Close the <span>603M Gap</span></h2>
+    </div>
+    <div class="pillars-row anim anim-d2">
+        <div class="pillar-card">
+            <div class="pc-icon"><img src="../reference/icons/Security_expanded.svg" alt="Security"></div>
+            <div class="pc-text">
+                <div class="pc-gp">506M</div>
+                <h3>Security</h3>
+                <p>SafeZone to Safe Employee. Norway's trust anchor for digital safety.</p>
+            </div>
+        </div>
+        <div class="pillar-card">
+            <div class="pc-icon"><img src="../reference/icons/CustomerService_expanded.svg" alt="Customer Solutions"></div>
+            <div class="pc-text">
+                <div class="pc-gp">266M</div>
+                <h3>Customer Solutions</h3>
+                <p>AI-native MBN, voice AI, and partner services platform.</p>
+            </div>
+        </div>
+        <div class="pillar-card">
+            <div class="pc-icon"><img src="../reference/icons/CellTower_expanded.svg" alt="Advanced Networks"></div>
+            <div class="pc-text">
+                <div class="pc-gp">329M</div>
+                <h3>Advanced Networks</h3>
+                <p>5G slicing, private networks, and managed IoT transition.</p>
+            </div>
+        </div>
+        <div class="pillar-card">
+            <div class="pc-icon"><img src="../reference/icons/Computer_expanded.svg" alt="Efficient Admin"></div>
+            <div class="pc-text">
+                <div class="pc-gp">118M</div>
+                <h3>Efficient Admin</h3>
+                <p>mPort evolution, DaaS, SplittB, and API integration.</p>
+            </div>
+        </div>
+        <div class="pillar-card">
+            <div class="pc-icon"><img src="../reference/icons/Fiber_expanded.svg" alt="Cloud"></div>
+            <div class="pc-text">
+                <div class="pc-gp" style="font-size:0.9rem;color:#637381;">TBD</div>
+                <h3>Cloud</h3>
+                <p>Sovereign Cloud and SaaS distribution opportunity.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ================================================================
+     SLIDE 7: SECURITY DEEP DIVE
+     ================================================================ -->
+<div class="slide slide-deepdive">
+    <div class="dd-layout">
+        <div class="dd-left">
+            <div class="kicker">Pillar 1 — Security</div>
+            <h2>From SafeZone to <span>Safe Employee</span></h2>
+            <div class="dd-customer-need anim anim-d1">
+                "Employee behavior is our biggest risk, and NIS2 makes the board personally liable. We need invisible protection — not more user training."
+                <div class="cn-source">The Trust Crisis — #1 customer battle</div>
+            </div>
+            <p>Highest-conviction growth bet. SafeZone proves the model: December 2025 price increase produced near-zero churn. We build security directly into the network — it's not an add-on, it's a fundamental property of the connection.</p>
+            <p>The evolution: from protecting devices to owning all human risk. Three engines:</p>
+            <div class="dd-battle-row">
+                <img class="dbr-icon" src="../reference/icons/SecurityPersonal_expanded.svg" alt="">
+                <div style="flex:1"><span class="dbr-label">Safe Employee (identity + training)</span>
+                <div class="dbr-detail">Identity protection · behavioral analysis · secure AI usage · SafeZone evolution</div></div>
+                <span class="dbr-value">+50M GP</span>
+            </div>
+            <div class="dd-battle-row">
+                <img class="dbr-icon" src="../reference/icons/SecurityPhone_expanded.svg" alt="">
+                <div style="flex:1"><span class="dbr-label">Secure Mobile & 5G Security</span>
+                <div class="dbr-detail">SIM-swap protection · MTD · Zero Trust · 5G slicing · network-embedded</div></div>
+                <span class="dbr-value">+287M GP</span>
+            </div>
+            <div class="dd-battle-row">
+                <img class="dbr-icon" src="../reference/icons/SecurityBrowser_expanded.svg" alt="">
+                <div style="flex:1"><span class="dbr-label">SOC Light for SMB</span>
+                <div class="dbr-detail">AI-driven monitoring · standardized response · scaled via TCD/NOC · low barrier</div></div>
+                <span class="dbr-value">+169M GP</span>
+            </div>
+        </div>
+        <div class="dd-right anim anim-d3">
+            <div class="dd-chart-card">
+                <h3>Security GP Growth (mNOK)</h3>
+                <div style="position:relative;"><canvas id="securityChart" style="max-height:280px;"></canvas></div>
+                <div class="dd-stat-row">
+                    <div class="dd-stat">
+                        <div class="ds-num">20</div>
+                        <div class="ds-label">FTEs by 2029</div>
+                    </div>
+                    <div class="dd-stat">
+                        <div class="ds-num">174K</div>
+                        <div class="ds-label">SafeZone users today</div>
+                    </div>
+                    <div class="dd-stat">
+                        <div class="ds-num" style="color:var(--tg-telenor-blue);">8/10</div>
+                        <div class="ds-label">Target CSAT</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ================================================================
+     SLIDE 8: CUSTOMER SOLUTIONS DEEP DIVE
+     ================================================================ -->
+<div class="slide slide-deepdive">
+    <div class="dd-layout">
+        <div class="dd-left">
+            <div class="kicker">Pillar 2 — Customer Solutions</div>
+            <h2>AI-Native <span>Communication</span> Platform</h2>
+            <div class="dd-customer-need anim anim-d1">
+                "We must adopt AI to survive, but putting sensitive customer calls in a public cloud feels unsafe. We need sovereign AI that is fast, local, and guarantees data never leaves Norway."
+                <div class="cn-source">The AI Dilemma — #2 customer battle</div>
+            </div>
+            <p>655K MBN users today. Our answer: on-net AI inference with sub-400ms latency via Norwegian infrastructure. We deliver what global OTT cannot — natural voice AI that is both fast and sovereign.</p>
+            <div class="dd-battle-row">
+                <img class="dbr-icon" src="../reference/icons/Chatbot_expanded.svg" alt="">
+                <div style="flex:1"><span class="dbr-label">Next Gen MBN</span>
+                <div class="dbr-detail">AI receptionist · real-time transcription · CRM integration via MCP</div></div>
+                <span class="dbr-value">+105M</span>
+            </div>
+            <div class="dd-battle-row">
+                <img class="dbr-icon" src="../reference/icons/Deal_expanded.svg" alt="">
+                <div style="flex:1"><span class="dbr-label">Partner Capability Platform</span>
+                <div class="dbr-detail">A2P/RCS messaging · Mobility Analytics · AI Inference API</div></div>
+                <span class="dbr-value">+161M</span>
+            </div>
+            <div class="dd-battle-row">
+                <img class="dbr-icon" src="../reference/icons/Coverage_expanded.svg" alt="">
+                <div style="flex:1"><span class="dbr-label">National AI Inference</span>
+                <div class="dbr-detail">Norwegian-hosted voice AI · 200-400ms latency · sovereign data</div></div>
+                <span class="dbr-value">Differentiator</span>
+            </div>
+        </div>
+        <div class="dd-right anim anim-d3">
+            <div class="dd-chart-card" style="flex:1;">
+                <h3>Why This Wins</h3>
+                <div class="dd-battle-row" style="background:var(--tg-light-cyan);">
+                    <img class="dbr-icon" src="../reference/icons/CellTower_expanded.svg" alt="">
+                    <div style="flex:1"><span class="dbr-label">200-400ms latency</span>
+                    <div class="dbr-detail">Norwegian infrastructure beats global OTT on speed and sovereignty</div></div>
+                </div>
+                <div class="dd-battle-row" style="background:var(--tg-light-cyan);">
+                    <img class="dbr-icon" src="../reference/icons/Document Sharing_expanded.svg" alt="">
+                    <div style="flex:1"><span class="dbr-label">MCP Protocol</span>
+                    <div class="dbr-detail">Voice AI agents connect directly to customer CRM, ERP, booking systems</div></div>
+                </div>
+                <div class="dd-battle-row" style="background:var(--tg-light-cyan);">
+                    <img class="dbr-icon" src="../reference/icons/SecurityBrowser_expanded.svg" alt="">
+                    <div style="flex:1"><span class="dbr-label">Open Platform</span>
+                    <div class="dbr-detail">Partners build on our APIs — Mobility Analytics, A2P, inference</div></div>
+                </div>
+                <div class="dd-stat-row" style="margin-top:auto;">
+                    <div class="dd-stat">
+                        <div class="ds-num">655K</div>
+                        <div class="ds-label">Active MBN users</div>
+                    </div>
+                    <div class="dd-stat">
+                        <div class="ds-num">37</div>
+                        <div class="ds-label">FTEs by 2029</div>
+                    </div>
+                    <div class="dd-stat">
+                        <div class="ds-num" style="color:var(--tg-telenor-blue);">266M</div>
+                        <div class="ds-label">Total GP target</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ================================================================
+     SLIDE 9: ADVANCED NETWORKS DEEP DIVE
+     ================================================================ -->
+<div class="slide slide-deepdive">
+    <div class="dd-layout">
+        <div class="dd-left">
+            <div class="kicker">Pillar 3 — Advanced Networks</div>
+            <h2><span>5G Slicing</span> & IoT at Scale</h2>
+            <div class="dd-customer-need anim anim-d1">
+                "We have too many disjointed vendors. Buying 'megabytes' doesn't solve our business problems. We need guaranteed resources and one strategic partner."
+                <div class="cn-source">The Complexity Burden — mission-critical industries</div>
+            </div>
+            <p>Cold Response Exercise proved the model in the field. "Skreddersydd 5G" with dedicated slices, guaranteed bandwidth and latency SLAs. Customer interest broader than expected — manufacturing, logistics, maritime all showing strong willingness to pay.</p>
+            <div class="dd-battle-row">
+                <img class="dbr-icon" src="../reference/icons/Factory_expanded.svg" alt="">
+                <div style="flex:1"><span class="dbr-label">Private 5G / Network Slicing</span>
+                <div class="dbr-detail">Dedicated network slices · &lt;10ms latency · 99.999% uptime · OT isolation</div></div>
+                <span class="dbr-value">+196M</span>
+            </div>
+            <div class="dd-battle-row">
+                <img class="dbr-icon" src="../reference/icons/Coverage_expanded.svg" alt="">
+                <div style="flex:1"><span class="dbr-label">IoT Migration (2G Exit)</span>
+                <div class="dbr-detail">NB-IoT/LTE-M migration · eSIM-as-a-Service · 10-year battery life sensors</div></div>
+                <span class="dbr-value">+133M</span>
+            </div>
+        </div>
+        <div class="dd-right anim anim-d3">
+            <div class="dd-chart-card">
+                <h3>Advanced Networks GP Growth (mNOK)</h3>
+                <div style="position:relative;"><canvas id="networksChart" style="max-height:260px;"></canvas></div>
+                <div class="dd-stat-row">
+                    <div class="dd-stat">
+                        <div class="ds-num">18</div>
+                        <div class="ds-label">FTEs by 2029</div>
+                    </div>
+                    <div class="dd-stat">
+                        <div class="ds-num" style="color:var(--tg-telenor-blue);">329M</div>
+                        <div class="ds-label">Total GP target</div>
+                    </div>
+                    <div class="dd-stat">
+                        <div class="ds-num">5G</div>
+                        <div class="ds-label">Proven in Cold Response</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ================================================================
+     SLIDE 10: EFFICIENT ADMIN DEEP DIVE
+     ================================================================ -->
+<div class="slide slide-deepdive">
+    <div class="dd-layout">
+        <div class="dd-left">
+            <div class="kicker">Pillar 4 — Efficient Admin</div>
+            <h2>From Portal to <span>Platform</span></h2>
+            <div class="dd-customer-need anim anim-d1">
+                "We are drowning in manual admin. Our IT and telecom systems don't talk to each other. We need zero-touch integration that updates the CRM automatically."
+                <div class="cn-source">The Efficiency Trap — #3 customer battle</div>
+            </div>
+            <p>mPort is already the preferred admin portal. Equinor migration (14M deal) proved enterprise appetite. CSAT at 94/100. Our answer: API-first orchestration connecting communication directly into the customer's ERP and workflows. Four sub-pillars drive the 118M GP target:</p>
+        </div>
+        <div class="dd-right anim anim-d3">
+            <div class="sub-pillar-grid">
+                <div class="sub-pillar-card">
+                    <div class="spc-icon"><img src="../reference/icons/SecurityPhone_expanded.svg" alt="Insurance"></div>
+                    <div class="spc-text">
+                        <h4>Insurance & Uptime</h4>
+                        <p>Fleet Insurance with 4-hour SLA device replacement. Proactive risk management. 15-29M GP.</p>
+                    </div>
+                </div>
+                <div class="sub-pillar-card">
+                    <div class="spc-icon"><img src="../reference/icons/Computer_expanded.svg" alt="DaaS"></div>
+                    <div class="spc-text">
+                        <h4>DaaS & Circular HW</h4>
+                        <p>Device as a Service via mPort. CAPEX→OPEX with ESG tracking and circular returns. 15-44M GP.</p>
+                    </div>
+                </div>
+                <div class="sub-pillar-card">
+                    <div class="spc-icon"><img src="../reference/icons/Deal_expanded.svg" alt="Employee"></div>
+                    <div class="spc-text">
+                        <h4>Employee Services</h4>
+                        <p>SplittB: employees upgrade privately on company agreement. Zero admin overhead. 11-31M GP.</p>
+                    </div>
+                </div>
+                <div class="sub-pillar-card">
+                    <div class="spc-icon"><img src="../reference/icons/Document Sharing_expanded.svg" alt="API"></div>
+                    <div class="spc-text">
+                        <h4>Integration & API</h4>
+                        <p>Zero manual invoicing via ERP integration (Visma, Xledger). Auto onboarding. 4-15M GP.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="dd-stat-row" style="margin-top:1rem;">
+                <div class="dd-stat">
+                    <div class="ds-num">23</div>
+                    <div class="ds-label">FTEs by 2029</div>
+                </div>
+                <div class="dd-stat">
+                    <div class="ds-num" style="color:var(--tg-telenor-blue);">118M</div>
+                    <div class="ds-label">Total GP target</div>
+                </div>
+                <div class="dd-stat">
+                    <div class="ds-num">94</div>
+                    <div class="ds-label">Activation CSAT</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ================================================================
+     SLIDE 10: GP CHART — Full 6-Series Combo Chart (Scenarios)
+     ================================================================ -->
+<div class="slide slide-gp-combo">
+    <div class="gp-combo-header anim">
+        <div class="kicker">Financial Trajectory</div>
+        <h2>Gross Profit <span>Scenarios</span> 2025–2029</h2>
+    </div>
+    <div class="gpc-layout anim anim-d1">
+        <div class="gpc-chart-side">
+            <div class="gpc-chart-label">GP (MNOK) — Bars: baseline + gap · Lines: BO scenarios</div>
+            <div class="gpc-chart-area"><canvas id="gpChart"></canvas></div>
+            <div class="gpc-legend">
+                <div class="gcl-item"><span class="gcl-swatch" style="background:#070452;"></span>Baseline</div>
+                <div class="gcl-item"><span class="gcl-swatch" style="background:#2954FF;"></span>Growth gap</div>
+                <div class="gcl-item"><span class="gcl-swatch gcl-line" style="border-color:#ff6b6b;border-style:dashed;"></span>BOs Independent</div>
+                <div class="gcl-item"><span class="gcl-swatch gcl-line" style="border-color:#10b981;"></span>Most Likely</div>
+                <div class="gcl-item"><span class="gcl-swatch gcl-line" style="border-color:#8b5cf6;"></span>Ambition</div>
+                <div class="gcl-item"><span class="gcl-swatch gcl-line" style="border-color:#00C8FF;"></span>Full Potential</div>
+            </div>
+        </div>
+        <div class="gpc-insights anim anim-d2">
+            <div class="gpc-governing">Without transformation, <span>we fall</span>. The dashed line tells the story — BOs alone peak and decline. Only platform-level change unlocks real growth.</div>
+            <div class="gpc-divider"></div>
+            <div class="gpc-bullet">
+                <div class="gpc-bullet-marker" style="background:#ff6b6b;"></div>
+                <div>
+                    <div class="gpc-bullet-title">BOs Independent — decline</div>
+                    <p>Without transformation, individual BOs peak in 2027 then fall. We end below baseline by 2029.</p>
+                </div>
+            </div>
+            <div class="gpc-bullet">
+                <div class="gpc-bullet-marker" style="background:#10b981;"></div>
+                <div>
+                    <div class="gpc-bullet-title">Most Likely — 4,947M</div>
+                    <p>Cross-BO synergies and 20:30 platform effects. Meets market expectation — but requires transformation.</p>
+                </div>
+            </div>
+            <div class="gpc-bullet">
+                <div class="gpc-bullet-marker" style="background:#8b5cf6;"></div>
+                <div>
+                    <div class="gpc-bullet-title">Ambition — X,XXXM</div>
+                    <p>Full execution on Security + Customer Solutions. Requires team reallocation and AI at scale.</p>
+                </div>
+            </div>
+            <div class="gpc-bullet">
+                <div class="gpc-bullet-marker" style="background:#00C8FF;"></div>
+                <div>
+                    <div class="gpc-bullet-title">Full Potential — 6,686M</div>
+                    <p>All growth pillars at full velocity. 5G monetization and market expansion beyond current base.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ================================================================
+     PHOTO DIVIDER — Transition: opportunity → legacy reality
+     ================================================================ -->
+<div class="slide slide-photo">
+    <img src="../reference/images/brand/DSCF4989.jpg" class="photo-bg photo-bg-anim" alt="Road toward mountains">
+    <div class="photo-overlay"></div>
+    <div class="photo-content anim anim-fade">
+        <h2>The opportunity is <span>clear</span></h2>
+        <p>But our current operating model can't deliver it. 92% of our capacity is locked in legacy operations.</p>
+    </div>
+</div>
+
+<!-- ================================================================
+     SLIDE: THE LEGACY TRAP
+     ================================================================ -->
+<div class="slide slide-legacy-detail">
+    <div class="ld-header">
+        <div class="kicker" style="color:var(--tg-telenor-blue);font-size:0.82rem;font-weight:800;letter-spacing:3px;text-transform:uppercase;margin-bottom:0.5rem;">The Uncomfortable Truth</div>
+        <h2 class="anim">We spend most of our time on <span>legacy</span></h2>
+        <p class="ld-sub">Of our 224 FTEs, only 19 work on future value creation. 147 maintain operations, 57 optimize the existing model. We cannot hire our way to growth — we must free capacity from within.</p>
+    </div>
+    <div class="ld-chart-wrap anim anim-d2">
+        <canvas id="legacyDetailChart"></canvas>
+    </div>
+    <div class="ld-summary-bar anim anim-d3">
+        <div class="ld-summary-seg seg-keep" style="flex:66;">Keep & Run — 147 FTE (66%)</div>
+        <div class="ld-summary-seg seg-legacy" style="flex:26;">Legacy Model — 58 FTE (26%)</div>
+        <div class="ld-summary-seg seg-future" style="flex:8;">Future — 19 (8%)</div>
+    </div>
+    <div class="ld-legend">
+        <div class="ld-legend-item"><div class="ld-dot" style="background:#001430;"></div>Keep & Run</div>
+        <div class="ld-legend-item"><div class="ld-dot" style="background:var(--tg-telenor-blue);"></div>Legacy Model</div>
+        <div class="ld-legend-item"><div class="ld-dot" style="background:var(--tg-white);"></div>Future Value</div>
+    </div>
+</div>
+
+<!-- ================================================================
+     SLIDE 12: TRANSFORMATION ENGINE
+     ================================================================ -->
+<div class="slide slide-engine">
+    <div class="slide-header anim">
+        <div class="kicker anim">How We Get There</div>
+        <h2>The <span>Transformation</span> Engine</h2>
+    </div>
+    <div class="engine-cards anim anim-d2">
+        <div class="engine-card">
+            <div class="ec-icon"><img src="../reference/icons/Factory_expanded.svg" alt="20:30 Model"></div>
+            <div class="ec-text">
+                <h3>The 20:30 Model</h3>
+                <p>Four simultaneous shifts: value creation, portfolio, product cycle, and pricing model. From usage-based metering to license-based decoupling — eliminating the entire billing/provisioning chain.</p>
+                <div class="ec-stat">30% capacity liberation through structural simplification</div>
+            </div>
+        </div>
+        <div class="engine-card">
+            <div class="ec-icon"><img src="../reference/icons/Chatbot_expanded.svg" alt="Agentic WoW"></div>
+            <div class="ec-text">
+                <h3>Agentic Ways of Working</h3>
+                <p>AI-first "Content as Code" operating model. Business users give instructions in Norwegian — agents execute across backends. Humans focus on decisions, relationships, and creativity.</p>
+                <div class="ec-stat">75 FTE-equivalents absorbed by AI agents — 60x productivity on key workflows</div>
+            </div>
+        </div>
+        <div class="engine-card">
+            <div class="ec-icon"><img src="../reference/icons/Coverage_expanded.svg" alt="Sales Reclaim"></div>
+            <div class="ec-text">
+                <h3>Sales Reclamation</h3>
+                <p>Salesforce/CPQ transformation + Gen AI-assisted selling. Converting administrative salespeople back into commercial hunters. Reclaiming customer dialogue from external commissions.</p>
+                <div class="ec-stat">220M 3-year GP target — CPQ cycle time from 10 hours to 10 minutes</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ================================================================
+     SLIDE 12b: THE 20:30 MODEL — Four Radical Shifts
+     ================================================================ -->
+<div class="slide slide-2030">
+    <div class="s2030-header anim">
+        <div class="kicker">The Core Transformation</div>
+        <h2>The <span>20:30</span> Model</h2>
+    </div>
+
+    <div class="s2030-governing anim anim-d1">GB-based growth is dead. The 20:30 model reconfigures <strong>how we create value</strong> — shifting from selling volume to <em>selling outcomes</em>. Three structural shifts make it possible, and each one <strong>also drives growth directly</strong>.</div>
+
+    <!-- The goal: what this enables -->
+    <div class="s2030-goal-row anim anim-d2">
+        <div class="s2030-goal-icon"><img src="../reference/icons/Coverage_expanded.svg" alt="Growth"></div>
+        <div class="s2030-goal-text">
+            <h3>Service-Led <span>Value Creation</span></h3>
+            <p>Security, Communication, Networks, and Admin become the <strong>primary value drivers</strong> — not add-ons to a connectivity subscription. The growth pillars scale because the platform beneath them is simplified.</p>
+            <div class="s2030-goal-nums">
+                <div class="s2030-gn"><span class="s2030-gn-val">1.5B+</span><span class="s2030-gn-label">GP potential unlocked</span></div>
+                <div class="s2030-gn"><span class="s2030-gn-val">100M</span><span class="s2030-gn-label">Direct 20:30 GP</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Three enablers with icons -->
+    <div class="s2030-enabler-label">Three shifts that enable it — and drive growth themselves</div>
+    <div class="s2030-enablers anim anim-d3">
+        <div class="s2030-enabler">
+            <div class="s2030-en-icon"><img src="../reference/icons/Document Sharing_expanded.svg" alt="Portfolio"></div>
+            <div class="s2030-en-title">Simplify Portfolio</div>
+            <div class="s2030-en-shift">Fragmented catalog → <strong>Focused portfolio</strong></div>
+            <div class="s2030-en-desc">Fewer variants, fewer configs, faster time-to-market. <strong>Also drives growth:</strong> bundling Security into core subscriptions creates upsell at scale.</div>
+            <div class="s2030-en-stat">30% capacity liberation</div>
+        </div>
+        <div class="s2030-enabler">
+            <div class="s2030-en-icon"><img src="../reference/icons/Chatbot_expanded.svg" alt="Cycles"></div>
+            <div class="s2030-en-title">Continuous Cycles</div>
+            <div class="s2030-en-shift">3-year contracts → <strong>Software-style updates</strong></div>
+            <div class="s2030-en-desc">Eliminates the renegotiation machine. <strong>Also drives growth:</strong> launch new services in weeks, not quarters.</div>
+            <div class="s2030-en-stat">Zero-touch contract management</div>
+        </div>
+        <div class="s2030-enabler">
+            <div class="s2030-en-icon"><img src="../reference/icons/Deal_expanded.svg" alt="Pricing"></div>
+            <div class="s2030-en-title">License Pricing</div>
+            <div class="s2030-en-shift">Metered usage → <strong>Decoupled licenses</strong></div>
+            <div class="s2030-en-desc">Decouples purchase from activation — payment moves from "usage" to "license." Kills billing disputes and provisioning chaos. <strong>Also drives growth:</strong> predictable pricing reduces acquisition friction.</div>
+            <div class="s2030-en-stat">Telco 5–7x → SaaS 15x valuation</div>
+        </div>
+    </div>
+</div>
+
+<!-- ================================================================
+     SLIDE 14: FROM 10 HOURS TO 10 MINUTES — Telegrafen redesign
+     ================================================================ -->
+<div class="slide slide-before-after">
+    <div class="ba-header anim">
+        <div class="kicker">Agentic Transformation</div>
+        <h2>From 10 Hours to <span>10 Minutes</span></h2>
+    </div>
+    <div class="ba-hero anim anim-d1">
+        <div class="ba-side ba-old-side">
+            <div class="ba-icon"><img src="../reference/icons/Document Sharing_expanded.svg" alt="Manual"></div>
+            <h3>Today</h3>
+            <p>15 systems touched per product change. Manual data gathering across silos.</p>
+            <div class="ba-metric">10 hours</div>
+        </div>
+        <div class="ba-arrow-col">
+            <div class="ba-arrow-graphic">→</div>
+        </div>
+        <div class="ba-side ba-new-side">
+            <div class="ba-icon"><img src="../reference/icons/Chatbot_expanded.svg" alt="AI Agent"></div>
+            <h3>Content-as-Code</h3>
+            <p>Natural language in. AI agents navigate, detect, update, and deliver.</p>
+            <div class="ba-metric">10 minutes</div>
+        </div>
+    </div>
+    <div class="ba-flow anim anim-d3">
+        <div class="ba-flow-header">
+            <h3>A real example — happening today</h3>
+            <div class="ba-flow-result">15 min · Zero errors · Single source of truth</div>
+        </div>
+        <div class="ba-steps">
+            <div class="ba-step-card">
+                <div class="ba-sc-icon"><img src="../reference/icons/CustomerService_expanded.svg" alt=""></div>
+                <div class="ba-sc-num">Step 1</div>
+                <p>"Make a board presentation on the Security roadmap"</p>
+            </div>
+            <div class="ba-step-card">
+                <div class="ba-sc-icon"><img src="../reference/icons/Document Attachment_expanded.svg" alt=""></div>
+                <div class="ba-sc-num">Step 2</div>
+                <p>Agent reads 4 source docs, <strong>detects SafeZone GP is outdated</strong> (258→280)</p>
+            </div>
+            <div class="ba-step-card">
+                <div class="ba-sc-icon"><img src="../reference/icons/Coverage_expanded.svg" alt=""></div>
+                <div class="ba-sc-num">Step 3</div>
+                <p>Identifies a missing opportunity — <strong>creates "AI SOC for SMB" (+50M)</strong></p>
+            </div>
+            <div class="ba-step-card">
+                <div class="ba-sc-icon"><img src="../reference/icons/Document Signature_expanded.svg" alt=""></div>
+                <div class="ba-sc-num">Step 4</div>
+                <p>Builds presentation, validates numbers, commits, <strong>notifies stakeholders</strong></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- ================================================================
+     PHOTO DIVIDER — Transition: transformation → capacity
+     ================================================================ -->
+<div class="slide slide-photo">
+    <img src="../reference/images/brand/Telenor.bedrift.70-high.res.jpg" class="photo-bg photo-bg-anim" alt="Team in corridor">
+    <div class="photo-overlay"></div>
+    <div class="photo-content anim anim-fade">
+        <h2>The team is <span>ready</span></h2>
+        <p>Now we shift the capacity. From maintaining the past to building the future.</p>
+    </div>
+</div>
+
+<!-- ================================================================
+     SLIDE: HEADCOUNT CHART
+     ================================================================ -->
+<div class="slide slide-capacity-open">
+    <div class="cap-o-header anim">
+        <div class="kicker">Headcount Transformation</div>
+        <h2>The Capacity <span>Equation</span></h2>
+    </div>
+    <div class="cap-o-layout">
+        <div class="cap-o-chart anim anim-d2">
+            <div class="cap-o-chart-label">3-Track FTE Allocation 2026–2029</div>
+            <div style="position:relative;flex:1;min-height:0;"><canvas id="headcountChart"></canvas></div>
+        </div>
+        <div class="cap-o-proof anim anim-d3">
+            <div class="cap-o-governing anim anim-d1">Invest in <strong>transformation now</strong> to unlock growth capacity later. The hardest part: rapidly freeing Run capacity while maintaining quality.</div>
+            <div class="cap-o-item">
+                <div class="cap-o-num" style="color:var(--tg-mid-blue);">90→43</div>
+                <div class="cap-o-text"><strong>Run the Business halved.</strong> The biggest challenge — automating operations fast enough to free capacity without disruption.</div>
+            </div>
+            <div class="cap-o-item">
+                <div class="cap-o-num" style="color:var(--tg-telenor-blue);">TiE→20:30</div>
+                <div class="cap-o-text"><strong>Transformation shifts focus.</strong> From Exit TiE cleanup to building AI-first 20:30 platform, agentic workflows, and new commercial models.</div>
+            </div>
+            <div class="cap-o-item">
+                <div class="cap-o-num" style="color:#059669;">76→127</div>
+                <div class="cap-o-text"><strong>Growth capacity +67%.</strong> Every FTE freed from Run or Transform feeds growth — Security, Customer Solutions, Efficient Admin.</div>
+            </div>
+            <div class="cap-o-item">
+                <div class="cap-o-num" style="color:#e53e3e;">26→5</div>
+                <div class="cap-o-text"><strong>Agentic WoW:</strong> 26 FTEs build the infrastructure in 2027. By 2029, only 5 maintain it. The Klarna playbook applied to B2B Mobile.</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ================================================================
+     SLIDE 15: PHOTO DIVIDER — Mountain road
+     ================================================================ -->
+<div class="slide slide-photo">
+    <img src="../reference/images/brand/DSCF5113.jpg" class="photo-bg photo-bg-anim" alt="Norwegian mountain road">
+    <div class="photo-overlay"></div>
+    <div class="photo-content anim anim-fade">
+        <h2>The road <span>ahead</span></h2>
+        <p>From turnaround to transformation. From defending share to creating new value. The infrastructure is Norwegian. The ambition is world-class.</p>
+    </div>
+</div>
+
+<!-- ================================================================
+     SLIDE 16: EXECUTION ROADMAP — 2026 focus + long-term horizon
+     ================================================================ -->
+<div class="slide slide-timeline-new">
+    <div class="tl-header anim">
+        <div class="kicker">Execution Roadmap</div>
+        <h2>Starting <span>Now</span></h2>
+    </div>
+
+    <div class="tl-year-label">2026 — The Foundation Year</div>
+    <div class="tl-2026 anim anim-d2">
+        <div class="tl-2026-col">
+            <div class="tl-2026-time">Now → June</div>
+            <h3>Plan</h3>
+            <ul>
+                <li><strong>Define first wave of transformation BOs</strong> for Q3 Kick-off</li>
+                <li>Content-as-Code workspace live and operational</li>
+                <li>Design <strong>team architecture</strong> for autumn pilots</li>
+                <li>Secure funding and align stakeholders</li>
+            </ul>
+        </div>
+        <div class="tl-2026-col">
+            <div class="tl-2026-time">Q3 2026</div>
+            <h3>Build</h3>
+            <ul>
+                <li><strong>GitOps infrastructure</strong> deployed</li>
+                <li>First agentic lighthouse in production</li>
+                <li><strong>SafeZone Quiz 2</strong> + 5G Bare Data launch</li>
+                <li>CPQ validation started, Vertex AI POC</li>
+            </ul>
+        </div>
+        <div class="tl-2026-col">
+            <div class="tl-2026-time">Q4 2026</div>
+            <h3>Learn</h3>
+            <ul>
+                <li><strong>Pilot agentic model</strong> on 1–2 teams</li>
+                <li>Monthly BO Reviews on leading indicators</li>
+                <li>Automated CPI + contract amendments</li>
+                <li>Learnings feed <strong>Q1 '27 Kick-off</strong></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="tl-horizon anim anim-d3">
+        <div class="tl-horizon-col">
+            <div class="tl-horizon-year">2027</div>
+            <p>Peak 67 FTE transformation. 10+ workflows automated.</p>
+        </div>
+        <div class="tl-horizon-col">
+            <div class="tl-horizon-year">2028</div>
+            <p>Legacy → 60 FTE. Growth → 96. Harvesting begins.</p>
+        </div>
+        <div class="tl-horizon-col">
+            <div class="tl-horizon-year">2029</div>
+            <p>127 FTEs on growth. Revenue decoupled from manual capacity.</p>
+        </div>
+    </div>
+
+    <div class="tl-outcomes anim anim-d4">
+        <div class="tl-outcome">
+            <div class="tl-outcome-num">75</div>
+            <div class="tl-outcome-label">FTE equivalents automated</div>
+        </div>
+        <div class="tl-outcome">
+            <div class="tl-outcome-num">220M</div>
+            <div class="tl-outcome-label">Sales transformation value</div>
+        </div>
+        <div class="tl-outcome">
+            <div class="tl-outcome-num">127</div>
+            <div class="tl-outcome-label">FTEs on growth (from 76)</div>
+        </div>
+    </div>
+</div>
+
+<!-- ================================================================
+     SLIDE 16: RISK & MITIGATION
+     ================================================================ -->
+<div class="slide slide-risk">
+    <div class="slide-header anim">
+        <h2>Risk & <span>Mitigation</span></h2>
+    </div>
+    <table class="risk-table anim anim-d2">
+        <thead>
+            <tr>
+                <th style="width:5%;">#</th>
+                <th style="width:22%;">Risk</th>
+                <th style="width:10%;">Impact</th>
+                <th style="width:30%;">What Could Happen</th>
+                <th style="width:33%;">Mitigation Strategy</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="risk-id">R1</td>
+                <td><strong>Legacy Stickiness</strong></td>
+                <td class="risk-high">High</td>
+                <td>Automation targets not met — capacity stays locked in operations. Transformation stalls at 2027 peak without reduction.</td>
+                <td>Front-load AI agent deployment (Agentic WoW peaks at 26 FTEs in 2027). Gate every RTB process for automation eligibility quarterly. Hard sunset dates for legacy systems.</td>
+            </tr>
+            <tr>
+                <td class="risk-id">R2</td>
+                <td><strong>Security Adoption Lag</strong></td>
+                <td class="risk-high">High</td>
+                <td>Safe Employee and SOC Light fail to reach mass adoption. Customers perceive Telenor as a connectivity company, not a security partner.</td>
+                <td>Embed security into M4M bundles (bundled SafeZone/Nettvern in core subscriptions). Use 25% hit rate on security leads as leading indicator. December price increase proved low price sensitivity.</td>
+            </tr>
+            <tr>
+                <td class="risk-id">R3</td>
+                <td><strong>5G Commercial Readiness</strong></td>
+                <td class="risk-med">Medium</td>
+                <td>Network slicing capabilities delayed or customer willingness to pay lower than modeled (HalvNi assumptions fail).</td>
+                <td>Validate with Cold Response-style pilots before portfolio launch. Start with 20+ customers for '5G Bare Data' as leading indicator. Build from proven MC segment outward.</td>
+            </tr>
+            <tr>
+                <td class="risk-id">R4</td>
+                <td><strong>Talent Reallocation Friction</strong></td>
+                <td class="risk-med">Medium</td>
+                <td>People in Run/Transform tracks resist or cannot transition to Growth roles. Skills gap between legacy operations and commercial product development.</td>
+                <td>Invest in upskilling during 2027 transformation peak. Use cross-functional team model (not siloed reorg). Track FTE flow quarterly with explicit pipeline from Transform to Growth.</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- ================================================================
+     SLIDE 17: CLOSING
+     ================================================================ -->
+<div class="slide slide-closing">
+    <h2>Ownership. Speed.<br><span>Commercial spirit.</span><br>This is how we build<br>our future.</h2>
+    <p class="closing-sub">Strategy 20:30 is not a plan to be approved. It is a machine to be started. Every team, every BO, every quarter — measured by customer outcomes, not slide decks.</p>
+</div>
+
+<!-- ================================================================
+     JAVASCRIPT: Charts + Navigation
+     ================================================================ -->
+<script>
+// ---- TURNAROUND CHART — Subs share vs Revenue share divergence ----
+const taCtx = document.getElementById('turnaroundChart');
+if (taCtx) {
+    const periods = ['2H22', '1H23', '2H23', '1H24', '2H24', '1H25', '2H25'];
+    const subsShare = [55, 54, 53, 52, 52, 51, 50];
+    const rmsShare  = [58, 56, 57, 55, 55, 56, 56];
+
+    const labelPlugin = {
+        id: 'lineLabels',
+        afterDraw(chart) {
+            const ctx = chart.ctx;
+            const metaSubs = chart.getDatasetMeta(0);
+            const metaRms = chart.getDatasetMeta(1);
+            const lastSubs = metaSubs.data[metaSubs.data.length - 1];
+            const lastRms = metaRms.data[metaRms.data.length - 1];
+
+            ctx.save();
+            ctx.font = "700 12px 'DM Sans'";
+            ctx.fillStyle = '#ff6b6b';
+            ctx.textAlign = 'left';
+            ctx.fillText('Subs ' + subsShare[6] + '%', lastSubs.x + 8, lastSubs.y + 4);
+            ctx.fillStyle = '#00C8FF';
+            ctx.fillText('Revenue ' + rmsShare[6] + '%', lastRms.x + 8, lastRms.y + 4);
+            ctx.restore();
+        }
+    };
+
+    new Chart(taCtx, {
+        type: 'line',
+        data: {
+            labels: periods,
+            datasets: [
+                { label: 'Subscription Share',
+                  data: subsShare,
+                  borderColor: '#ff6b6b', backgroundColor: 'rgba(255,107,107,0.08)',
+                  borderWidth: 2.5, borderDash: [6, 4],
+                  pointBackgroundColor: '#ff6b6b', pointBorderColor: '#fff',
+                  pointRadius: 4, pointHoverRadius: 6,
+                  tension: 0.2, fill: true, yAxisID: 'yRight',
+                  datalabels: { display: false }
+                },
+                { label: 'Revenue Market Share',
+                  data: rmsShare,
+                  borderColor: '#00C8FF', backgroundColor: 'rgba(0,200,255,0.08)',
+                  borderWidth: 3,
+                  pointBackgroundColor: '#00C8FF', pointBorderColor: '#fff',
+                  pointRadius: 5, pointHoverRadius: 7,
+                  tension: 0.2, fill: true, yAxisID: 'yLeft',
+                  datalabels: { display: false }
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: {
+                duration: 800,
+                delay: function(ctx) {
+                    return ctx.dataIndex * 300 + (ctx.datasetIndex * 150);
+                },
+                easing: 'easeOutQuart'
+            },
+            layout: { padding: { right: 80 } },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    bodyFont: { family: "'DM Sans'" },
+                    titleFont: { family: "'DM Sans'", weight: 700 },
+                    callbacks: {
+                        label: (ctx) => ctx.dataset.label + ': ' + ctx.parsed.y + '%'
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    ticks: { color: '#94a3b8', font: { family: "'DM Sans'", size: 11, weight: 600 } },
+                    grid: { display: false },
+                    border: { display: false }
+                },
+                yLeft: {
+                    position: 'left',
+                    min: 55, max: 62,
+                    ticks: {
+                        color: 'rgba(0,200,255,0.5)',
+                        font: { family: "'DM Sans'", size: 10 },
+                        callback: (v) => v + '%'
+                    },
+                    grid: { color: 'rgba(0,0,0,0.04)' },
+                    border: { display: false },
+                    title: { display: false }
+                },
+                yRight: {
+                    position: 'right',
+                    min: 49, max: 54,
+                    ticks: {
+                        color: 'rgba(255,107,107,0.5)',
+                        font: { family: "'DM Sans'", size: 10 },
+                        callback: (v) => v + '%'
+                    },
+                    grid: { display: false },
+                    border: { display: false },
+                    title: { display: false }
+                }
+            }
+        },
+        plugins: [labelPlugin]
+    });
+}
+
+// ---- GP BASELINE BAR CHART (premium with bridges) ----
+const gpBarCtx = document.getElementById('gpBarChart');
+if (gpBarCtx) {
+    const baseline = [4480, 4551, 4461, 4371, 4281];
+    const growth   = [0, 0, 217, 438, 663];
+    const totals   = baseline.map((b, i) => b + growth[i]);
+    const deltas   = [null, 71, 127, 131, 135];
+    const pcts     = [null, '+1.6%', '+2.8%', '+2.8%', '+2.8%'];
+
+    const bridgePlugin = {
+        id: 'bridges',
+        afterDraw(chart) {
+            const ctx = chart.ctx;
+            const yAxis = chart.scales.y;
+            const meta = chart.getDatasetMeta(2);
+
+            // Total labels above each bar
+            for (let i = 0; i < totals.length; i++) {
+                const bar = meta.data[i];
+                const yTop = yAxis.getPixelForValue(totals[i]);
+                ctx.save();
+                ctx.textAlign = 'center';
+                ctx.font = "900 italic 16px 'DM Sans'";
+                ctx.fillStyle = '#fff';
+                ctx.fillText(totals[i].toLocaleString('no-NO'), bar.x, yTop - 10);
+                ctx.restore();
+            }
+
+            // Bridges between bars
+            for (let i = 0; i < totals.length - 1; i++) {
+                const barCur = meta.data[i];
+                const barNext = meta.data[i + 1];
+                const yCur = yAxis.getPixelForValue(totals[i]);
+                const yNext = yAxis.getPixelForValue(totals[i + 1]);
+                const x1 = barCur.x + barCur.width / 2 + 3;
+                const x2 = barNext.x - barNext.width / 2 - 3;
+                const xMid = (x1 + x2) / 2;
+
+                ctx.save();
+                ctx.strokeStyle = 'rgba(254,246,184,0.4)';
+                ctx.lineWidth = 1.5;
+                ctx.setLineDash([4, 3]);
+                ctx.beginPath();
+                ctx.moveTo(x1, yCur);
+                ctx.lineTo(x2, yCur);
+                ctx.stroke();
+
+                ctx.setLineDash([]);
+                ctx.strokeStyle = 'rgba(254,246,184,0.2)';
+                ctx.beginPath();
+                ctx.moveTo(x2, yCur);
+                ctx.lineTo(x2, yNext);
+                ctx.stroke();
+                ctx.restore();
+
+                const delta = deltas[i + 1];
+                const pct = pcts[i + 1];
+                const labelY = Math.min(yCur, yNext) - 12;
+                ctx.save();
+                ctx.textAlign = 'center';
+                ctx.font = "900 16px 'DM Sans'";
+                ctx.fillStyle = '#FEF6B8';
+                ctx.fillText('+' + delta, xMid, labelY);
+                ctx.font = "700 12px 'DM Sans'";
+                ctx.fillStyle = 'rgba(254,246,184,0.6)';
+                ctx.fillText(pct, xMid, labelY + 18);
+                ctx.restore();
+            }
+        }
+    };
+
+    new Chart(gpBarCtx, {
+        type: 'bar',
+        data: {
+            labels: ['2025', '2026', '2027', '2028', '2029'],
+            datasets: [
+                { type: 'line', label: 'BOs independent of transformation',
+                  data: [1000, 1050, 1100, 1080, 1060],
+                  borderColor: '#ff6b6b', borderDash: [6, 4],
+                  backgroundColor: 'transparent', borderWidth: 2.5,
+                  pointBackgroundColor: '#ff6b6b', pointBorderColor: '#fff',
+                  pointRadius: 4, pointHoverRadius: 6,
+                  tension: 0.15, fill: false, yAxisID: 'yLine', order: 1,
+                  datalabels: { display: false }
+                },
+                { label: 'Baseline',
+                  data: baseline,
+                  backgroundColor: '#070452',
+                  borderColor: 'rgba(41,84,255,0.3)', borderWidth: 1,
+                  borderRadius: { topLeft: 0, topRight: 0, bottomLeft: 6, bottomRight: 6 },
+                  borderSkipped: false,
+                  barPercentage: 0.65,
+                  stack: 'gp', order: 5,
+                  datalabels: {
+                      anchor: 'center', align: 'center',
+                      color: 'rgba(255,255,255,0.5)',
+                      font: { family: "'DM Sans'", size: 14, weight: 700 },
+                      formatter: (v) => v.toLocaleString('no-NO')
+                  }
+                },
+                { label: 'Growth to market expectation',
+                  data: growth,
+                  backgroundColor: '#00C8FF',
+                  borderRadius: { topLeft: 6, topRight: 6, bottomLeft: 0, bottomRight: 0 },
+                  borderSkipped: false,
+                  barPercentage: 0.65,
+                  stack: 'gp', order: 6,
+                  datalabels: {
+                      anchor: 'center', align: 'center',
+                      color: '#070452',
+                      font: { family: "'DM Sans'", size: 14, weight: 800 },
+                      formatter: (v) => v > 0 ? '+' + v : '',
+                      display: (ctx) => ctx.dataset.data[ctx.dataIndex] > 0
+                  }
+                },
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: {
+                duration: 800,
+                delay: function(ctx) {
+                    return ctx.dataIndex * 300 + (ctx.datasetIndex * 150);
+                },
+                easing: 'easeOutQuart'
+            },
+            layout: { padding: { top: 40 } },
+            plugins: {
+                legend: { display: false },
+                datalabels: {},
+                tooltip: {
+                    bodyFont: { family: "'DM Sans'" },
+                    titleFont: { family: "'DM Sans'", weight: 700 },
+                    filter: (item) => item.datasetIndex <= 2 && item.dataset.label !== '_total',
+                    callbacks: {
+                        label: function(ctx) {
+                            return ctx.dataset.label + ': ' + Math.round(ctx.parsed.y).toLocaleString('no-NO') + ' mNOK';
+                        }
+                    }
+                }
+            },
+            interaction: { mode: 'index', intersect: false },
+            scales: {
+                x: {
+                    stacked: true,
+                    ticks: { color: 'rgba(255,255,255,0.5)', font: { family: "'DM Sans'", weight: 700, size: 14 } },
+                    grid: { display: false },
+                    border: { display: false }
+                },
+                y: {
+                    stacked: true,
+                    min: 3800, max: 5400,
+                    ticks: { display: false },
+                    grid: { color: 'rgba(255,255,255,0.03)' },
+                    border: { display: false }
+                },
+                yLine: {
+                    display: false,
+                    stacked: false,
+                    min: 3800, max: 5400
+                }
+            }
+        },
+        plugins: [ChartDataLabels, bridgePlugin]
+    });
+}
+
+// ---- GP SCENARIOS COMBO CHART (stacked bar + overlay lines) ----
+const gpCtx = document.getElementById('gpChart');
+if (gpCtx) {
+    new Chart(gpCtx, {
+        type: 'bar',
+        data: {
+            labels: ['2025', '2026', '2027', '2028', '2029'],
+            datasets: [
+                // Lines first (rendered behind bars)
+                { type: 'line', label: 'Full Potential', data: [4480,4551,4960.0,5714.5,6686.0],
+                  borderColor: '#00C8FF', backgroundColor: 'transparent', borderWidth: 3,
+                  pointBackgroundColor: '#00C8FF', pointBorderColor: '#fff', pointRadius: 5, pointHoverRadius: 7,
+                  tension: 0.15, fill: false, yAxisID: 'y', order: 1 },
+                { type: 'line', label: 'Ambition', data: [4480,4551,4727.5,5016.0,5464.0],
+                  borderColor: '#8b5cf6', backgroundColor: 'transparent', borderWidth: 3,
+                  pointBackgroundColor: '#8b5cf6', pointBorderColor: '#fff', pointRadius: 5, pointHoverRadius: 7,
+                  tension: 0.15, fill: false, yAxisID: 'y', order: 2 },
+                { type: 'line', label: 'Most Likely', data: [4480,4551,4664.8,4801.4,4947.1],
+                  borderColor: '#10b981', backgroundColor: 'transparent', borderWidth: 3,
+                  pointBackgroundColor: '#10b981', pointBorderColor: '#fff', pointRadius: 5, pointHoverRadius: 7,
+                  tension: 0.15, fill: false, yAxisID: 'y', order: 3 },
+                { type: 'line', label: 'BOs Independent', data: [4480,4551,4710.9,4590,4489.3],
+                  borderColor: '#ff6b6b', borderDash: [5,5], backgroundColor: 'transparent', borderWidth: 2,
+                  pointBackgroundColor: '#ff6b6b', pointBorderColor: '#fff', pointRadius: 4, pointHoverRadius: 6,
+                  tension: 0.15, fill: false, yAxisID: 'y', order: 4 },
+                // Stacked bars — Baseline FIRST (bottom), Growth SECOND (visible on top)
+                { type: 'bar', label: 'Baseline (without BOs)',
+                  data: [1000,1050,1030,1010,990],
+                  backgroundColor: '#070452', hoverBackgroundColor: '#03022c',
+                  borderColor: '#1C16C5', borderWidth: 1, borderRadius: 4,
+                  stack: 'gp_stack', yAxisID: 'yBar', order: 5 },
+                { type: 'bar', label: 'Growth to reach Market Expectation',
+                  data: [0,0,50,100,150],
+                  backgroundColor: '#2954FF', hoverBackgroundColor: '#1C16C5',
+                  borderRadius: 4, borderSkipped: false,
+                  stack: 'gp_stack', yAxisID: 'yBar', order: 6 }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: {
+                duration: 800,
+                delay: function(ctx) {
+                    return ctx.dataIndex * 300 + (ctx.datasetIndex * 150);
+                },
+                easing: 'easeOutQuart'
+            },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    bodyFont: { family: "'DM Sans'" },
+                    titleFont: { family: "'DM Sans'", weight: 700 },
+                    callbacks: {
+                        label: function(ctx) {
+                            return ctx.dataset.label + ': ' + Math.round(ctx.parsed.y).toLocaleString() + ' mNOK';
+                        }
+                    }
+                }
+            },
+            interaction: { mode: 'index', intersect: false },
+            scales: {
+                x: {
+                    stacked: true,
+                    ticks: { color: '#cbd5e1', font: { family: "'DM Sans'", weight: 600, size: 12 } },
+                    grid: { display: false }
+                },
+                y: {
+                    stacked: false,
+                    min: 4000, max: 6800,
+                    ticks: {
+                        color: '#94a3b8', font: { family: "'DM Sans'", size: 11 },
+                        callback: function(v) { return v.toLocaleString('no-NO') + ' m'; }
+                    },
+                    grid: { color: 'rgba(255,255,255,0.06)' },
+                    border: { display: false }
+                },
+                yBar: {
+                    stacked: true, display: false,
+                    min: 4000, max: 6800
+                }
+            }
+        }
+    });
+}
+
+// ---- SECURITY GP CHART ----
+const secCtx = document.getElementById('securityChart');
+if (secCtx) {
+    new Chart(secCtx, {
+        type: 'bar',
+        data: {
+            labels: ['2026', '2027', '2028', '2029'],
+            datasets: [
+                {
+                    label: 'Most Likely',
+                    data: [10, 25, 50, 80],
+                    backgroundColor: '#1C16C5',
+                    borderRadius: 6,
+                    barPercentage: 0.6,
+                },
+                {
+                    label: 'Full Potential',
+                    data: [15, 35, 70, 110],
+                    backgroundColor: '#00C8FF',
+                    borderRadius: 6,
+                    barPercentage: 0.6,
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            animation: {
+                duration: 800,
+                delay: function(ctx) {
+                    return ctx.dataIndex * 300 + (ctx.datasetIndex * 150);
+                },
+                easing: 'easeOutQuart'
+            },
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: { color: '#070452', font: { family: "'DM Sans'", weight: 700, size: 11 }, padding: 15 }
+                }
+            },
+            scales: {
+                x: { ticks: { color: '#637381', font: { family: "'DM Sans'", weight: 600, size: 11 } }, grid: { display: false } },
+                y: {
+                    ticks: { color: '#637381', font: { family: "'DM Sans'", size: 11 } },
+                    grid: { color: 'rgba(7,4,82,0.06)' },
+                    border: { display: false }
+                }
+            }
+        }
+    });
+}
+
+// ---- ADVANCED NETWORKS CHART ----
+const netCtx = document.getElementById('networksChart');
+if (netCtx) {
+    new Chart(netCtx, {
+        type: 'line',
+        data: {
+            labels: ['2026', '2027', '2028', '2029'],
+            datasets: [
+                {
+                    label: 'Full Potential',
+                    data: [5, 12, 30, 55],
+                    borderColor: '#00C8FF',
+                    backgroundColor: 'rgba(0, 200, 255, 0.08)',
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 5,
+                    pointBackgroundColor: '#00C8FF',
+                    borderWidth: 3,
+                },
+                {
+                    label: 'Most Likely',
+                    data: [5, 10, 22, 38],
+                    borderColor: '#1C16C5',
+                    backgroundColor: 'rgba(28, 22, 197, 0.08)',
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 5,
+                    pointBackgroundColor: '#1C16C5',
+                    borderWidth: 3,
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            animation: {
+                duration: 800,
+                delay: function(ctx) {
+                    return ctx.dataIndex * 300 + (ctx.datasetIndex * 150);
+                },
+                easing: 'easeOutQuart'
+            },
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: { color: '#070452', font: { family: "'DM Sans'", weight: 700, size: 11 }, padding: 15 }
+                }
+            },
+            scales: {
+                x: { ticks: { color: '#637381', font: { family: "'DM Sans'", weight: 600, size: 11 } }, grid: { display: false } },
+                y: {
+                    ticks: { color: '#637381', font: { family: "'DM Sans'", size: 11 } },
+                    grid: { color: 'rgba(7,4,82,0.06)' },
+                    border: { display: false }
+                }
+            }
+        }
+    });
+}
+
+// ---- LEGACY DONUT CHART ----
+// Donut chart removed — data shown in bar chart below
+
+// ---- LEGACY DETAIL VALUE STREAM CHART ----
+const ldCtx = document.getElementById('legacyDetailChart');
+if (ldCtx) {
+    new Chart(ldCtx, {
+        type: 'bar',
+        data: {
+            labels: ['20:30 Team', 'Mass Market', 'Enterprise', 'Security', 'Next Gen MBN', 'Voice Services', 'Voice Svc Del.', 'IoT', 'Partner Sol.', 'HW & eCom', 'Employee Exp.', 'Cust. Activation', 'API', 'Insight Enabl.', 'Mktg & Sales', 'Msg Ctr & Cov.', 'Cust. Ops', 'Mobile Ops', 'OneView Enabl.', 'MC commercial', 'MC technical'],
+            datasets: [
+                {
+                    label: 'Keep & Run',
+                    data: [1, 6, 5, 0, 4, 17, 17, 5, 3, 3, 3, 4, 3, 7, 4, 5, 6, 21, 6, 12, 6],
+                    backgroundColor: '#001430',
+                    borderRadius: { topLeft: 0, topRight: 0, bottomLeft: 4, bottomRight: 4 },
+                },
+                {
+                    label: 'Legacy Model',
+                    data: [0, 5, 3, 3, 0, 4, 0, 1, 0, 1, 6, 2, 4, 8, 8, 7, 0, 0, 6, 0, 0],
+                    backgroundColor: '#00C8FF',
+                },
+                {
+                    label: 'Future Value',
+                    data: [1, 1, 0, 1, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 9, 3],
+                    backgroundColor: '#FFFFFF',
+                    borderRadius: { topLeft: 4, topRight: 4, bottomLeft: 0, bottomRight: 0 },
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: {
+                duration: 800,
+                delay: function(ctx) {
+                    return ctx.dataIndex * 300 + (ctx.datasetIndex * 150);
+                },
+                easing: 'easeOutQuart'
+            },
+            indexAxis: 'x',
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    bodyFont: { family: "'DM Sans'" },
+                    titleFont: { family: "'DM Sans'", weight: 700 },
+                    callbacks: {
+                        afterBody: function(context) {
+                            const idx = context[0].dataIndex;
+                            const kr = [1,6,5,0,4,17,17,5,3,3,3,4,3,7,4,5,6,21,6,12,6];
+                            const lm = [0,5,3,3,0,4,0,1,0,1,6,2,4,8,8,7,0,0,6,0,0];
+                            const fv = [1,1,0,1,0,0,0,3,0,0,0,0,0,0,1,0,0,0,0,9,3];
+                            return 'Total: ' + (kr[idx]+lm[idx]+fv[idx]) + ' FTEs';
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    stacked: true,
+                    ticks: {
+                        color: 'rgba(255,255,255,0.55)',
+                        font: { family: "'DM Sans'", weight: 600, size: 9 },
+                        maxRotation: 55,
+                        minRotation: 45,
+                    },
+                    grid: { display: false }
+                },
+                y: {
+                    stacked: true,
+                    ticks: {
+                        color: 'rgba(255,255,255,0.4)',
+                        font: { family: "'DM Sans'", size: 10 },
+                    },
+                    grid: { color: 'rgba(255,255,255,0.06)' },
+                    border: { display: false }
+                }
+            }
+        }
+    });
+}
+
+// ---- HEADCOUNT STACKED BAR CHART ----
+const hcCtx = document.getElementById('headcountChart');
+if (hcCtx) {
+    new Chart(hcCtx, {
+        type: 'bar',
+        plugins: [ChartDataLabels],
+        data: {
+            labels: ['2026', '2027', '2028', '2029'],
+            datasets: [
+                {
+                    label: 'Run the Business',
+                    data: [90, 57, 48, 43],
+                    backgroundColor: '#070452',
+                    borderRadius: { topLeft: 0, topRight: 0, bottomLeft: 6, bottomRight: 6 },
+                },
+                {
+                    label: 'Transform',
+                    data: [58, 67, 56, 29],
+                    backgroundColor: '#1C16C5',
+                },
+                {
+                    label: 'Growth',
+                    data: [76, 93, 96, 127],
+                    backgroundColor: '#00C8FF',
+                    borderRadius: { topLeft: 6, topRight: 6, bottomLeft: 0, bottomRight: 0 },
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: {
+                duration: 800,
+                delay: function(ctx) {
+                    return ctx.dataIndex * 300 + (ctx.datasetIndex * 150);
+                },
+                easing: 'easeOutQuart'
+            },
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: { color: '#070452', font: { family: "'DM Sans'", weight: 700, size: 13 }, padding: 20 }
+                },
+                tooltip: {
+                    callbacks: {
+                        afterBody: function(context) {
+                            const idx = context[0].dataIndex;
+                            const totals = [224, 217, 200, 199];
+                            return 'Total: ' + totals[idx] + ' FTEs';
+                        }
+                    }
+                },
+                datalabels: {
+                    color: '#fff',
+                    font: { family: "'DM Sans'", weight: 700, size: 14 },
+                    anchor: 'center',
+                    align: 'center',
+                    formatter: function(value) { return value; }
+                }
+            },
+            scales: {
+                x: {
+                    stacked: true,
+                    ticks: { color: '#637381', font: { family: "'DM Sans'", weight: 600, size: 14 } },
+                    grid: { display: false }
+                },
+                y: {
+                    stacked: true,
+                    ticks: { color: '#637381', font: { family: "'DM Sans'", size: 13 } },
+                    grid: { color: 'rgba(7,4,82,0.06)' },
+                    border: { display: false }
+                }
+            }
+        }
+    });
+}
+
+// ---- NAVIGATION ----
+const slides = document.querySelectorAll('.slide');
+const counter = document.getElementById('counter');
+const progress = document.getElementById('progress');
+const total = slides.length;
+
+function getCurrentSlide() {
+    let idx = 0;
+    slides.forEach((s, i) => {
+        const rect = s.getBoundingClientRect();
+        if (rect.top < window.innerHeight / 2 && rect.bottom > window.innerHeight / 2) idx = i;
+    });
+    return idx;
+}
+
+function scrollToSlide(i) {
+    i = Math.max(0, Math.min(i, total - 1));
+    slides[i].scrollIntoView({ behavior: 'smooth' });
+}
+
+document.addEventListener('scroll', () => {
+    const idx = getCurrentSlide();
+    counter.textContent = `${idx + 1} / ${total}`;
+    progress.style.width = `${((idx + 1) / total) * 100}%`;
+});
+
+document.addEventListener('keydown', (e) => {
+    const idx = getCurrentSlide();
+    if (['ArrowDown', 'ArrowRight', ' ', 'PageDown'].includes(e.key)) { scrollToSlide(idx + 1); e.preventDefault(); }
+    if (['ArrowUp', 'ArrowLeft', 'PageUp'].includes(e.key)) { scrollToSlide(idx - 1); e.preventDefault(); }
+    if (e.key === 'Home') { scrollToSlide(0); e.preventDefault(); }
+    if (e.key === 'End') { scrollToSlide(total - 1); e.preventDefault(); }
+    if (e.key === 'f' || e.key === 'F') {
+        if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+        else document.exitFullscreen();
+    }
+});
+
+// ---- SCROLL-TRIGGERED ANIMATIONS ----
+const animObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+        if (e.isIntersecting) {
+            e.target.classList.add('visible');
+            animObserver.unobserve(e.target);
+        }
+    });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.anim, .photo-bg-anim').forEach(el => {
+    if (el.closest('.slide-title')) {
+        el.classList.add('visible');
+    } else {
+        animObserver.observe(el);
+    }
+});
+</script>
+
+</body>
+</html>

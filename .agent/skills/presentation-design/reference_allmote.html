@@ -1,0 +1,3572 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vi lever i BOer — Allmøte Show and Learn</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;0,800;0,900;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+    <style>
+        :root {
+            --tg-dark-blue:    #070452;   /* Mørk marineblå til kontrast og tekst på lyse lysbilder */
+            --tg-mid-blue:     #1C16C5;   /* Livlig kongeblå fra bilde 2, brukt til bakgrunner */
+            --tg-telenor-blue: #00C8FF;   /* Lysende blå, aktive tall, kickere */
+            --tg-blue:         #2954FF;   /* Sekundær aksentblå */
+            --tg-light-cyan:   #EBFFFF;   /* Primær lys bakgrunn for innholdsslides */
+            --tg-light-blue:   #B4FFFF;   /* Tynne linjer, lysende detaljer */
+            --tg-off-white:    #E8FDFF;   /* Ikonstadier, bakgrunner i kort */
+            --tg-white:        #FFFFFF;   /* Hvite flater */
+            --tg-accent-green: #B0FBB8;   /* Suksessmønstre, positiv vekst */
+            --tg-accent-pink:  #FFB8D7;   /* Forstyrrende elementer, enheter */
+            --tg-accent-yellow:#FEF6B8;   /* Viktige merknader */
+            --tg-accent-red:   #FF5A70;   /* Riktig rød-rosa for status og labels */
+            --font: 'DM Sans', Arial, sans-serif;
+            --gray-body:       #4a5568;   /* Standard brødtekst */
+            --gray-caption:    #637381;   /* Dempet tekst */
+            --red-pain:        #FF4A5A;   /* Farge for feller/gammel modell */
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            font-family: var(--font);
+            scroll-snap-type: y mandatory;
+            overflow-y: scroll;
+            height: 100vh;
+            background: var(--tg-mid-blue);
+            color: var(--tg-dark-blue);
+        }
+
+        /* Fixed Navigation Overlay */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--tg-mid-blue), var(--tg-telenor-blue));
+            z-index: 100;
+            transition: width 0.3s ease;
+            box-shadow: 0 0 10px rgba(0, 200, 255, 0.5);
+        }
+
+        .nav-counter {
+            position: fixed;
+            bottom: 24px;
+            left: 24px;
+            background: rgba(7, 4, 82, 0.85);
+            backdrop-filter: blur(8px);
+            color: var(--tg-telenor-blue);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            z-index: 100;
+            border: 1px solid rgba(0, 200, 255, 0.2);
+            letter-spacing: 1px;
+        }
+
+        .nav-logo {
+            position: fixed;
+            bottom: 22px;
+            right: 24px;
+            z-index: 100;
+            opacity: 0.5;
+            transition: opacity 0.3s ease;
+        }
+        .nav-logo:hover {
+            opacity: 0.9;
+        }
+
+        .nav-logo img {
+            width: 36px;
+            height: 36px;
+        }
+
+        /* Slide Mechanics */
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            scroll-snap-align: start;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 8vh 8vw;
+        }
+
+        /* Slide Theme Variants */
+        .slide-light {
+            background: var(--tg-light-cyan);
+            color: var(--tg-dark-blue);
+        }
+
+        .slide-dark {
+            background: var(--tg-mid-blue);
+            color: var(--tg-white);
+        }
+
+        .slide-mid {
+            background: var(--tg-mid-blue);
+            color: var(--tg-white);
+        }
+
+        /* Ambient animated shifts for statement slides */
+        .am-ambient {
+            background: linear-gradient(135deg, var(--tg-mid-blue) 0%, var(--tg-blue) 50%, var(--tg-mid-blue) 100%);
+            background-size: 200% 200%;
+            animation: ambientShift 12s ease infinite;
+        }
+
+        @keyframes ambientShift {
+            0%   { background-position: 0% 50%; }
+            50%  { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Typography */
+        h1, h2, h3, .hero-display-num {
+            font-style: italic;
+            letter-spacing: -1.5px;
+        }
+
+        .kicker {
+            font-size: 0.82rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: var(--tg-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .slide-dark .kicker, .slide-mid .kicker {
+            color: var(--tg-telenor-blue);
+        }
+
+        .slide-header {
+            margin-bottom: 2.5rem;
+            align-self: flex-start;
+        }
+
+        .slide-header h2 {
+            font-size: clamp(2rem, 3.5vw, 3rem);
+            font-weight: 900;
+            line-height: 1.15;
+        }
+
+        .governing-thought {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--tg-dark-blue);
+            margin-bottom: 1.5rem;
+            max-width: 800px;
+            line-height: 1.45;
+        }
+
+        .slide-dark .governing-thought, .slide-mid .governing-thought {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* Entry Animations */
+        .anim {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .anim.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .anim-fade {
+            transform: none;
+        }
+
+        .anim-scale {
+            transform: translateY(16px) scale(0.96);
+        }
+
+        .anim-d1 { transition-delay: 0.12s; }
+        .anim-d2 { transition-delay: 0.24s; }
+        .anim-d3 { transition-delay: 0.36s; }
+        .anim-d4 { transition-delay: 0.48s; }
+        .anim-d5 { transition-delay: 0.60s; }
+
+        /* AllMøte Advanced Keyframe Animations */
+        @keyframes slamIn {
+            0%   { opacity: 0; transform: scale(0.6) translateY(30px); }
+            60%  { opacity: 1; transform: scale(1.04) translateY(-4px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        @keyframes revealUp {
+            from { opacity: 0; transform: translateY(40px); filter: blur(4px); }
+            to   { opacity: 1; transform: translateY(0);    filter: blur(0); }
+        }
+
+        @keyframes drawLine {
+            from { width: 0; opacity: 0; }
+            to   { width: 100%; opacity: 1; }
+        }
+
+        .am-slam { opacity: 0; }
+        .am-reveal { opacity: 0; }
+        .am-draw-line { width: 0; height: 2px; background: var(--tg-telenor-blue); opacity: 0; margin: 2rem 0; max-width: 180px; }
+
+        .slide-active .am-slam {
+            animation: slamIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+
+        .slide-active .am-reveal {
+            animation: revealUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        .slide-active .am-draw-line {
+            animation: drawLine 0.8s cubic-bezier(0.4, 0, 0.2, 1) both;
+            animation-delay: 0.4s;
+        }
+
+        .am-slam-d1 { animation-delay: 0.18s; }
+        .am-slam-d2 { animation-delay: 0.38s; }
+
+        /* Slide 1: Split Title */
+        .slide-title-split {
+            display: grid !important;
+            grid-template-columns: 65% 35%;
+            padding: 0;
+            background: var(--tg-mid-blue);
+        }
+
+        .title-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 8vh 6vw;
+            color: var(--tg-white);
+            position: relative;
+        }
+
+        .badge-pill {
+            display: inline-flex;
+            align-self: flex-start;
+            background: rgba(0, 200, 255, 0.12);
+            border: 1px solid rgba(0, 200, 255, 0.3);
+            color: var(--tg-telenor-blue);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+        }
+
+        .title-content h1 {
+            font-size: clamp(4rem, 8vw, 7rem);
+            font-weight: 900;
+            line-height: 1.05;
+            margin-bottom: 0.75rem;
+            color: var(--tg-white);
+        }
+
+        .title-content h1 span {
+            color: var(--tg-telenor-blue);
+        }
+
+        .title-subtitle {
+            font-size: 1.2rem;
+            font-weight: 500;
+            opacity: 0.75;
+            line-height: 1.5;
+            margin-bottom: 3rem;
+            max-width: 500px;
+        }
+
+        .title-logo-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            opacity: 0.65;
+            font-weight: 700;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-top: 3rem;
+        }
+
+        .title-logo-area img {
+            width: 24px;
+            height: 24px;
+        }
+
+        .title-visual {
+            display: flex;
+            height: 100%;
+            width: 100%;
+        }
+
+        .tg-band {
+            height: 100%;
+        }
+
+        .tg-band-1 { flex: 2; background: var(--tg-dark-blue); }
+        .tg-band-2 { flex: 3; background: var(--tg-telenor-blue); }
+        .tg-band-3 { flex: 1.5; background: var(--tg-light-blue); }
+        .tg-band-4 { flex: 0.5; background: var(--tg-white); }
+        .tg-band-5 { display: none; } /* Skjuler femte stripe for å matche bilde 1 med nøyaktig 4 striper */
+
+        .year-mark {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            font-size: 8rem;
+            font-weight: 900;
+            font-style: italic;
+            color: rgba(255, 255, 255, 0.03);
+            pointer-events: none;
+            user-select: none;
+        }
+
+        /* Slide 2: Opening Stat Dual-Card Redesign */
+        .am-stat-slide {
+            align-items: center;
+            justify-content: center;
+        }
+        .stat-header {
+            align-self: center;
+            text-align: center;
+            margin-bottom: 3.5rem;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 3rem;
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .stat-card {
+            background: none;
+            border: none;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .stat-card-num-container {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-card-number {
+            font-size: clamp(6rem, 10vw, 8.5rem);
+            font-weight: 900;
+            font-style: italic;
+            color: var(--tg-white);
+            line-height: 0.85;
+            letter-spacing: -3px;
+        }
+
+        .stat-card-label {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: var(--tg-telenor-blue);
+            letter-spacing: 0.5px;
+            margin-top: 0.5rem;
+            font-size: 1.15rem;
+            font-weight: 700;
+        }
+
+        .stat-card-desc {
+            font-size: 1rem;
+            line-height: 1.5;
+            color: var(--tg-white);
+            font-weight: 500;
+            max-width: 380px;
+            margin-top: 1rem;
+        }
+
+        /* Slide 3: Problem Triptych (mirrors slide 4) */
+        .s3-triptych {
+            padding: 0 !important;
+            flex-direction: row !important;
+            align-items: stretch;
+        }
+        .s3-title-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 3.5vh 5vw;
+            z-index: 10;
+            pointer-events: none;
+            text-align: center;
+        }
+        .s3-title-bar h2 {
+            font-size: clamp(2rem, 3.2vw, 3rem);
+            font-weight: 900;
+            color: var(--tg-white);
+            letter-spacing: -1.5px;
+            display: inline;
+            background: var(--red-pain);
+            padding: 0.08em 0.35em;
+            box-decoration-break: clone;
+            -webkit-box-decoration-break: clone;
+        }
+        .s3-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            justify-content: center;
+            padding: 10vh 3vw;
+            position: relative;
+            overflow: hidden;
+        }
+        .s3-panel + .s3-panel::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 1px;
+            height: 100%;
+            background: rgba(255,255,255,0.08);
+        }
+        .s3-q1 { background: #070452; }
+        .s3-q2 { background: #0a0870; }
+        .s3-q3 { background: #0e0a7f; }
+        .s3-name {
+            font-size: clamp(2.5rem, 4.5vw, 4rem);
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: -3px;
+            color: var(--red-pain);
+            line-height: 1;
+            margin-bottom: 1.75rem;
+        }
+        .s3-accent {
+            width: 64px;
+            height: 4px;
+            background: var(--red-pain);
+            margin-bottom: 1.25rem;
+            border-radius: 2px;
+        }
+        .s3-sub {
+            font-size: 1rem;
+            font-weight: 500;
+            color: rgba(255,255,255,0.85);
+            line-height: 1.55;
+            max-width: 28ch;
+        }
+
+        /* Slide 4: Three Principles — Full-bleed Triptych */
+        .s4-triptych {
+            padding: 0 !important;
+            flex-direction: row !important;
+            align-items: stretch;
+        }
+        .s4-title-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 3.5vh 5vw;
+            z-index: 10;
+            pointer-events: none;
+            text-align: center;
+        }
+        .s4-title-bar h2 {
+            font-size: clamp(2rem, 3.2vw, 3rem);
+            font-weight: 900;
+            color: var(--tg-white);
+            letter-spacing: -1.5px;
+            display: inline;
+            background: var(--tg-dark-blue);
+            padding: 0.08em 0.35em;
+            box-decoration-break: clone;
+            -webkit-box-decoration-break: clone;
+        }
+        .s4-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            justify-content: center;
+            padding: 10vh 3vw;
+            position: relative;
+            overflow: hidden;
+        }
+        .s4-panel + .s4-panel::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 1px;
+            height: 100%;
+            background: rgba(255,255,255,0.1);
+        }
+        .s4-p1 { background: #070452; }
+        .s4-p2 { background: var(--tg-mid-blue); }
+        .s4-p3 { background: #2954FF; }
+        .s4-icon {
+            width: clamp(72px, 10vw, 100px);
+            height: clamp(72px, 10vw, 100px);
+            margin-bottom: 2rem;
+        }
+        .s4-name {
+            font-size: clamp(3.5rem, 6vw, 6.5rem);
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: -3px;
+            color: #fff;
+            line-height: 1;
+            margin-bottom: 1.75rem;
+        }
+        .s4-accent {
+            width: 64px;
+            height: 4px;
+            background: #ffffff;
+            margin-bottom: 1.25rem;
+            border-radius: 2px;
+        }
+        .s4-sub {
+            font-size: 1rem;
+            font-weight: 500;
+            color: rgba(255,255,255,0.85);
+            line-height: 1.55;
+            max-width: 28ch;
+        }
+
+        /* Slide 5: 7-Column Steering Chain */
+        .slide-chain {
+            padding: 0 !important;
+            justify-content: stretch !important;
+        }
+
+        .slide-chain .slide-header {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 3vh 5vw;
+            z-index: 10;
+            text-align: center;
+        }
+
+        .slide-chain .slide-header h2 {
+            display: inline;
+            background: var(--tg-dark-blue);
+            color: var(--tg-white);
+            padding: 0.08em 0.35em;
+            box-decoration-break: clone;
+            -webkit-box-decoration-break: clone;
+        }
+
+        .chain-container {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .chain-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 38vh 1.5vw 12vh;
+            position: relative;
+            justify-content: flex-start;
+            
+            /* Hidden state by default for click-to-animate flow */
+            opacity: 0 !important;
+            transform: translateY(24px) !important;
+            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            transition-delay: 0s !important;
+            pointer-events: none;
+        }
+
+        .chain-col.col-visible {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+            pointer-events: auto;
+        }
+
+
+        .chain-col + .chain-col::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 1px;
+            height: 100%;
+            background: rgba(255,255,255,0.08);
+        }
+
+        .chain-col-1 { background: #030228; }
+        .chain-col-2 { background: #050340; }
+        .chain-col-3 { background: #070452; }
+        .chain-col-4 { background: var(--tg-accent-green); }
+        .chain-col-5 { background: var(--tg-mid-blue); }
+        .chain-col-6 { background: var(--tg-blue); }
+        .chain-col-7 { background: #4a6fff; }
+
+        .chain-col-title {
+            font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+            font-weight: 900;
+            font-style: italic;
+            color: var(--tg-white);
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -1px;
+        }
+
+        .chain-col-hero .chain-col-title {
+            color: var(--tg-dark-blue);
+            font-size: clamp(1.8rem, 3vw, 2.5rem);
+        }
+
+        .chain-col-desc {
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: rgba(255,255,255,0.9);
+            line-height: 1.5;
+            max-width: 22ch;
+        }
+
+        .chain-col-hero {
+            border: none;
+            box-shadow: 0 0 40px rgba(176, 251, 184, 0.2);
+        }
+
+        .chain-col-hero .chain-col-desc {
+            color: rgba(7, 4, 82, 0.6);
+        }
+
+        .chain-col-num {
+            font-size: 0.7rem;
+            font-weight: 800;
+            letter-spacing: 3px;
+            color: rgba(255,255,255,0.35);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        .chain-col-hero .chain-col-num {
+            color: rgba(7, 4, 82, 0.4);
+        }
+
+        .chain-col-list {
+            list-style: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: rgba(255,255,255,0.9);
+            line-height: 1.55;
+            text-align: left;
+            max-width: 22ch;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+        .chain-col-list li::before {
+            content: "· ";
+            color: rgba(255,255,255,0.5);
+        }
+        .chain-col-hero .chain-col-list {
+            color: rgba(7, 4, 82, 0.55);
+        }
+        .chain-col-hero .chain-col-list li::before {
+            color: rgba(7, 4, 82, 0.3);
+        }
+
+        .chain-col + .chain-col::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 1px;
+            height: 100%;
+            background: rgba(255,255,255,0.06);
+        }
+
+        .chain-container::before {
+            content: '';
+            position: absolute;
+            top: 9vh;
+            left: 0;
+            width: var(--arrow-width, 100%);
+            height: 20vh;
+            clip-path: polygon(0 20%, calc(100% - 80px) 20%, calc(100% - 80px) 0, 100% 50%, calc(100% - 80px) 100%, calc(100% - 80px) 80%, 0 80%);
+            background: linear-gradient(90deg, rgba(255,255,255,0.12), rgba(0,200,255,0.35));
+            z-index: 2;
+            pointer-events: none;
+            transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .chain-badge {
+            position: absolute;
+            top: -15px;
+            right: 2rem;
+            background: var(--tg-accent-red);
+            color: #fff;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 12px rgba(255, 90, 112, 0.25);
+        }
+
+        .chain-row {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
+            background: transparent;
+            border: 1px solid transparent;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+            position: relative;
+        }
+
+        .chain-row:hover {
+            transform: translateY(-1px);
+            background: rgba(7, 4, 82, 0.03);
+        }
+
+        /* Operative rows styled inside dark blue container */
+        .chain-group-operative .chain-row {
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--tg-white);
+        }
+
+        .chain-group-operative .chain-row:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Level 5 (BO-en) is highlighted as the absolute hero card */
+        .chain-group-operative .chain-row.row-hero {
+            background: rgba(0, 200, 255, 0.08);
+            border: 1.5px solid var(--tg-telenor-blue);
+            box-shadow: 0 0 20px rgba(0, 200, 255, 0.12);
+            border-radius: 10px;
+            padding: 1rem 1.5rem;
+            margin: 0.5rem 0;
+        }
+
+        .chain-group-operative .chain-row.row-hero:hover {
+            background: rgba(0, 200, 255, 0.12);
+            transform: translateY(-1px);
+        }
+
+        .chain-group-operative .chain-row.row-hero::after {
+            content: "HJERTET I MODELLEN";
+            position: absolute;
+            top: -10px;
+            right: 1.25rem;
+            background: var(--tg-telenor-blue);
+            color: #070452;
+            font-size: 0.65rem;
+            font-weight: 900;
+            letter-spacing: 1px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            box-shadow: 0 3px 8px rgba(0, 200, 255, 0.25);
+        }
+
+        .row-num {
+            width: 28px;
+            height: 28px;
+            background: rgba(7, 4, 82, 0.08);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: var(--tg-dark-blue);
+            flex-shrink: 0;
+            z-index: 2;
+        }
+
+        .chain-group-operative .row-num {
+            background: rgba(255, 255, 255, 0.15);
+            color: var(--tg-white);
+        }
+
+        .chain-group-operative .chain-row.row-hero .row-num {
+            background: var(--tg-telenor-blue);
+            color: #070452;
+        }
+
+        .row-title-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 0.05rem;
+            text-align: left;
+            flex-grow: 1;
+        }
+
+        .row-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--tg-dark-blue);
+        }
+
+        .chain-group-operative .row-title {
+            color: var(--tg-white);
+        }
+
+        .chain-group-operative .chain-row.row-hero .row-title {
+            color: #fff;
+            font-size: 1.8rem;
+        }
+
+        .row-desc {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: rgba(7, 4, 82, 0.6);
+        }
+
+        .chain-group-operative .row-desc {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .row-example {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: rgba(7, 4, 82, 0.6);
+            font-style: italic;
+            text-align: right;
+            max-width: 48%;
+            margin-left: auto;
+        }
+
+        .chain-group-operative .row-example {
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .chain-group-operative .chain-row.row-hero .row-example {
+            color: var(--tg-telenor-blue);
+            font-weight: 700;
+            font-style: normal;
+        }
+
+        /* Connecting vertical line */
+        .chain-flow-arrow {
+            width: 2px;
+            height: 20px;
+            background: rgba(7, 4, 82, 0.15);
+            margin: 0.2rem 0 0.2rem 1.5rem;
+            font-size: 0;
+            color: transparent;
+            overflow: hidden;
+        }
+
+        .chain-group-operative .chain-flow-arrow {
+            background: rgba(0, 200, 255, 0.3);
+        }
+
+        /* Slide 5: Popup Overlays */
+        .chain-popup-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(3, 2, 40, 0.92);
+            backdrop-filter: blur(12px);
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+        .chain-popup-overlay.popup-visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+        .chain-popup-close {
+            position: absolute;
+            top: 3vh;
+            right: 4vw;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.2);
+            background: rgba(7, 4, 82, 0.6);
+            color: var(--tg-white);
+            font-size: 1.4rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: border-color 0.3s ease, background 0.3s ease;
+            z-index: 210;
+        }
+        .chain-popup-close:hover {
+            border-color: var(--tg-telenor-blue);
+            background: rgba(0, 200, 255, 0.15);
+        }
+
+        /* Mission Popup */
+        .mission-popup-content {
+            text-align: center;
+            max-width: 1100px;
+            padding: 4rem;
+            position: relative;
+            animation: revealUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+        .mission-popup-tag {
+            font-size: 0.82rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: var(--tg-telenor-blue);
+            margin-bottom: 2.5rem;
+        }
+        .mission-popup-text {
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            font-weight: 900;
+            font-style: italic;
+            color: var(--tg-white);
+            line-height: 1.35;
+            letter-spacing: -1.5px;
+            position: relative;
+        }
+        .mission-popup-text .mp-hl {
+            display: inline;
+            background: var(--tg-dark-blue);
+            padding: 0.04em 0.25em;
+            box-decoration-break: clone;
+            -webkit-box-decoration-break: clone;
+        }
+        .mission-popup-text .mp-accent {
+            color: var(--tg-telenor-blue);
+        }
+        .mission-anno {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .mission-anno-up {
+            flex-direction: column-reverse;
+        }
+        .mission-anno-line {
+            width: 2px;
+            height: 40px;
+            background: var(--tg-accent-pink);
+            opacity: 0.5;
+        }
+        .mission-anno-label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--tg-accent-pink);
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+        .anno-offer-left   { top: -80px; left: 14%; }
+        .anno-offer-right  { top: -80px; right: 8%; }
+        .anno-how          { bottom: -80px; left: 38%; }
+        .anno-create       { bottom: -80px; right: 18%; }
+
+        /* Pillars Popup */
+        .pillars-popup-content {
+            max-width: 1300px;
+            width: 100%;
+            padding: 3rem 4rem;
+            animation: revealUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+        .pillars-popup-header {
+            margin-bottom: 2.5rem;
+        }
+        .pillars-popup-year {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 0.25rem;
+        }
+        .pillars-popup-title {
+            font-size: clamp(1.8rem, 3vw, 2.5rem);
+            font-weight: 900;
+            color: var(--tg-white);
+            letter-spacing: -1px;
+        }
+        .pillars-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1.25rem;
+        }
+        .pillar-card {
+            background: var(--tg-dark-blue);
+            border-radius: 16px;
+            padding: 2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.08);
+            transition: border-color 0.3s ease, transform 0.3s ease;
+        }
+        .pillar-card:hover {
+            border-color: rgba(0, 200, 255, 0.25);
+            transform: translateY(-4px);
+        }
+        .pillar-card-icon {
+            width: 122px;
+            height: 122px;
+            margin-bottom: 1.5rem;
+        }
+        .pillar-card-icon svg {
+            width: 100%;
+            height: 100%;
+        }
+        .pillar-card-desc {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--tg-white);
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+        .pillar-card-desc strong {
+            color: var(--tg-telenor-blue);
+            font-weight: 800;
+            font-style: italic;
+        }
+        .pillar-card-kpi {
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: rgba(255,255,255,0.45);
+            line-height: 1.5;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            padding-top: 1rem;
+            width: 100%;
+        }
+
+        /* Slide 6: Interactive Flywheel Ceremony Circle */
+        .rhythm-container {
+            display: grid;
+            grid-template-columns: 1.15fr 1fr;
+            gap: 3.5rem;
+            align-items: center;
+            width: 100%;
+        }
+
+        .flywheel-wrap {
+            position: relative;
+            width: 580px;
+            height: 580px;
+            margin: 0 auto;
+        }
+
+        .flywheel-bg-circle {
+            position: absolute;
+            top: 10%; left: 10%; width: 80%; height: 80%;
+            border: 2px dashed rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .flywheel-center {
+            position: absolute;
+            top: 36%; left: 36%; width: 28%; height: 28%;
+            background: var(--tg-dark-blue);
+            border: 2px solid var(--tg-telenor-blue);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            box-shadow: 0 0 35px rgba(0, 200, 255, 0.2);
+        }
+
+        .flywheel-center h4 {
+            font-size: 1.7rem;
+            font-weight: 900;
+            font-style: italic;
+            color: var(--tg-telenor-blue);
+        }
+
+        .flywheel-center span {
+            font-size: 0.82rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.55;
+        }
+
+        .fw-node {
+            position: absolute;
+            width: 170px;
+            height: 170px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1.5px solid rgba(255, 255, 255, 0.15);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 10px;
+            color: var(--tg-white);
+            transition: transform 0.4s ease, border-color 0.4s ease, background 0.4s ease, box-shadow 0.4s ease, color 0.4s ease;
+            cursor: pointer;
+        }
+
+        .fw-node:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .fw-node.active-node {
+            transform: scale(1.1);
+            background: var(--tg-telenor-blue);
+            border-color: var(--tg-telenor-blue);
+            color: var(--tg-dark-blue);
+            box-shadow: 0 0 30px rgba(0, 200, 255, 0.35);
+        }
+
+        .node-1 { top: 0; left: calc(50% - 85px); }
+        .node-2 { top: 150px; right: -15px; }
+        .node-3 { bottom: 0; right: 25px; }
+        .node-4 { bottom: 0; left: 25px; }
+        .node-5 { top: 150px; left: -15px; }
+
+        .fw-num {
+            font-size: 0.8rem;
+            font-weight: 900;
+            color: var(--tg-telenor-blue);
+            margin-bottom: 4px;
+            letter-spacing: 1px;
+        }
+
+        .fw-node.active-node .fw-num {
+            color: var(--tg-dark-blue);
+        }
+
+        .fw-title {
+            font-size: 1.05rem;
+            font-weight: 800;
+            line-height: 1.2;
+        }
+
+        .fw-node.active-node .fw-title {
+            font-weight: 900;
+        }
+
+        .fw-sub {
+            font-size: 0.8rem;
+            opacity: 0.5;
+            margin-top: 2px;
+        }
+
+        .fw-node.active-node .fw-sub {
+            opacity: 0.7;
+        }
+
+        /* Flywheel Detail Card */
+        .rhythm-details {
+            background: var(--tg-dark-blue);
+            border: none;
+            border-radius: 20px;
+            padding: 2.8rem 3rem;
+            height: 480px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .rhythm-detail-item {
+            display: none;
+        }
+
+        .rhythm-detail-item.active-detail {
+            display: block;
+            animation: fadeInDetail 0.4s ease;
+        }
+
+        @keyframes fadeInDetail {
+            from { opacity: 0; transform: translateX(10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .detail-header {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-tag {
+            background: var(--tg-accent-green);
+            color: var(--tg-dark-blue);
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 0.72rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .detail-title {
+            font-size: clamp(2rem, 3.5vw, 2.8rem);
+            font-weight: 900;
+            font-style: italic;
+        }
+
+        .detail-freq {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--tg-telenor-blue);
+            margin-top: 0.25rem;
+        }
+
+        .detail-desc {
+            font-size: 1.05rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-bullets {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .detail-bullets li {
+            font-size: 0.95rem;
+            line-height: 1.55;
+            padding-left: 1.4em;
+            text-indent: -1.4em;
+        }
+
+        .detail-bullets li::before {
+            content: "→  ";
+            color: var(--tg-telenor-blue);
+            font-weight: 900;
+        }
+
+        /* Rhythm title-bar and step indicator */
+        .rhythm-title-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 3.5vh 5vw;
+            z-index: 10;
+            pointer-events: none;
+            text-align: center;
+        }
+        .rhythm-title-bar h2 {
+            font-size: clamp(2rem, 3.2vw, 3rem);
+            font-weight: 900;
+            color: var(--tg-white);
+            letter-spacing: -1.5px;
+            display: inline;
+            background: var(--tg-dark-blue);
+            padding: 0.08em 0.35em;
+            box-decoration-break: clone;
+            -webkit-box-decoration-break: clone;
+        }
+
+        .ceremony-step-indicator {
+            font-size: 0.82rem;
+            font-weight: 800;
+            color: var(--tg-telenor-blue);
+            letter-spacing: 3px;
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+
+        /* Slide 10: Samspill-triangel */
+        .slide-collab {
+            padding: 3vh 5vw 10vh !important;
+            display: flex !important;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--tg-white);
+        }
+
+        .collab-canvas {
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            height: 620px;
+        }
+
+        .collab-svg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes collabFlow {
+            to {
+                stroke-dashoffset: 32;
+            }
+        }
+        .collab-flow-left, .collab-flow-right, .collab-flow-bottom {
+            animation: collabFlow 1.2s linear infinite;
+        }
+
+        /* Central BO Node */
+        .collab-center-node {
+            position: absolute;
+            top: 260px;
+            left: calc(50% - 90px);
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .center-node-glow {
+            position: absolute;
+            inset: -12px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 200, 255, 0.35) 0%, transparent 70%);
+            animation: pulseGlow 3s ease-in-out infinite alternate;
+            z-index: -1;
+        }
+
+        @keyframes pulseGlow {
+            0% { transform: scale(0.92); opacity: 0.5; }
+            100% { transform: scale(1.08); opacity: 0.9; }
+        }
+
+        .center-node-inner {
+            width: 100%;
+            height: 100%;
+            background: rgba(7, 4, 82, 0.85);
+            border: 2px solid var(--tg-telenor-blue);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 1.5rem;
+            box-shadow: 0 0 25px rgba(0, 200, 255, 0.3), inset 0 0 15px rgba(0, 200, 255, 0.15);
+            backdrop-filter: blur(8px);
+        }
+
+        .cn-tag {
+            font-size: 0.62rem;
+            font-weight: 800;
+            color: var(--tg-accent-green);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .cn-title {
+            font-size: 1.8rem;
+            font-weight: 900;
+            font-style: italic;
+            color: var(--tg-white);
+            line-height: 1;
+            letter-spacing: -0.5px;
+            margin-bottom: 4px;
+        }
+
+        .cn-desc {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.2;
+        }
+
+        /* Node Card Styles */
+        .collab-card {
+            position: absolute;
+            width: 360px;
+            border-radius: 18px;
+            padding: 1.8rem 2rem;
+            z-index: 5;
+            display: flex;
+            flex-direction: column;
+            backdrop-filter: blur(8px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        .collab-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .collab-card-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 1rem;
+        }
+
+        .collab-card-icon {
+            width: 64px;
+            height: 64px;
+            flex-shrink: 0;
+        }
+
+        .collab-card-titles {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .collab-card-tag {
+            font-size: 0.72rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 2px;
+        }
+
+        .collab-card-name {
+            font-size: 1.6rem;
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: -1px;
+            line-height: 1.1;
+        }
+
+        .collab-card-list {
+            list-style: none;
+            font-size: 0.88rem;
+            font-weight: 500;
+            line-height: 1.6;
+        }
+
+        .collab-card-list li {
+            margin-bottom: 0.4rem;
+            position: relative;
+            padding-left: 1.2rem;
+        }
+
+        .collab-card-list li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            font-weight: 700;
+        }
+
+        /* Card 1: Teamene (top center) — solid green */
+        .collab-c1 {
+            top: 10px;
+            left: calc(50% - 180px);
+            background: var(--tg-accent-green);
+            border: 1px solid rgba(176, 251, 184, 0.6);
+            box-shadow: 0 10px 30px rgba(176, 251, 184, 0.15);
+        }
+        .collab-c1 .collab-card-tag { color: var(--tg-dark-blue); opacity: 0.7; }
+        .collab-c1 .collab-card-name { color: var(--tg-dark-blue); }
+        .collab-c1 .collab-card-list { color: var(--tg-dark-blue); }
+        .collab-c1 .collab-card-list li::before { color: var(--tg-dark-blue); }
+        .collab-c1:hover {
+            box-shadow: 0 15px 40px rgba(176, 251, 184, 0.25);
+        }
+
+        /* Card 2: Verdistrømsledelse (bottom left) — cyan accent */
+        .collab-c2 {
+            bottom: 20px;
+            left: 40px;
+            background: var(--tg-dark-blue);
+            border: 1px solid rgba(0, 200, 255, 0.25);
+            box-shadow: 0 10px 30px rgba(0, 200, 255, 0.04);
+        }
+        .collab-c2 .collab-card-tag { color: var(--tg-telenor-blue); }
+        .collab-c2 .collab-card-name { color: var(--tg-white); }
+        .collab-c2 .collab-card-list { color: rgba(255, 255, 255, 0.9); }
+        .collab-c2 .collab-card-list li::before { color: var(--tg-telenor-blue); }
+        .collab-c2:hover {
+            border-color: var(--tg-telenor-blue);
+            box-shadow: 0 15px 35px rgba(0, 200, 255, 0.15);
+        }
+
+        /* Card 3: P&C (bottom right) — warm pink accent */
+        .collab-c3 {
+            bottom: 20px;
+            right: 40px;
+            background: var(--tg-dark-blue);
+            border: 1px solid rgba(255, 184, 215, 0.25);
+            box-shadow: 0 10px 30px rgba(255, 184, 215, 0.04);
+        }
+        .collab-c3 .collab-card-tag { color: var(--tg-accent-pink); }
+        .collab-c3 .collab-card-name { color: var(--tg-white); }
+        .collab-c3 .collab-card-list { color: rgba(255, 255, 255, 0.9); }
+        .collab-c3 .collab-card-list li::before { color: var(--tg-accent-pink); }
+        .collab-c3:hover {
+            border-color: var(--tg-accent-pink);
+            box-shadow: 0 15px 35px rgba(255, 184, 215, 0.12);
+        }
+
+        /* Edge Callout Pills */
+        .collab-edge-pill {
+            position: absolute;
+            background: rgba(28, 22, 197, 0.7);
+            border: 1px solid rgba(0, 200, 255, 0.3);
+            border-radius: 30px;
+            padding: 0.6rem 1.2rem;
+            z-index: 12;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 200, 255, 0.1);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .collab-edge-pill:hover {
+            border-color: var(--tg-telenor-blue);
+            box-shadow: 0 6px 20px rgba(0, 200, 255, 0.25);
+        }
+
+        .collab-edge-pill .edge-title {
+            font-size: 0.72rem;
+            font-weight: 800;
+            color: var(--tg-telenor-blue);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            line-height: 1.2;
+            margin-bottom: 2px;
+        }
+
+        .collab-edge-pill .edge-text {
+            font-size: 0.72rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.2;
+            white-space: nowrap;
+        }
+
+        /* Positions for the Edge Pills */
+        /* Left edge: Verdistrømsledelse <-> Teamene. Path from (400, 160) to (220, 440). Midpoint around (310, 300) */
+        .edge-left {
+            top: 250px;
+            left: 200px;
+        }
+
+        /* Right edge: Verdistrømsledelse <-> P&C. Path from (800, 160) to (980, 440). Midpoint around (890, 300) */
+        .edge-right {
+            top: 250px;
+            right: 200px;
+        }
+
+        /* Bottom edge: Teamene <-> P&C. Path from (280, 500) to (920, 500). Midpoint around (600, 500) */
+        .edge-bottom {
+            bottom: 10px;
+            left: calc(50% - 150px);
+            width: 300px;
+        }
+
+        @keyframes dashMove {
+            to { background-position: 32px 0; }
+        }
+        .collab-bottom-line {
+            position: absolute;
+            bottom: 95px;
+            left: 36%;
+            right: 36%;
+            height: 2px;
+            z-index: 6;
+            pointer-events: none;
+            background: repeating-linear-gradient(90deg,
+                rgba(0, 200, 255, 0.4) 0px, rgba(0, 200, 255, 0.4) 10px,
+                transparent 10px, transparent 16px);
+            background-size: 32px 2px;
+            animation: dashMove 1.2s linear infinite reverse;
+        }
+
+        .collab-title-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 3vh 5vw;
+            z-index: 10;
+            pointer-events: none;
+            text-align: center;
+        }
+        .collab-title-bar h2 {
+            font-size: clamp(1.8rem, 3vw, 2.8rem);
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: -1.5px;
+            color: var(--tg-white);
+            display: inline;
+            background: var(--tg-dark-blue);
+            padding: 0.08em 0.35em;
+            box-decoration-break: clone;
+            -webkit-box-decoration-break: clone;
+        }
+
+        /* Slide 7: Photo Divider */
+        .slide-photo {
+            padding: 0;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .photo-bg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 1;
+            transform: scale(1.06);
+            transition: transform 1.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .slide-active .photo-bg {
+            transform: scale(1);
+        }
+
+        .photo-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 1;
+            text-align: center;
+            padding: 3.5vh 5vw;
+        }
+
+        .photo-content h2 {
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: -2px;
+            line-height: 1.25;
+            color: var(--tg-white);
+        }
+
+        .photo-content h2 .hl {
+            display: inline;
+            background: var(--tg-dark-blue);
+            color: var(--tg-white);
+            padding: 0.08em 0.35em;
+            box-decoration-break: clone;
+            -webkit-box-decoration-break: clone;
+        }
+
+        .photo-content h2 .hl .accent {
+            color: var(--tg-telenor-blue);
+        }
+
+        /* Slide 6: BO Showcase — Kick-off inspired */
+        .slide-bo-showcase {
+            padding: 3vh 6vw 11vh !important;
+            display: grid !important;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto auto;
+            gap: 0;
+            align-content: center;
+        }
+
+        .bo-kick-card {
+            color: var(--tg-white);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .bo-kick-top {
+            background: var(--tg-dark-blue);
+            padding: 1.75rem 2rem;
+            border-radius: 20px 0 0 20px;
+        }
+
+        .bo-kick-bottom {
+            background: rgba(255,255,255,0.06);
+            backdrop-filter: blur(8px);
+            border-left: 1px solid rgba(255,255,255,0.08);
+            padding: 1.75rem 2rem;
+            border-radius: 0 20px 20px 0;
+            
+            /* Hidden by default, overriding global .anim transition */
+            opacity: 0 !important;
+            transform: translateY(24px) !important;
+            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            transition-delay: 0s !important;
+            pointer-events: none;
+        }
+
+        .bo-kick-bottom.card-visible {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+            pointer-events: auto;
+        }
+
+        .bo-kick-header {
+            margin-bottom: 1.25rem;
+        }
+
+        .bo-kick-tag {
+            font-size: 0.72rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--tg-dark-blue);
+            background: var(--tg-accent-green);
+            padding: 3px 10px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 0.25rem;
+        }
+
+        .bo-kick-header h3 {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--tg-white);
+            margin-bottom: 0.5rem;
+        }
+
+        .bo-kick-header p {
+            font-size: 1rem;
+            font-weight: 500;
+            color: rgba(255,255,255,0.65);
+            line-height: 1.5;
+        }
+
+        .bo-kick-cols {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .bo-kick-cols-3 {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .bo-kick-col-title {
+            font-size: 1.15rem;
+            font-weight: 900;
+            font-style: italic;
+            color: var(--tg-white);
+            margin-bottom: 0.25rem;
+        }
+
+        .bo-kick-col-q {
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--tg-telenor-blue);
+            margin-bottom: 0.6rem;
+        }
+
+        .bo-kick-col p {
+            font-size: 1rem;
+            font-weight: 500;
+            color: rgba(255,255,255,0.85);
+            line-height: 1.55;
+        }
+
+        .bo-kick-col ul {
+            list-style: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: rgba(255,255,255,0.85);
+            line-height: 1.6;
+        }
+
+        .bo-kick-col ul li::before {
+            content: "• ";
+            color: var(--tg-telenor-blue);
+        }
+
+        .bo-kick-col ul li strong {
+            color: var(--tg-white);
+        }
+
+        .bo-kick-gp {
+            display: flex;
+            flex-direction: row;
+            gap: 0.5rem;
+        }
+
+        .bo-kick-gp-row {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.06);
+        }
+
+        .bo-kick-gp-row span {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: rgba(255,255,255,0.5);
+        }
+
+        .bo-kick-gp-row strong {
+            font-size: 0.88rem;
+            font-weight: 900;
+            color: var(--tg-telenor-blue);
+        }
+
+        .bo-kick-gp-total {
+            background: rgba(0,200,255,0.12);
+            border: 1px solid rgba(0,200,255,0.25);
+        }
+
+        .bo-kick-gp-total strong {
+            font-size: 1rem;
+        }
+
+        .bo-showcase-footer {
+            grid-column: 1 / -1;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 3vh 5vw;
+            text-align: center;
+        }
+
+        .bo-showcase-footer h2 {
+            font-size: clamp(2rem, 3.2vw, 3rem);
+            font-weight: 900;
+            color: var(--tg-white);
+            display: inline;
+            background: var(--tg-dark-blue);
+            padding: 0.08em 0.35em;
+            box-decoration-break: clone;
+            -webkit-box-decoration-break: clone;
+        }
+
+        .ac.highlight .ac-example {
+            color: var(--tg-blue);
+        }
+
+        /* Slide 7: BO in Practice — Hero Quote + Grid */
+        .bo-hero-quote {
+            font-size: clamp(1.4rem, 2.2vw, 1.8rem);
+            font-weight: 700;
+            font-style: italic;
+            color: var(--tg-dark-blue);
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 2.5rem;
+            line-height: 1.5;
+            padding: 2rem;
+            background: var(--tg-white);
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(7,4,82,0.04);
+            border: 1px solid rgba(0,200,255,0.15);
+        }
+
+        .bo-hero-quote cite {
+            display: block;
+            font-size: 0.8rem;
+            font-style: normal;
+            font-weight: 800;
+            color: var(--tg-telenor-blue);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 1rem;
+        }
+
+        .bo-customer-quote cite {
+            display: block;
+            font-size: 0.82rem;
+            font-style: normal;
+            font-weight: 800;
+            opacity: 0.55;
+            margin-top: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--tg-dark-blue);
+        }
+
+        .bo-tech-label {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--tg-dark-blue);
+            font-weight: 500;
+        }
+
+        .bo-details-card {
+            background: var(--tg-white);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(7, 4, 82, 0.05);
+            border: 2px solid var(--tg-telenor-blue);
+            padding: 1.75rem 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            width: 100%;
+        }
+
+        .bo-card-header {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 2px solid var(--tg-off-white);
+            padding-bottom: 1rem;
+        }
+
+        .bo-field-row:last-child {
+            grid-column: 1 / -1;
+        }
+
+        .bo-card-title h4 {
+            font-size: 1.35rem;
+            font-weight: 900;
+            font-style: italic;
+            color: var(--tg-dark-blue);
+            line-height: 1.2;
+        }
+
+        .bo-card-title span {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--tg-blue);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: block;
+            margin-top: 2px;
+        }
+
+        .bo-gp-badge {
+            background: var(--tg-dark-blue);
+            color: var(--tg-telenor-blue);
+            padding: 6px 14px;
+            border-radius: 12px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            min-width: 80px;
+            box-shadow: 0 4px 10px rgba(7, 4, 82, 0.1);
+        }
+
+        .bo-gp-val {
+            font-size: 1.15rem;
+            font-weight: 900;
+            font-style: italic;
+            line-height: 1;
+        }
+
+        .bo-gp-lbl {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            font-weight: 800;
+            letter-spacing: 1px;
+            opacity: 0.7;
+            margin-top: 1px;
+        }
+
+        .bo-field-row {
+            font-size: 0.9rem;
+            line-height: 1.45;
+        }
+
+        .bo-field-row strong {
+            display: block;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--tg-blue);
+            margin-bottom: 2px;
+        }
+
+        .bo-field-row p {
+            color: var(--tg-dark-blue);
+            margin: 0;
+            font-weight: 500;
+        }
+
+        .bo-indicator-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 4px;
+        }
+
+        .bo-tag {
+            background: var(--tg-off-white);
+            border: 1px solid rgba(0, 200, 255, 0.25);
+            color: var(--tg-dark-blue);
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 6px;
+        }
+
+        /* Slide 9: Legacy Learning */
+        .slide-legacy-learn {
+            background: var(--tg-mid-blue);
+            color: var(--tg-white);
+            padding: 4vh 4vw 0 !important;
+        }
+        .ll-header {
+            text-align: center;
+            margin-bottom: 1.5vh;
+        }
+        .ll-header h2 {
+            font-size: clamp(2rem, 3.5vw, 3rem);
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: -1.5px;
+        }
+        .ll-header h2 span {
+            color: var(--tg-telenor-blue);
+        }
+        .ll-sub {
+            font-size: 0.92rem;
+            opacity: 0.55;
+            margin-top: 0.5rem;
+            font-weight: 500;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+            text-align: center;
+        }
+        .ll-chart-wrap {
+            background: transparent;
+            border-radius: 20px;
+            padding: 1.25rem 1.5rem;
+            border: none;
+            width: 100%;
+            position: relative;
+            height: 340px;
+            margin-top: 1.5vh;
+        }
+        .ll-summary-bar {
+            display: flex;
+            width: 100%;
+            margin-top: 1.25rem;
+            border-radius: 12px;
+            overflow: hidden;
+            height: 48px;
+        }
+        .ll-summary-seg {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.78rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+        .ll-seg-keep { background: #001430; color: var(--tg-white); }
+        .ll-seg-legacy { background: var(--tg-telenor-blue); color: var(--tg-dark-blue); }
+        .ll-seg-future { background: var(--tg-white); color: var(--tg-dark-blue); }
+        .ll-legend {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+        .ll-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.78rem;
+            font-weight: 700;
+            opacity: 0.8;
+        }
+        .ll-legend-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 4px;
+        }
+        .ll-title-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 3vh 5vw;
+            z-index: 10;
+            pointer-events: none;
+            text-align: center;
+        }
+        .ll-title-bar h2 {
+            font-size: clamp(1.8rem, 3vw, 2.8rem);
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: -1.5px;
+            color: var(--tg-white);
+            display: inline;
+            background: var(--tg-dark-blue);
+            padding: 0.08em 0.35em;
+            box-decoration-break: clone;
+            -webkit-box-decoration-break: clone;
+        }
+
+        /* New Slide: Hybrid Teams (Humans + AI) */
+        .slide-hybrid-teams {
+            padding: 8vh 8vw 14vh; /* Generous padding-bottom to clear the absolute title-bar */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 2vh;
+        }
+
+        .ht-title-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 3.5vh 5vw;
+            z-index: 10;
+            pointer-events: none;
+            text-align: center;
+        }
+
+        .ht-title-bar h2 {
+            font-size: clamp(1.8rem, 3vw, 2.8rem);
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: -1.5px;
+            color: var(--tg-white);
+            display: inline;
+            background: var(--tg-dark-blue);
+            padding: 0.08em 0.35em;
+            box-decoration-break: clone;
+            -webkit-box-decoration-break: clone;
+        }
+
+        .ht-title-bar h2 span {
+            color: var(--tg-telenor-blue);
+        }
+
+        /* Before / After Hero Section */
+        .ht-hero {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            gap: 2.5rem;
+            width: 100%;
+            max-width: 1100px;
+            margin: 1.5vh 0;
+        }
+
+        .ht-side {
+            padding: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+        }
+
+        .ht-side-old {
+            background: transparent; /* Detach the card background to avoid boxiness */
+        }
+
+        .ht-side-old:hover {
+            transform: translateY(-4px);
+        }
+
+        .ht-side-new {
+            background: linear-gradient(135deg, var(--tg-white) 0%, #f3fcff 100%);
+            color: var(--tg-dark-blue);
+            border-radius: 32px; /* Smooth, luxurious rounded corners */
+            box-shadow: 
+                0 30px 70px rgba(0, 0, 0, 0.25), 
+                0 0 50px rgba(0, 200, 255, 0.12); /* Dynamic ambient soft aura glow */
+        }
+
+        .ht-side-new:hover {
+            transform: translateY(-6px);
+            box-shadow: 
+                0 40px 85px rgba(0, 0, 0, 0.35), 
+                0 0 60px rgba(0, 200, 255, 0.2);
+        }
+
+        .ht-icon-stage {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .ht-side-old .ht-icon-stage {
+            background: none;
+            border: none;
+        }
+
+        .ht-side-old:hover .ht-icon-stage {
+            transform: scale(1.08);
+        }
+
+        .ht-side-new .ht-icon-stage {
+            background: none;
+            box-shadow: none;
+        }
+
+        .ht-side-new:hover .ht-icon-stage {
+            transform: scale(1.08);
+        }
+
+        .ht-icon {
+            width: 96px; /* Magnified icon size */
+            height: 96px;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .ht-side-old .ht-icon {
+            filter: none;
+        }
+
+        .ht-side-new .ht-icon {
+            filter: none;
+        }
+
+        .ht-side h3 {
+            font-size: 1.45rem;
+            font-weight: 800;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.5px;
+        }
+
+        .ht-side-old h3 {
+            color: var(--tg-white);
+        }
+
+        .ht-side-new h3 {
+            color: var(--tg-dark-blue);
+        }
+
+        .ht-side p {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            max-width: 32ch;
+        }
+
+        .ht-side-old p {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .ht-side-new p {
+            color: var(--tg-dark-blue);
+            opacity: 0.9;
+        }
+
+        .ht-arrow-flow {
+            width: 56px;
+            height: 56px;
+            background: var(--tg-telenor-blue);
+            color: var(--tg-dark-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 200, 255, 0.4);
+            font-weight: 900;
+            z-index: 2;
+            animation: htArrowFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes htArrowFloat {
+            0%, 100% {
+                transform: translateX(0);
+                box-shadow: 0 10px 30px rgba(0, 200, 255, 0.4);
+            }
+            50% {
+                transform: translateX(8px);
+                box-shadow: 0 15px 35px rgba(0, 200, 255, 0.6);
+            }
+        }
+
+        /* 3 Columns Radical Changes Section */
+        .ht-changes-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3rem; /* Spreading columns to breathe */
+            width: 100%;
+            max-width: 1100px;
+            margin-top: 3.5vh;
+            border-top: 1px solid rgba(255, 255, 255, 0.1); /* Elegant thin horizontal divider */
+            padding-top: 3vh;
+        }
+
+        .ht-change-card {
+            background: transparent; /* No heavy backgrounds, just floating content */
+            padding: 0.5rem 0;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .ht-change-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .ht-change-num {
+            font-size: 2.2rem;
+            font-weight: 900;
+            font-style: italic;
+            color: var(--tg-telenor-blue);
+            line-height: 1;
+            margin-bottom: 0.75rem;
+            letter-spacing: -1px;
+        }
+
+        .ht-change-card h4 {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--tg-white);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.3px;
+            transition: color 0.3s ease;
+        }
+
+        .ht-change-card:hover h4 {
+            color: var(--tg-telenor-blue);
+        }
+
+        .ht-change-card p {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Slide 10: Three Commitments — Triptych */
+        .s10-triptych {
+            padding: 0 !important;
+            flex-direction: row !important;
+            align-items: stretch;
+        }
+        .s10-title-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 3.5vh 5vw;
+            z-index: 10;
+            pointer-events: none;
+            text-align: center;
+        }
+        .s10-title-bar h2 {
+            font-size: clamp(2rem, 3.2vw, 3rem);
+            font-weight: 900;
+            color: var(--tg-white);
+            letter-spacing: -1.5px;
+            display: inline;
+            background: var(--tg-dark-blue);
+            padding: 0.08em 0.35em;
+            box-decoration-break: clone;
+            -webkit-box-decoration-break: clone;
+        }
+        .s10-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            justify-content: center;
+            padding: 10vh 3vw;
+            position: relative;
+            overflow: hidden;
+        }
+        .s10-panel + .s10-panel::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 1px;
+            height: 100%;
+            background: rgba(255,255,255,0.1);
+        }
+        .s10-p1 { background: #070452; }
+        .s10-p2 { background: var(--tg-mid-blue); }
+        .s10-p3 { background: #2954FF; }
+        .s10-icon {
+            width: clamp(72px, 10vw, 100px);
+            height: clamp(72px, 10vw, 100px);
+            margin-bottom: 2rem;
+        }
+        .s10-name {
+            font-size: clamp(2.5rem, 4.5vw, 4rem);
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: -3px;
+            color: #fff;
+            line-height: 1;
+            margin-bottom: 1.75rem;
+        }
+        .s10-accent {
+            width: 64px;
+            height: 4px;
+            background: #ffffff;
+            margin-bottom: 1.25rem;
+            border-radius: 2px;
+        }
+        .s10-sub {
+            font-size: 1rem;
+            font-weight: 500;
+            color: rgba(255,255,255,0.85);
+            line-height: 1.55;
+            max-width: 28ch;
+        }
+
+        /* Slide: Closing Charge */
+        .closing-layout {
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 8vh 10vw;
+        }
+
+        .closing-layout h2 {
+            font-size: clamp(3rem, 6vw, 5.5rem);
+            font-weight: 900;
+            line-height: 1.08;
+            max-width: 90%;
+            margin-bottom: 2.5rem;
+        }
+
+        .closing-layout h2 span {
+            color: var(--tg-telenor-blue);
+        }
+
+        .closing-divider {
+            width: 80px;
+            height: 4px;
+            background: var(--tg-telenor-blue);
+            border-radius: 2px;
+            margin-bottom: 2.5rem;
+        }
+
+        .closing-sub {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--tg-telenor-blue);
+            max-width: 650px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress" style="width: 8.33%;"></div>
+<div class="nav-counter" id="counter">1 / 12</div>
+<div class="nav-logo">
+    <img src="../../reference/images/telenor_symbol_blue_RGB_Refresh.svg" alt="Telenor Logo">
+</div>
+
+<!-- Slide 1: Split Title -->
+<div class="slide slide-title-split">
+    <div class="title-content">
+        <span class="badge-pill anim">Norges ULF — 11.06.26</span>
+        <h1 class="anim anim-d1">Vi lever i <span>Business Opportunities</span></h1>
+        <div class="title-logo-area anim anim-d3">
+            <img src="../../reference/images/telenor_symbol_blue_RGB_Refresh.svg" alt="">
+            <span>Mobile Business Verdistrøm</span>
+        </div>
+    </div>
+    <div class="title-visual">
+        <div class="tg-band tg-band-1"></div>
+        <div class="tg-band tg-band-2"></div>
+        <div class="tg-band tg-band-3"></div>
+        <div class="tg-band tg-band-4"></div>
+        <div class="tg-band tg-band-5"></div>
+    </div>
+</div>
+
+<!-- Slide 2: Operational Scale Dual Stats -->
+<div class="slide slide-dark am-ambient am-stat-slide">
+    <div class="slide-header stat-header anim">
+        <h2>Verdistrømmen i tall</h2>
+    </div>
+    <div class="stat-grid">
+        <div class="stat-card anim anim-d1">
+            <div class="stat-card-num-container">
+                <div class="stat-card-number" id="animated-num-teams">0</div>
+            </div>
+            <span class="stat-card-label">Tverrfaglige Team</span>
+            <p class="stat-card-desc">Autonome team som eier verdistrømmer og kundeverdi</p>
+        </div>
+        <div class="stat-card anim anim-d2">
+            <div class="stat-card-num-container">
+                <div class="stat-card-number" id="animated-num-bos">0</div>
+            </div>
+            <span class="stat-card-label">Aktive BO-er i porteføljen</span>
+            <p class="stat-card-desc">Vekstinitiativer med kundeeffekter og finansielle mål</p>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 3: Problem Triptych -->
+<div class="slide s3-triptych">
+    <div class="s3-title-bar anim">
+        <h2>Det vi måtte løse.</h2>
+    </div>
+    <div class="s3-panel s3-q1 anim anim-d1">
+        <div class="s3-name">Løs strategisk forankring</div>
+        <div class="s3-accent"></div>
+        <div class="s3-sub">Initiativene manglet kobling til strategi og kundeverdi</div>
+    </div>
+    <div class="s3-panel s3-q2 anim anim-d2">
+        <div class="s3-name">Ingen eide resultatet</div>
+        <div class="s3-accent"></div>
+        <div class="s3-sub">Teamene leverte features, men ingen hadde kommersielt ansvar</div>
+    </div>
+    <div class="s3-panel s3-q3 anim anim-d3">
+        <div class="s3-name">Uklare strukturer for måling</div>
+        <div class="s3-accent"></div>
+        <div class="s3-sub">Ingen faste seremonier, ingen ledende indikatorer</div>
+    </div>
+</div>
+
+<!-- Slide 4: Three Principles — Full-bleed Triptych -->
+<div class="slide s4-triptych">
+    <div class="s4-title-bar anim">
+        <h2>Tre kjerneprinsipper. Ingen unntak.</h2>
+    </div>
+    <div class="s4-panel s4-p1 anim anim-d1">
+        <img class="s4-icon" src="../../reference/icons/CellTower_expanded_white.svg" alt="">
+        <div class="s4-name">Retning</div>
+        <div class="s4-accent"></div>
+        <div class="s4-sub">Hvert initiativ forankret i en av 5 strategiske pilarer</div>
+    </div>
+    <div class="s4-panel s4-p2 anim anim-d2">
+        <img class="s4-icon" src="../../reference/icons/Document Signature_expanded_white.svg" alt="">
+        <div class="s4-name">Eierskap</div>
+        <div class="s4-accent"></div>
+        <div class="s4-sub">Hvert team eier impact og kundegevinst</div>
+    </div>
+    <div class="s4-panel s4-p3 anim anim-d3">
+        <img class="s4-icon" src="../../reference/icons/Reminder_expanded_white.svg" alt="">
+        <div class="s4-name">Rytme</div>
+        <div class="s4-accent"></div>
+        <div class="s4-sub">Faste presise seremonier — uten unødvendige stage gates</div>
+    </div>
+</div>
+
+<!-- Slide 5: 7-Column Steering Chain -->
+<div class="slide slide-chain">
+    <div class="slide-header anim">
+        <h2>Fra visjon til oppfølging av hver enkelt.</h2>
+    </div>
+    <div class="chain-container">
+        <div class="chain-col chain-col-1 anim">
+
+            <div class="chain-col-title">Selskaps&shy;strategi</div>
+            <ul class="chain-col-list">
+                <li>Skape sammen</li>
+                <li>Vinne kunden</li>
+                <li>Ledende på teknologi</li>
+                <li>Bærekraft i alt vi gjør</li>
+            </ul>
+        </div>
+        <div class="chain-col chain-col-2 anim anim-d1">
+
+            <div class="chain-col-title">Vår misjon</div>
+            <div class="chain-col-desc">Trusted mobile connectivity and digital security — delivering effortless value and exceptional experiences</div>
+        </div>
+        <div class="chain-col chain-col-3 anim anim-d2">
+
+            <div class="chain-col-title">5<br>Pilarer</div>
+            <ul class="chain-col-list">
+                <li>Grow revenue market share</li>
+                <li>Mission Critical partner</li>
+                <li>New license model</li>
+                <li>Differentiate through services</li>
+                <li>Simplify and enable</li>
+            </ul>
+        </div>
+        <div class="chain-col chain-col-4 chain-col-hero anim anim-d3">
+
+            <div class="chain-col-title">BO<br>&nbsp;</div>
+            <div class="chain-col-desc">Business Opportunities — kundeeffekt, finansielt mål, milepæler og indikatorer</div>
+        </div>
+        <div class="chain-col chain-col-5 anim anim-d4">
+
+            <div class="chain-col-title">Milepæler<br>indikatorer</div>
+            <div class="chain-col-desc">Kvartalsvise leveranser og sanntids trekkraft-signaler</div>
+        </div>
+        <div class="chain-col chain-col-6 anim anim-d5">
+
+            <div class="chain-col-title">Personlige mål</div>
+            <div class="chain-col-desc">Kvartalsmål i Oracle knyttet direkte til BO-ene</div>
+        </div>
+        <div class="chain-col chain-col-7 anim">
+
+            <div class="chain-col-title">Team Puls</div>
+            <div class="chain-col-desc">Månedlig temperatur på trygghet og enablement</div>
+        </div>
+    </div>
+</div>
+
+<!-- Popup: Vår misjon -->
+<div class="chain-popup-overlay" id="popup-mission" onclick="if(event.target===this)closeChainPopup()">
+    <button class="chain-popup-close" onclick="closeChainPopup()">&times;</button>
+    <div class="mission-popup-content">
+        <div class="mission-popup-tag">Vår misjon</div>
+        <div class="mission-popup-text">
+            <span class="mp-hl">Empowering Norwegian businesses</span><br>
+            <span class="mp-hl">with <span class="mp-accent">trusted mobile connectivity</span> and <span class="mp-accent">digital security</span></span><br>
+            <span class="mp-hl">– delivering <span class="mp-accent">effortless value</span> and</span><br>
+            <span class="mp-hl"><span class="mp-accent">exceptional experiences</span> every day</span>
+        </div>
+    </div>
+</div>
+
+<!-- Popup: 5 Strategiske Pilarer -->
+<div class="chain-popup-overlay" id="popup-pillars" onclick="if(event.target===this)closeChainPopup()">
+    <button class="chain-popup-close" onclick="closeChainPopup()">&times;</button>
+    <div class="pillars-popup-content">
+        <div class="pillars-popup-header">
+            <div class="pillars-popup-year">2026</div>
+            <div class="pillars-popup-title">Fem strategiske pilarer</div>
+        </div>
+        <div class="pillars-grid">
+            <div class="pillar-card">
+                <div class="pillar-card-icon"><img src="../../reference/icons/grow.svg" alt="Grow" style="width:100%;height:100%"></div>
+                <div class="pillar-card-desc">Grow revenue market share across Mass Market and Enterprise by <strong>renewing</strong> and <strong>growing the value</strong> of our customer base</div>
+                <div class="pillar-card-kpi">Revenue growth in Mass Market and Large + Growth in ARPU in XL and Public</div>
+            </div>
+            <div class="pillar-card">
+                <div class="pillar-card-icon"><img src="../../reference/icons/shield.svg" alt="Shield" style="width:100%;height:100%"></div>
+                <div class="pillar-card-desc">Position as the preferred <strong>strategic partner</strong> for Mission Critical customers</div>
+                <div class="pillar-card-kpi"># of new Mission Critical contracts</div>
+            </div>
+            <div class="pillar-card">
+                <div class="pillar-card-icon"><img src="../../reference/icons/2030.svg" alt="20:30" style="width:100%;height:100%"></div>
+                <div class="pillar-card-desc">Succeed through a new <strong>license model</strong>: Easy to understand, buy, and use – simple to build and deliver</div>
+                <div class="pillar-card-kpi">Value from 20:30 target picture</div>
+            </div>
+            <div class="pillar-card">
+                <div class="pillar-card-icon"><img src="../../reference/icons/services.svg" alt="Services" style="width:100%;height:100%"></div>
+                <div class="pillar-card-desc">Protect the base through <strong>Core connectivity</strong> while driving growth through <strong>Future-ready networks</strong>, <strong>Secure by design</strong>, <strong>Intelligent communication</strong>, and <strong>Trusted Data Infrastructure</strong></div>
+                <div class="pillar-card-kpi">Growth in revenue from services</div>
+            </div>
+            <div class="pillar-card">
+                <div class="pillar-card-icon"><img src="../../reference/icons/simplify.svg" alt="Simplify" style="width:100%;height:100%"></div>
+                <div class="pillar-card-desc">Simplify, speed up and enable our business with <strong>data</strong> and <strong>high-impact teams</strong></div>
+                <div class="pillar-card-kpi"># of active Looker users + increase in team enablement</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 6: BO Showcase — SafeZone Hero (Kick-off inspired) -->
+<div class="slide slide-dark am-ambient slide-bo-showcase">
+
+    <!-- Card 1: High Level — What & Why -->
+    <div class="bo-kick-card bo-kick-top anim">
+        <div class="bo-kick-header">
+            <div class="bo-kick-tag">Security</div>
+            <h3># SafeZone</h3>
+            <p>Strengthen SafeZone Hero — enhance the concept and increase customer value 1-2 times per year, alongside annual price increases</p>
+        </div>
+        <div class="bo-kick-cols">
+            <div class="bo-kick-col">
+                <div class="bo-kick-col-title">Customer Outcome</div>
+                <div class="bo-kick-col-q">What does the customer experience?</div>
+                <p>SafeZone customers gain more value through new features that improve usability. Customers are and feel safer thanks to added functionality.</p>
+            </div>
+            <div class="bo-kick-col">
+                <div class="bo-kick-col-title">Value for Telenor</div>
+                <div class="bo-kick-col-q">Why are we doing this?</div>
+                <p>Supports "Hele Norges Sikkerhetsnett", M4M, retention and new revenue. We strengthen our position as market leader through innovation.</p>
+            </div>
+            <div class="bo-kick-gp">
+                <div class="bo-kick-gp-row"><span>2026</span><strong>XX mNOK</strong></div>
+                <div class="bo-kick-gp-row"><span>2027</span><strong>XX mNOK</strong></div>
+                <div class="bo-kick-gp-row bo-kick-gp-total"><span>Total</span><strong>XX mNOK</strong></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Card 2: Details — How & Proof -->
+    <div class="bo-kick-card bo-kick-bottom anim anim-d1">
+        <div class="bo-kick-cols bo-kick-cols-3">
+            <div class="bo-kick-col">
+                <div class="bo-kick-col-title">Customer Outcome</div>
+                <div class="bo-kick-col-q">What does the customer experience?</div>
+                <ul>
+                    <li>More value: New features that enhance user experience</li>
+                    <li>Increased safety: Additional functionality for stronger protection</li>
+                    <li>Competence: Stronger cybersecurity knowledge and awareness</li>
+                </ul>
+            </div>
+            <div class="bo-kick-col">
+                <div class="bo-kick-col-title">Key Milestones</div>
+                <div class="bo-kick-col-q">What will be delivered when?</div>
+                <ul>
+                    <li><strong>Q2:</strong> Launch Quiz 2 functionality</li>
+                    <li><strong>Q2:</strong> Develop and pilot new functionality</li>
+                    <li><strong>Q2:</strong> Soft launch to new and existing customers</li>
+                </ul>
+            </div>
+            <div class="bo-kick-col">
+                <div class="bo-kick-col-title">Leading Indicators</div>
+                <div class="bo-kick-col-q">How do we know it's working?</div>
+                <ul>
+                    <li>Stable customer retention (manageable churn)</li>
+                    <li>8 out of 10 users satisfied with the service</li>
+                    <li>Sales growth offsets churn</li>
+                    <li>Competitors emulating our strategies</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="bo-showcase-footer anim anim-d2">
+        <h2>Slik ser en BO ut.</h2>
+    </div>
+</div>
+
+<!-- Slide 7: Photo Divider -->
+<div class="slide slide-photo">
+    <img class="photo-bg" src="../../reference/images/brand/Telenor.bedrift.70-high.res.jpg" alt="Telenor team i samarbeid">
+    <div class="photo-content anim anim-fade">
+        <h2>
+            <span class="hl">Teamene eier <span class="accent">farten.</span></span><br>
+            <span class="hl">Vi rydder veien.</span>
+        </h2>
+    </div>
+</div>
+
+<!-- Slide 8: The Operative Flywheel -->
+<div class="slide slide-dark am-ambient slide-rhythm">
+    <div class="rhythm-title-bar anim">
+        <h2>Rapportering ut. Disiplinert rytme inn.</h2>
+    </div>
+    <div class="rhythm-container anim">
+        <!-- Flywheel Circle -->
+        <div class="flywheel-wrap">
+            <div class="flywheel-bg-circle"></div>
+            <div class="flywheel-center">
+                <h4 id="fw-center-num">01</h4>
+                <span>av 05</span>
+            </div>
+            <div class="fw-node node-1 active-node" onclick="showRhythmDetail(0)">
+                <span class="fw-num">01</span>
+                <span class="fw-title">BO Kick-off</span>
+                <span class="fw-sub">Kvartalsvis</span>
+            </div>
+            <div class="fw-node node-2" onclick="showRhythmDetail(1)">
+                <span class="fw-num">02</span>
+                <span class="fw-title">BO Review</span>
+                <span class="fw-sub">Månedlig</span>
+            </div>
+            <div class="fw-node node-3" onclick="showRhythmDetail(2)">
+                <span class="fw-num">03</span>
+                <span class="fw-title">State of Mobile</span>
+                <span class="fw-sub">Månedlig allmøte</span>
+            </div>
+            <div class="fw-node node-4" onclick="showRhythmDetail(3)">
+                <span class="fw-num">04</span>
+                <span class="fw-title">Personlig Mål</span>
+                <span class="fw-sub">1:1 Hver 14. dag</span>
+            </div>
+            <div class="fw-node node-5" onclick="showRhythmDetail(4)">
+                <span class="fw-num">05</span>
+                <span class="fw-title">Live Puls</span>
+                <span class="fw-sub">Månedlig</span>
+            </div>
+            <div class="ceremony-step-indicator" id="ceremony-indicator">01 / 05</div>
+        </div>
+
+        <!-- Detail Card -->
+        <div class="rhythm-details">
+            <!-- Detail 1 -->
+            <div class="rhythm-detail-item active-detail">
+                <div class="detail-header">
+                    <span class="detail-tag">Planlegging</span>
+                    <span class="detail-title">BO Kick-off</span>
+                </div>
+                <div class="detail-freq">Kvartalsvis</div>
+                <p class="detail-desc">En samling for hele verdistrømmen hvert kvartal. Ingen tørre statusmøter — vi kjører en strukturert agenda der teamene pitch-er sine planer.</p>
+                <ul class="detail-bullets">
+                    <li><strong>Retro:</strong> Hva har vi lært og feilet på i forrige periode?</li>
+                    <li><strong>BO-oversikt:</strong> Kvantifiserte planer for de neste 6 månedene.</li>
+                    <li><strong>Ekte evaluering:</strong> Alle BO-er scores på strategisk klarhet og P&amp;L-effekt før tildeling av ressurser.</li>
+                </ul>
+            </div>
+            <!-- Detail 2 -->
+            <div class="rhythm-detail-item">
+                <div class="detail-header">
+                    <span class="detail-tag">Styring</span>
+                    <span class="detail-title">BO Review</span>
+                </div>
+                <div class="detail-freq">Månedlig</div>
+                <p class="detail-desc">Månedlig møte for kapteiner og ledelsen. Vi har droppet tradisjonell statusrapportering og Stage Gates i PowerPoint til fordel for live dashboard-styring.</p>
+                <ul class="detail-bullets">
+                    <li><strong>Ingen PowerPoint:</strong> Vi styrer direkte etter live monday-dashbord.</li>
+                    <li><strong>Gjennomføring &amp; Sannsynlighet:</strong> Tracker status og sannsynlighet for måloppnåelse.</li>
+                    <li><strong>Løpende prognoser:</strong> Fra sept-des prognostiserer vi både inneværende og neste års tall.</li>
+                </ul>
+            </div>
+            <!-- Detail 3 -->
+            <div class="rhythm-detail-item">
+                <div class="detail-header">
+                    <span class="detail-tag">Kultur &amp; Alignment</span>
+                    <span class="detail-title">State of Mobile</span>
+                </div>
+                <div class="detail-freq">Månedlig allmøte</div>
+                <p class="detail-desc">Vårt månedlige allmøte som forener hele verdistrømmen og B2B-salgsapparatet rundt felles prestasjon og felles kultur.</p>
+                <ul class="detail-bullets">
+                    <li><strong>Første 30 min (felles med salg):</strong> Feiring av salgsseire, butikkstatus og markedshøydepunkter.</li>
+                    <li><strong>Siste 30 min (verdistrømmen):</strong> Fokus på folka, strategiske dypdykk og månedens temperaturmåling.</li>
+                </ul>
+            </div>
+            <!-- Detail 4 -->
+            <div class="rhythm-detail-item">
+                <div class="detail-header">
+                    <span class="detail-tag">Oppfølging</span>
+                    <span class="detail-title">Personlige Mål</span>
+                </div>
+                <div class="detail-freq">1:1 hver 14. dag</div>
+                <p class="detail-desc">Autonomi uten personlig forpliktelse blir fort til kaos. Derfor kobles medarbeidernes suksess direkte til teamets milepæler.</p>
+                <ul class="detail-bullets">
+                    <li><strong>Oracle-mål:</strong> Alle oversetter teamets godkjente BO-milepæler til sine egne kvartalsmål.</li>
+                    <li><strong>Bi-weekly 1:1:</strong> Personlige mål følges opp kontinuerlig hver 14. dag med personalleder.</li>
+                </ul>
+            </div>
+            <!-- Detail 5 -->
+            <div class="rhythm-detail-item">
+                <div class="detail-header">
+                    <span class="detail-tag">Tidlig signal</span>
+                    <span class="detail-title">Live Puls</span>
+                </div>
+                <div class="detail-freq">Månedlig</div>
+                <p class="detail-desc">Månedlig anonym temperaturmåling av teamets trygghet og enablement, så vi fanger opp utfordringer før de blir kritiske problemer.</p>
+                <ul class="detail-bullets">
+                    <li><strong>6 dimensjoner:</strong> Måler Tillit, Autonomi, Læring, Feedback, Ansvarsglede og Mestring.</li>
+                    <li><strong>Dagens Tall:</strong> Teamindeksen (0-100%) presenteres og diskuteres i State of Mobile.</li>
+                    <li><strong>Teamkontrakt:</strong> Puls-score brukes til å utløse oppdatering av teamets egne kjøreregler.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 9: Kontinuerlig kapasitetsinnsikt -->
+<div class="slide slide-legacy-learn">
+    <div class="ll-header anim">
+        <h2>Vi planlegger. Vi måler. <span>Vi lærer.</span></h2>
+        <p class="ll-sub">Av våre 224 FTE jobber kun 19 med fremtidig verdiskapning. 90 er ren Run, 57 moderniserer virksomheten, og 58 optimaliserer gammel modell. Vi kan ikke ansette oss til vekst — vi må frigjøre kapasitet innenfra.</p>
+    </div>
+    <div class="ll-chart-wrap anim anim-d2">
+        <canvas id="legacyChart"></canvas>
+    </div>
+    <div class="ll-summary-bar anim anim-d3">
+        <div class="ll-summary-seg" style="flex:40;background:#070452;color:rgba(255,255,255,0.9);">Run — 90 FTE (40%)</div>
+        <div class="ll-summary-seg" style="flex:26;background:#2954FF;color:rgba(255,255,255,0.9);">Modernisering — 57 FTE (26%)</div>
+        <div class="ll-summary-seg" style="flex:26;background:#00C8FF;color:#070452;">Vekst fra Legacy Modell — 58 FTE (26%)</div>
+        <div class="ll-summary-seg" style="flex:8;background:#FFFFFF;color:#070452;">Ny Modell — 19 (8%)</div>
+    </div>
+    <div class="ll-legend">
+        <div class="ll-legend-item"><div class="ll-legend-dot" style="background:#070452;"></div>Run</div>
+        <div class="ll-legend-item"><div class="ll-legend-dot" style="background:#2954FF;"></div>Modernisering</div>
+        <div class="ll-legend-item"><div class="ll-legend-dot" style="background:#00C8FF;"></div>Vekst fra Legacy Modell</div>
+        <div class="ll-legend-item"><div class="ll-legend-dot" style="background:#FFFFFF;"></div>Ny Modell</div>
+    </div>
+    <div class="ll-title-bar anim anim-d4">
+        <h2>Det du måler, kan du forbedre.</h2>
+    </div>
+</div>
+
+<!-- Slide 9b: Driftshybridisering — Mennesker & AI -->
+<div class="slide slide-dark am-ambient slide-hybrid-teams">
+    <!-- Before / After Comparison -->
+    <div class="ht-hero">
+        <div class="ht-side ht-side-old anim anim-d1">
+            <div class="ht-icon-stage">
+                <img class="ht-icon" src="../../reference/icons/Family1_expanded_white.svg" alt="Mennesker">
+            </div>
+            <h3>Dagens Modell</h3>
+            <p>Spredt dokumentasjon. AI brukes som chatbot av den enkelte — ikke som en felles motor for vekst.</p>
+        </div>
+
+        <div class="ht-arrow-flow anim anim-scale anim-d2">&rarr;</div>
+
+        <div class="ht-side ht-side-new anim anim-d3">
+            <div class="ht-icon-stage">
+                <img class="ht-icon" src="../../reference/icons/Chatbot_expanded.svg" alt="Chatbot">
+            </div>
+            <h3>Morgendagens AI-first Modell</h3>
+            <p>Et reelt, integrert samspill mellom mennesker og digitale agenter for å skape vekst.</p>
+        </div>
+    </div>
+
+    <!-- Three Radical Shifts -->
+    <div class="ht-changes-grid">
+        <div class="ht-change-card anim anim-d4">
+            <div class="ht-change-num">01</div>
+            <h4>Organisering</h4>
+            <p>Mindre, autonome team på <strong>4-5 personer + AI-agenter</strong>.</p>
+        </div>
+        <div class="ht-change-card anim anim-d4 anim-d5">
+            <div class="ht-change-num">02</div>
+            <h4>Arbeidsmåte</h4>
+            <p><strong>AI-first</strong> prosesser og <strong>GitOps</strong> introduseres i hele organisasjonen.</p>
+        </div>
+        <div class="ht-change-card anim anim-d4 anim-d5">
+            <div class="ht-change-num">03</div>
+            <h4>Roller &amp; Kompetanse</h4>
+            <p>Massiv transformasjon. Over <strong>50% av rollene blir helt nye</strong>.</p>
+        </div>
+    </div>
+
+    <div class="ht-title-bar anim anim-d5">
+        <h2>Fremtidens team: Mennesker <span>OG AI-agenter</span></h2>
+    </div>
+</div>
+
+<!-- Slide 10: Samspill-triangel -->
+<div class="slide slide-dark am-ambient slide-collab">
+    <div class="collab-canvas anim anim-d1">
+        <!-- Connecting SVG Paths with flowing stroke animation -->
+        <svg class="collab-svg" viewBox="0 0 1200 620" fill="none">
+            <defs>
+                <linearGradient id="glowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="var(--tg-telenor-blue)" stop-opacity="0.8"/>
+                    <stop offset="100%" stop-color="var(--tg-blue)" stop-opacity="0.3"/>
+                </linearGradient>
+            </defs>
+            <!-- Outer triangle flowing lines -->
+            <path d="M 400 130 L 220 380" stroke="url(#glowGrad)" stroke-width="2" stroke-dasharray="10 6" class="collab-flow-left"/>
+            <path d="M 980 380 L 800 130" stroke="url(#glowGrad)" stroke-width="2" stroke-dasharray="10 6" class="collab-flow-right"/>
+            <!-- Bottom line moved to HTML element for z-index control -->
+
+            <!-- Hub-and-Spoke connections to center BO node -->
+            <line x1="600" y1="130" x2="600" y2="260" stroke="rgba(0, 200, 255, 0.4)" stroke-width="1.5" stroke-dasharray="4 4"/>
+            <line x1="220" y1="380" x2="520" y2="350" stroke="rgba(0, 200, 255, 0.4)" stroke-width="1.5" stroke-dasharray="4 4"/>
+            <line x1="980" y1="380" x2="680" y2="350" stroke="rgba(0, 200, 255, 0.4)" stroke-width="1.5" stroke-dasharray="4 4"/>
+        </svg>
+
+        <!-- Central Node: The BO (The Heart) -->
+        <div class="collab-center-node anim anim-scale anim-d3">
+            <div class="center-node-glow"></div>
+            <div class="center-node-inner">
+                <span class="cn-tag">Hjertet</span>
+                <span class="cn-title">BO-en</span>
+                <span class="cn-desc">Felles drivkraft</span>
+            </div>
+        </div>
+
+        <!-- Node 1: Teamene (Top Center) -->
+        <div class="collab-card collab-c1 anim anim-d2">
+            <div class="collab-card-header">
+                <img class="collab-card-icon" src="../../reference/icons/Family1_expanded.svg" alt="">
+                <div class="collab-card-titles">
+                    <span class="collab-card-tag">Effekt &amp; Leveranse</span>
+                    <span class="collab-card-name">Teamene</span>
+                </div>
+            </div>
+            <ul class="collab-card-list">
+                <li>Eier resultat og gevinster fra BO-en</li>
+                <li>Etablerer milepæler og indikatorer</li>
+                <li>Leverer verdi og driver kontinuerlig læring</li>
+            </ul>
+        </div>
+
+        <!-- Node 2: Verdistrømsledelse (Bottom Left) -->
+        <div class="collab-card collab-c2 anim anim-d3">
+            <div class="collab-card-header">
+                <img class="collab-card-icon" src="../../reference/icons/Computer_expanded_white.svg" alt="">
+                <div class="collab-card-titles">
+                    <span class="collab-card-tag">Retning &amp; Fart</span>
+                    <span class="collab-card-name">Verdistrøms&shy;ledelse</span>
+                </div>
+            </div>
+            <ul class="collab-card-list">
+                <li>Formulerer og prioriterer BO-er</li>
+                <li>Sikrer helhetlig strategisk retning</li>
+                <li>Rydder hindringer og sikrer fremdrift</li>
+            </ul>
+        </div>
+
+        <!-- Node 3: P&C (Bottom Right) -->
+        <div class="collab-card collab-c3 anim anim-d4">
+            <div class="collab-card-header">
+                <img class="collab-card-icon" src="../../reference/icons/CustomerService_expanded_white.svg" alt="">
+                <div class="collab-card-titles">
+                    <span class="collab-card-tag">Mennesker &amp; Kultur</span>
+                    <span class="collab-card-name">P&amp;C</span>
+                </div>
+            </div>
+            <ul class="collab-card-list">
+                <li>Kobler BO-er til personlige mål for performance og kompetanse (Oracle)</li>
+                <li>Sikrer hyppig oppfølging og coaching</li>
+                <li>Måler og følger opp Team Puls &amp; trivsel</li>
+            </ul>
+        </div>
+
+        <!-- Bottom dashed line: Verdistrømsledelse <-> P&C -->
+        <div class="collab-bottom-line"></div>
+
+        <!-- Edge Callouts describing the interaction/samspill -->
+        <div class="collab-edge-pill edge-left anim anim-d4">
+            <div class="edge-title">Strategisk Dialog</div>
+            <div class="edge-text">Målbare BOer forankres i strategien</div>
+        </div>
+
+        <div class="collab-edge-pill edge-right anim anim-d4">
+            <div class="edge-title">Enablement &amp; Læring</div>
+            <div class="edge-text">Coaching fjerner hindringer i hverdagen</div>
+        </div>
+
+        <div class="collab-edge-pill edge-bottom anim anim-d4">
+            <div class="edge-title">Målstyring &amp; Kapasitet</div>
+            <div class="edge-text">Rett kompetanse kobles på BO-en</div>
+        </div>
+    </div>
+
+    <!-- Title bar at bottom — matching other slides -->
+    <div class="collab-title-bar anim anim-d5">
+        <h2>Samspillet som holder kursen.</h2>
+    </div>
+</div>
+
+<!-- Slide 11: Three Commitments — Triptych -->
+<div class="slide s10-triptych">
+    <div class="s10-title-bar anim">
+        <h2>Tre ting som aldri er valgfritt.</h2>
+    </div>
+    <div class="s10-panel s10-p1 anim anim-d1">
+        <img class="s10-icon" src="../../reference/icons/CustomerService_expanded_white.svg" alt="">
+        <div class="s10-name">Kunde&shy;gevinst</div>
+        <div class="s10-accent"></div>
+        <div class="s10-sub">Definer hva kunden opplever annerledes — ikke hva dere bygger. Dette er startpunktet.</div>
+    </div>
+    <div class="s10-panel s10-p2 anim anim-d2">
+        <img class="s10-icon" src="../../reference/icons/Deal_expanded_white.svg" alt="">
+        <div class="s10-name">Tallfestet</div>
+        <div class="s10-accent"></div>
+        <div class="s10-sub">Legg listen så høyt at du kan gå rakrygget under. Kvantifisert 3-årig GP-mål — ingen unntak.</div>
+    </div>
+    <div class="s10-panel s10-p3 anim anim-d3">
+        <img class="s10-icon" src="../../reference/icons/Coverage_expanded_white.svg" alt="">
+        <div class="s10-name">Ledende indikatorer</div>
+        <div class="s10-accent"></div>
+        <div class="s10-sub">Mål adferdsendringer kontinuerlig. Sanntidssignaler gir kurskorreksjon før det er for sent.</div>
+    </div>
+</div>
+
+<!-- Closing Slide -->
+<div class="slide slide-mid am-ambient closing-layout">
+    <h2 class="anim">
+        Autonomi uten retning er <span>kaos.</span><br>
+        Retning uten autonomi er <span>tretthet.</span>
+    </h2>
+    <div class="closing-divider anim anim-d1"></div>
+    <p class="closing-sub anim anim-d2">
+        Vi gir teamene retning gjennom BO-er — og frihet til å finne veien selv.
+    </p>
+</div>
+
+<!-- ================= SCRIPTS ================= -->
+<script>
+    Chart.defaults.plugins.datalabels = { display: false };
+    // --- Navigation System ---
+    const slides = document.querySelectorAll('.slide');
+    const counter = document.getElementById('counter');
+    const progress = document.getElementById('progress');
+    const total = slides.length;
+
+    function getCurrentSlide() {
+        let idx = 0;
+        slides.forEach((s, i) => {
+            const rect = s.getBoundingClientRect();
+            if (rect.top < window.innerHeight / 2 && rect.bottom > window.innerHeight / 2) {
+                idx = i;
+            }
+        });
+        return idx;
+    }
+
+    function scrollToSlide(i) {
+        i = Math.max(0, Math.min(i, total - 1));
+        slides[i].scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // --- Ceremony Slide Setup (needed before keydown handler) ---
+    let currentCeremonyIdx = 0;
+    const nodes = document.querySelectorAll('.fw-node');
+    const ceremonySlide = document.querySelector('.slide-rhythm');
+    const ceremonySlideIdx = Array.from(slides).indexOf(ceremonySlide);
+    const fwCenterNum = document.getElementById('fw-center-num');
+    const ceremonyIndicator = document.getElementById('ceremony-indicator');
+
+    function showRhythmDetail(index) {
+        currentCeremonyIdx = index;
+        nodes.forEach(n => n.classList.remove('active-node'));
+        nodes[index].classList.add('active-node');
+        const items = document.querySelectorAll('.rhythm-detail-item');
+        items.forEach(item => item.classList.remove('active-detail'));
+        items[index].classList.add('active-detail');
+        const num = String(index + 1).padStart(2, '0');
+        if (fwCenterNum) fwCenterNum.textContent = num;
+        if (ceremonyIndicator) ceremonyIndicator.textContent = `${num} / 05`;
+    }
+
+    // --- Slide 5 Chain Setup & Sub-stepping ---
+    const chainSlide = document.querySelector('.slide-chain');
+    const chainSlideIdx = Array.from(slides).indexOf(chainSlide);
+    const popupMission = document.getElementById('popup-mission');
+    const popupPillars = document.getElementById('popup-pillars');
+    const chainCols = document.querySelectorAll('.chain-col');
+    const chainContainer = document.querySelector('.chain-container');
+    let chainStep = 0; // Starts at 0: only column 1 is visible
+
+    function updateChainSlide() {
+        // Hide both overlays initially
+        popupMission.classList.remove('popup-visible');
+        popupPillars.classList.remove('popup-visible');
+
+        // Step 0: Only col 1 is visible
+        // Step 1: Col 1, 2 visible
+        // Step 2: Col 1, 2 visible + mission popup open
+        // Step 3: Col 1, 2, 3 visible
+        // Step 4: Col 1, 2, 3 visible + pillars popup open
+        // Step 5: Col 1, 2, 3, 4 visible
+        // Step 6: Col 1 to 5 visible
+        // Step 7: Col 1 to 6 visible
+        // Step 8: Col 1 to 7 visible
+
+        let visibleColsCount = 1;
+        if (chainStep === 1 || chainStep === 2) {
+            visibleColsCount = 2;
+        } else if (chainStep === 3 || chainStep === 4) {
+            visibleColsCount = 3;
+        } else if (chainStep === 5) {
+            visibleColsCount = 4;
+        } else if (chainStep === 6) {
+            visibleColsCount = 5;
+        } else if (chainStep === 7) {
+            visibleColsCount = 6;
+        } else if (chainStep >= 8) {
+            visibleColsCount = 7;
+        }
+
+        // Set visibility of columns
+        chainCols.forEach((col, idx) => {
+            if (idx < visibleColsCount) {
+                col.classList.add('col-visible');
+            } else {
+                col.classList.remove('col-visible');
+            }
+        });
+
+        // Open popups based on steps
+        if (chainStep === 2) {
+            popupMission.classList.add('popup-visible');
+        } else if (chainStep === 4) {
+            popupPillars.classList.add('popup-visible');
+        }
+
+        // Adjust background arrow width dynamically based on visible columns
+        const arrowWidth = (visibleColsCount / 7) * 100;
+        if (chainContainer) {
+            chainContainer.style.setProperty('--arrow-width', `${arrowWidth}%`);
+        }
+    }
+
+    function closeChainPopup() {
+        popupMission.classList.remove('popup-visible');
+        popupPillars.classList.remove('popup-visible');
+        if (chainStep === 2) {
+            chainStep = 1;
+        } else if (chainStep === 4) {
+            chainStep = 3;
+        }
+        updateChainSlide();
+    }
+
+    // Initialize chain slide on load
+    updateChainSlide();
+
+    // --- Slide 6 Showcase Setup & Sub-stepping ---
+    const showcaseSlide = document.querySelector('.slide-bo-showcase');
+    const showcaseSlideIdx = Array.from(slides).indexOf(showcaseSlide);
+    const boKickBottom = document.querySelector('.bo-kick-bottom');
+    let showcaseStep = 0; // 0: Right card hidden, 1: Right card visible
+
+    function updateShowcaseSlide() {
+        if (showcaseStep >= 1) {
+            if (boKickBottom) boKickBottom.classList.add('card-visible');
+        } else {
+            if (boKickBottom) boKickBottom.classList.remove('card-visible');
+        }
+    }
+
+    // Initialize showcase slide on load
+    updateShowcaseSlide();
+
+    let lastKnownSlideIdx = 0;
+    document.addEventListener('scroll', () => {
+        const idx = getCurrentSlide();
+        counter.textContent = `${idx + 1} / ${total}`;
+        progress.style.width = `${((idx + 1) / total) * 100}%`;
+
+        // Reset states on slide change
+        if (idx !== lastKnownSlideIdx) {
+            if (idx === ceremonySlideIdx) {
+                showRhythmDetail(lastKnownSlideIdx < ceremonySlideIdx ? 0 : 4);
+            }
+            if (idx === chainSlideIdx) {
+                // If we enter Slide 5 from previous slide (forward), start at step 0
+                // If we enter Slide 5 from next slide (backward), show fully revealed state (8)
+                if (lastKnownSlideIdx < chainSlideIdx) {
+                    chainStep = 0;
+                } else {
+                    chainStep = 8;
+                }
+                updateChainSlide();
+            } else {
+                // Clean up popups if we leave slide 5
+                popupMission.classList.remove('popup-visible');
+                popupPillars.classList.remove('popup-visible');
+            }
+            if (idx === showcaseSlideIdx) {
+                // If we enter Slide 6 from previous slide (forward), start at step 0
+                // If we enter Slide 6 from next slide (backward), show fully revealed state (1)
+                if (lastKnownSlideIdx < showcaseSlideIdx) {
+                    showcaseStep = 0;
+                } else {
+                    showcaseStep = 1;
+                }
+                updateShowcaseSlide();
+            }
+            lastKnownSlideIdx = idx;
+        }
+    });
+
+    // Click sub-stepping
+    document.addEventListener('click', (e) => {
+        const idx = getCurrentSlide();
+
+        // Skip if clicking inside interactive elements or overlays
+        if (e.target.closest('button') || e.target.closest('a') || e.target.closest('.fw-node') || e.target.closest('.chain-popup-overlay')) {
+            return;
+        }
+
+        if (idx === chainSlideIdx) {
+            if (chainStep < 8) {
+                chainStep++;
+                updateChainSlide();
+                e.preventDefault();
+            } else {
+                scrollToSlide(idx + 1);
+                e.preventDefault();
+            }
+        } else if (idx === showcaseSlideIdx) {
+            if (showcaseStep < 1) {
+                showcaseStep++;
+                updateShowcaseSlide();
+                e.preventDefault();
+            } else {
+                scrollToSlide(idx + 1);
+                e.preventDefault();
+            }
+        }
+    });
+
+    document.addEventListener('keydown', (e) => {
+        const idx = getCurrentSlide();
+
+        // Chain slide (slide 5) keyboard sub-stepping
+        if (idx === chainSlideIdx) {
+            if (['ArrowDown', 'ArrowRight', ' ', 'PageDown'].includes(e.key)) {
+                if (chainStep < 8) {
+                    chainStep++;
+                    updateChainSlide();
+                    e.preventDefault();
+                    return;
+                }
+            }
+            if (['ArrowUp', 'ArrowLeft', 'PageUp'].includes(e.key)) {
+                if (chainStep > 0) {
+                    chainStep--;
+                    updateChainSlide();
+                    e.preventDefault();
+                    return;
+                }
+            }
+        }
+
+        // Showcase slide (slide 6) keyboard sub-stepping
+        if (idx === showcaseSlideIdx) {
+            if (['ArrowDown', 'ArrowRight', ' ', 'PageDown'].includes(e.key)) {
+                if (showcaseStep < 1) {
+                    showcaseStep++;
+                    updateShowcaseSlide();
+                    e.preventDefault();
+                    return;
+                }
+            }
+            if (['ArrowUp', 'ArrowLeft', 'PageUp'].includes(e.key)) {
+                if (showcaseStep > 0) {
+                    showcaseStep--;
+                    updateShowcaseSlide();
+                    e.preventDefault();
+                    return;
+                }
+            }
+        }
+
+        // Ceremony slide stepping — intercept before normal navigation
+        if (idx === ceremonySlideIdx) {
+            if (['ArrowDown', 'ArrowRight', ' ', 'PageDown'].includes(e.key)) {
+                if (currentCeremonyIdx < 4) {
+                    showRhythmDetail(currentCeremonyIdx + 1);
+                    e.preventDefault();
+                    return;
+                }
+            }
+            if (['ArrowUp', 'ArrowLeft', 'PageUp'].includes(e.key)) {
+                if (currentCeremonyIdx > 0) {
+                    showRhythmDetail(currentCeremonyIdx - 1);
+                    e.preventDefault();
+                    return;
+                }
+            }
+        }
+
+        // Standard slide navigation
+        if (['ArrowDown', 'ArrowRight', ' ', 'PageDown'].includes(e.key)) {
+            scrollToSlide(idx + 1);
+            e.preventDefault();
+        }
+        if (['ArrowUp', 'ArrowLeft', 'PageUp'].includes(e.key)) {
+            scrollToSlide(idx - 1);
+            e.preventDefault();
+        }
+        if (e.key === 'Home') {
+            scrollToSlide(0);
+            e.preventDefault();
+        }
+        if (e.key === 'End') {
+            scrollToSlide(total - 1);
+            e.preventDefault();
+        }
+        if (e.key === 'f' || e.key === 'F') {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        }
+    });
+
+    // --- Intersection Observer for Animations ---
+    const slideObserver = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+            if (e.isIntersecting) {
+                e.target.classList.add('slide-active');
+                
+                // Add visible class to content elements
+                e.target.querySelectorAll('.anim').forEach(el => {
+                    el.classList.add('visible');
+                });
+            } else {
+                e.target.classList.remove('slide-active');
+            }
+        });
+    }, { threshold: 0.5 });
+
+    slides.forEach(s => slideObserver.observe(s));
+
+    // Activate slide 1 immediately
+    window.addEventListener('load', () => {
+        slides[0].classList.add('slide-active');
+        slides[0].querySelectorAll('.anim').forEach(el => el.classList.add('visible'));
+    });
+
+    // --- Counter Animation for Slide 2 (Dual Stats) ---
+    const animatedNumTeams = document.getElementById('animated-num-teams');
+    const animatedNumBos = document.getElementById('animated-num-bos');
+    let counterTriggered = false;
+
+    function animateCounter(el, target, duration = 1500, suffix = '') {
+        const start = performance.now();
+        const update = (now) => {
+            const elapsed = now - start;
+            const progress = Math.min(elapsed / duration, 1);
+            // easeOutQuart
+            const eased = 1 - Math.pow(1 - progress, 4);
+            el.textContent = Math.round(eased * target).toLocaleString('no-NO') + suffix;
+            if (progress < 1) {
+                requestAnimationFrame(update);
+            }
+        };
+        requestAnimationFrame(update);
+    }
+
+    const slide2 = slides[1];
+    const mo = new MutationObserver(() => {
+        if (slide2.classList.contains('slide-active')) {
+            if (!counterTriggered) {
+                animateCounter(animatedNumTeams, 21, 1200);
+                animateCounter(animatedNumBos, 45, 1200);
+                counterTriggered = true;
+            }
+        } else {
+            animatedNumTeams.textContent = '0';
+            animatedNumBos.textContent = '0';
+            counterTriggered = false;
+        }
+    });
+    mo.observe(slide2, { attributes: true, attributeFilter: ['class'] });
+
+    // --- Legacy Detail Chart (Slide 9) ---
+    const lcCtx = document.getElementById('legacyChart');
+    const slide9 = document.querySelector('.slide-legacy-learn');
+    let legacyChartInstance = null;
+
+    if (lcCtx && slide9) {
+        const runData   = [1.0, 4, 5.5, 3.3, 0.0, 15.0, 8, 2.0, 1.2, 5.0, 3, 2.0, 2.1, 3.0, 1.0, 2.4, 21, 4.8, 1, 2.7, 2];
+        const modData   = [0, 2, 2.2, 0, 0.4, 1.8, 9, 0.7, 1.6, 3.4, 0, 2.4, 4.9, 3.7, 10.7, 1.8, 0, 1.2, 11, 0, 0.4];
+        const legData   = [0.4, 6, 3.3, 5.5, 0.8, 4.2, 0.0, 2.7, 0.8, 3.9, 3, 2.4, 0.0, 7.5, 1.3, 1.8, 0.0, 0.0, 0.0, 9.1, 4.8];
+        const futData   = [5.6, 0.0, 0.0, 2.2, 2.8, 0.0, 0.0, 3.6, 0.4, 0.7, 0.0, 1.2, 0.0, 0.8, 0.0, 0.0, 0.0, 0.0, 0.0, 1.3, 0.8];
+
+        function initLegacyChart() {
+            if (legacyChartInstance) return;
+            legacyChartInstance = new Chart(lcCtx, {
+                type: 'bar',
+                plugins: [ChartDataLabels],
+                data: {
+                    labels: ['20:30 Team', 'Mass Market', 'Enterprise', 'Security', 'Next Gen MBN', 'Voice Services', 'Voice Svc Del.', 'IoT', 'Partner Sol.', 'HW & eCom', 'Employee Exp.', 'Cust. Activation', 'API', 'Insight Enabl.', 'Mktg & Sales', 'Msg Ctr & Cov.', 'Cust. Ops', 'Mobile Ops', 'OneView Enabl.', 'MC commercial', 'MC technical'],
+                    datasets: [
+                        {
+                            label: 'Run',
+                            data: runData,
+                            backgroundColor: '#070452',
+                            borderRadius: { topLeft: 0, topRight: 0, bottomLeft: 4, bottomRight: 4 },
+                        },
+                        {
+                            label: 'Modernisering',
+                            data: modData,
+                            backgroundColor: '#2954FF',
+                        },
+                        {
+                            label: 'Vekst fra Legacy Modell',
+                            data: legData,
+                            backgroundColor: '#00C8FF',
+                        },
+                        {
+                            label: 'Ny Modell',
+                            data: futData,
+                            backgroundColor: '#FFFFFF',
+                            borderRadius: { topLeft: 4, topRight: 4, bottomLeft: 0, bottomRight: 0 },
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: {
+                        duration: 800,
+                        delay: function(ctx) {
+                            return ctx.dataIndex * 200 + (ctx.datasetIndex * 100);
+                        },
+                        easing: 'easeOutQuart'
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            bodyFont: { family: "'DM Sans'" },
+                            titleFont: { family: "'DM Sans'", weight: 700 },
+                            callbacks: {
+                                afterBody: function(context) {
+                                    const idx = context[0].dataIndex;
+                                    return 'Total: ' + (runData[idx]+modData[idx]+legData[idx]+futData[idx]).toFixed(1) + ' FTEs';
+                                }
+                            }
+                        },
+                        datalabels: {
+                            display: function(ctx) { return ctx.datasetIndex === 3; },
+                            anchor: 'end', align: 'end',
+                            color: 'rgba(255,255,255,0.85)',
+                            font: { family: "'DM Sans'", weight: 900, size: 11 },
+                            formatter: function(_, ctx) {
+                                const idx = ctx.dataIndex;
+                                return Math.round(runData[idx]+modData[idx]+legData[idx]+futData[idx]);
+                            },
+                            offset: 2,
+                        }
+                    },
+                    scales: {
+                        x: {
+                            stacked: true,
+                            ticks: {
+                                color: 'rgba(255,255,255,0.55)',
+                                font: { family: "'DM Sans'", weight: 600, size: 9 },
+                                maxRotation: 55,
+                                minRotation: 45,
+                            },
+                            grid: { display: false }
+                        },
+                        y: {
+                            stacked: true,
+                            ticks: {
+                                color: 'rgba(255,255,255,0.4)',
+                                font: { family: "'DM Sans'", size: 10 },
+                            },
+                            grid: { color: 'rgba(255,255,255,0.06)' },
+                            border: { display: false }
+                        }
+                    }
+                }
+            });
+        }
+
+        function destroyLegacyChart() {
+            if (legacyChartInstance) {
+                legacyChartInstance.destroy();
+                legacyChartInstance = null;
+            }
+        }
+
+        const mo9 = new MutationObserver(() => {
+            if (slide9.classList.contains('slide-active')) {
+                initLegacyChart();
+            } else {
+                destroyLegacyChart();
+            }
+        });
+        mo9.observe(slide9, { attributes: true, attributeFilter: ['class'] });
+
+        // If slide9 is active initially (unlikely, but safe)
+        if (slide9.classList.contains('slide-active')) {
+            initLegacyChart();
+        }
+    }
+</script>
+</body>
+</html>
