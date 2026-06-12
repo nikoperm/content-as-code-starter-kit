@@ -10,6 +10,21 @@ Text IS the design element. One idea fills the screen. Every slide creates a mom
 
 ---
 
+## Cinematic Dark Mode — Mandatory
+
+**AllMøte presentations NEVER use light backgrounds.** No `slide-light`, no `--tg-light-cyan`, no `#EBFFFF`. Every content slide uses one of:
+
+- `--tg-dark-blue` (`#070452`) — primary dark background
+- `--tg-mid-blue` (`#1C16C5`) — secondary dark background
+- `.am-ambient` — animated gradient between mid-blue and blue
+- Full-bleed photo — with dark overlay text treatment (`.hl` boxes)
+
+Accent and glow colors: `--tg-telenor-blue` (`#00C8FF`) for highlights, `--tg-accent-green` (`#B0FBB8`) for success/hero elements, `--tg-accent-pink` (`#FFB8D7`) for human/warm accents.
+
+This is the standard established by `BO_Governance_NorgeULF.html` — the canonical AllMøte reference.
+
+---
+
 ## Animation System
 
 AllMote presentations use a layered animation system. All animations are CSS-driven and triggered by IntersectionObserver adding `.slide-active` to slides.
@@ -239,7 +254,7 @@ The `big-number` layout presents a single metric that creates an emotional react
   layout: big-number
 -->
 
-**Headline:** *XX%*
+**Headline:** *58.1%*
 
 Revenue Market Share -- built on clarity, ownership, and commercial spirit.
 ```

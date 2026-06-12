@@ -64,7 +64,7 @@ Optional YAML metadata placed immediately after the slide heading:
 
 | Field         | Values                                        | Default (inferred)     |
 |:--------------|:----------------------------------------------|:-----------------------|
-| `theme`       | `statement` (dark bg), `light`, `dark`        | Inferred from mode/title |
+| `theme`       | `statement` (dark bg), `light`, `dark`        | Inferred from mode/title. **AllMote: `light` is forbidden — use `statement` or `dark` only.** |
 | `layout`      | Any of the 29 layout names                    | Inferred from content  |
 | `pptx_layout` | PowerPoint slide master layout name           | Mapped from `layout`   |
 | `icon`        | Filename from `reference/icons/`              | None                   |
@@ -146,7 +146,7 @@ Macros are expanded during build into full HTML chart blocks. See `chart_spec.md
 Action title displayed prominently at the top of the slide:
 
 ```markdown
-**Headline:** *XX% market share -- built on clarity, ownership, and commercial spirit.*
+**Headline:** *58.1% market share -- built on clarity, ownership, and commercial spirit.*
 ```
 
 The parser extracts this into the `headline` field of the slide model. It is rendered as the slide's primary assertion/action title, separate from the body content.

@@ -85,7 +85,7 @@ Used in `mode: narrative` — designed for presenter-led strategic storytelling.
 
 ## AllMote-Only Layouts (14)
 
-Used in `mode: allmote` — designed for large-audience inspiration with high visual impact.
+Used in `mode: allmote` — designed for large-audience inspiration with high visual impact. **All AllMote layouts use dark backgrounds only** (`--tg-dark-blue`, `--tg-mid-blue`, `.am-ambient`, or full-bleed photo). Light cyan (`#EBFFFF`) is never used.
 
 ### `hero-statement`
 - **PPTX:** Statement Dark
