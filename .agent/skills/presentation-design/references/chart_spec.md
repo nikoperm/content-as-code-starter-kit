@@ -111,6 +111,81 @@ Macros are expanded during `make build`. If a macro is not found, a placeholder 
 
 ---
 
+## Truncated Y-Axis — Axis Break Plugin
+
+When a chart's y-axis does not start at zero (e.g., `min: 4000` for values around 4000–5000), you **must** add a visual axis break to avoid misleading the audience. The standard is two diagonal lines with a background-colored band between them, drawn near the base of each bar.
+
+### Plugin Implementation
+
+```javascript
+var axisBreakPlugin = {
+    id: 'axisBreak',
+    afterDatasetsDraw: function(chart) {
+        var ctx = chart.ctx;
+        var yScale = chart.scales.yBar || chart.scales.y;
+        if (!yScale) return;
+        var barMeta = chart.getDatasetMeta(0);
+        var yBottom = yScale.getPixelForValue(yScale.min);
+        var gap = 7;      // half-height of the break band
+        var slant = 8;    // diagonal tilt in px
+        var breakY = yBottom - 50;  // distance from bottom of chart area
+        for (var i = 0; i < barMeta.data.length; i++) {
+            var bar = barMeta.data[i];
+            if (!bar) continue;
+            // Animate with bars: fade in as bar grows past break point
+            var barTop = bar.y;
+            if (barTop > breakY - gap) continue;
+            var dist = (breakY - gap) - barTop;
+            var opacity = Math.min(1, dist / 40);
+            var halfW = bar.width / 2;
+            var cx = bar.x;
+            ctx.save();
+            ctx.globalAlpha = opacity;
+            // Fill band between lines with slide background color
+            ctx.fillStyle = '#1C16C5';  // match slide background (--tg-mid-blue)
+            ctx.beginPath();
+            ctx.moveTo(cx - halfW, breakY - gap + slant);
+            ctx.lineTo(cx + halfW, breakY - gap - slant);
+            ctx.lineTo(cx + halfW, breakY + gap - slant);
+            ctx.lineTo(cx - halfW, breakY + gap + slant);
+            ctx.closePath();
+            ctx.fill();
+            // Draw diagonal break lines
+            ctx.strokeStyle = 'rgba(255,255,255,0.7)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(cx - halfW - 4, breakY - gap + slant);
+            ctx.lineTo(cx + halfW + 4, breakY - gap - slant);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(cx - halfW - 4, breakY + gap + slant);
+            ctx.lineTo(cx + halfW + 4, breakY + gap - slant);
+            ctx.stroke();
+            ctx.restore();
+        }
+    }
+};
+```
+
+### Usage Rules
+
+| Rule | Detail |
+|:-----|:-------|
+| When to use | Any bar chart where `y.min > 0` (truncated axis) |
+| Fill color | Must match the slide's background color (`#1C16C5` for mid-blue, `#070452` for dark-blue) |
+| Animation | Break marks fade in as bars grow past them during chart entry animation |
+| Registration | Add to `plugins: [axisBreakPlugin]` in the Chart constructor |
+| Scale reference | Use `chart.scales.yBar` for dual-axis charts, `chart.scales.y` for single-axis |
+| Adjustable values | `breakY` offset (distance from bottom), `gap` (band thickness), `slant` (diagonal angle) |
+
+### When NOT to Use
+
+- Charts where y-axis starts at zero — no break needed
+- Line-only charts — break marks are a bar chart convention
+- Doughnut/pie charts — not applicable
+
+---
+
 ## Mode-Specific Chart Styling
 
 | Mode      | Chart treatment                                                        |

@@ -506,6 +506,8 @@ animation: {
 }
 ```
 
+**Truncated Y-Axis:** When a bar chart has `y.min > 0`, always add the `axisBreakPlugin` (see `chart_spec.md` § "Truncated Y-Axis"). This draws animated diagonal break marks at the base of each bar, filled with the slide background color, preventing the chart from being visually misleading. The break marks fade in together with each bar's stagger animation.
+
 Charts are created/destroyed based on slide visibility to avoid memory leaks:
 
 ```javascript

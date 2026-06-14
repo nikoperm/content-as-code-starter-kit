@@ -16,7 +16,10 @@ CSS per slide. Each slide is a unique visual composition tailored to its content
 | Mode | Reference file | What to do |
 |------|---------------|------------|
 | **Narrative** | `presentations/internal/Strategy_2030_Narrative.html` | Study patterns, adapt structure |
-| **AllMøte** | `.agent/skills/presentation-design/reference_allmote.html` | **Start from this file.** Copy it, strip content, keep all CSS/JS/animations, then fill with new content. AllMøte is architecturally different from Narrative — it uses full-bleed triptychs, sub-stepping, interactive flywheels, and cinematic dark mode. You cannot "adapt" a Narrative into AllMøte; you must start from the AllMøte reference. |
+| **AllMøte (governance)** | `.agent/skills/presentation-design/reference_allmote.html` | **Start from this file** for governance/BO decks. Full architecture with strategy chain, flywheel, popup overlays, and BO showcase cards. |
+| **AllMøte (storytelling)** | `.agent/skills/presentation-design/reference_allmote_storytelling.html` | **Start from this file** for transformation/change narratives. Leaner structure with Chart.js axis breaks, click-to-reveal engine panels, zoom-in layers, photo statements, and roadmap cards. |
+
+**AllMøte is architecturally different from Narrative** — it uses full-bleed triptychs, sub-stepping, cinematic dark mode, and interactive elements. You cannot "adapt" a Narrative into AllMøte; you must start from one of the AllMøte references above. Pick the one closest to your story.
 
 ### Reference documents (read on demand)
 
@@ -242,6 +245,11 @@ Pick from these — each has full CSS/HTML in the reference file:
 | Collab triangle | `.slide-collab` | 3-actor relationship diagram with SVG animations |
 | Commitments triptych | `.s10-triptych` | 3 full-bleed panels (blue gradient) |
 | Closing charge | `.closing-layout` | Bold centered statement with accent divider |
+| Transformation engine | `.slide-engine` | 3-panel triptych with click-to-green animation (from `reference_allmote_storytelling.html`) |
+| Zoom-in layers | `.slide-zoom-in` | Bottom-up click-reveal of stacked horizontal layers |
+| How-it-works flow | `.slide-how` | 4-step horizontal process with numbered cards and arrows |
+| Roadmap phases | `.slide-roadmap` | 4 phase cards with active/done/future states |
+| GP scenario chart | (inline) | Stacked bar + click-to-reveal line with axis break plugin |
 
 ### AllMøte narrative arc (8-12 slides)
 
@@ -266,7 +274,7 @@ Pick from these — each has full CSS/HTML in the reference file:
 
 ### What AllMøte does differently (never simplify away)
 
-- **Start from `reference_allmote.html`** — never from Narrative or scratch
+- **Start from `reference_allmote.html`** (or `reference_allmote_storytelling.html`) — never from Narrative or scratch
 - **Full-bleed layouts** — `padding: 0; flex-direction: row; align-items: stretch`
 - **Sub-stepping** — Click/keyboard reveals content within a slide before advancing
 - **Popup overlays** — Full-screen backdrop-blur modals for deep-dives

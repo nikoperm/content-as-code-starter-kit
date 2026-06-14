@@ -1,0 +1,1957 @@
+<!-- AllMøte Storytelling Reference — Neutralized template. Replace placeholder content with your real data. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transformation Story — AllMøte Reference</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;0,800;0,900;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+    <style>
+        :root {
+            --tg-dark-blue:    #070452;
+            --tg-mid-blue:     #1C16C5;
+            --tg-telenor-blue: #00C8FF;
+            --tg-blue:         #2954FF;
+            --tg-light-cyan:   #EBFFFF;
+            --tg-light-blue:   #B4FFFF;
+            --tg-off-white:    #E8FDFF;
+            --tg-white:        #FFFFFF;
+            --tg-accent-green: #B0FBB8;
+            --tg-accent-pink:  #FFB8D7;
+            --tg-accent-yellow:#FEF6B8;
+            --tg-accent-red:   #FF5A70;
+            --font: 'DM Sans', Arial, sans-serif;
+            --gray-body:       #4a5568;
+            --gray-caption:    #637381;
+            --red-pain:        #FF4A5A;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { font-size: 16px; -webkit-font-smoothing: antialiased; }
+        body {
+            font-family: var(--font);
+            scroll-snap-type: y mandatory;
+            overflow-y: scroll;
+            height: 100vh;
+            background: var(--tg-mid-blue);
+            color: var(--tg-dark-blue);
+        }
+
+        /* Navigation */
+        .progress-bar {
+            position: fixed; top: 0; left: 0; height: 4px;
+            background: linear-gradient(90deg, var(--tg-mid-blue), var(--tg-telenor-blue));
+            z-index: 100; transition: width 0.3s ease;
+            box-shadow: 0 0 10px rgba(0, 200, 255, 0.5);
+        }
+        .nav-counter {
+            position: fixed; bottom: 24px; left: 24px;
+            background: rgba(7, 4, 82, 0.85); backdrop-filter: blur(8px);
+            color: var(--tg-telenor-blue); padding: 6px 14px; border-radius: 20px;
+            font-size: 0.75rem; font-weight: 800; z-index: 100;
+            border: 1px solid rgba(0, 200, 255, 0.2); letter-spacing: 1px;
+        }
+        .nav-logo {
+            position: fixed; bottom: 22px; right: 24px; z-index: 100;
+            opacity: 0.5; transition: opacity 0.3s ease;
+        }
+        .nav-logo:hover { opacity: 0.9; }
+        .nav-logo img { width: 36px; height: 36px; }
+
+        /* Slide Base */
+        .slide {
+            width: 100vw; height: 100vh; scroll-snap-align: start;
+            position: relative; overflow: hidden;
+            display: flex; flex-direction: column; justify-content: center; padding: 8vh 8vw;
+        }
+        .slide-dark { background: var(--tg-mid-blue); color: var(--tg-white); }
+        .slide-mid  { background: var(--tg-mid-blue); color: var(--tg-white); }
+        .slide-light { background: var(--tg-light-cyan); color: var(--tg-dark-blue); }
+
+        .am-ambient {
+            background: linear-gradient(135deg, var(--tg-mid-blue) 0%, var(--tg-blue) 50%, var(--tg-mid-blue) 100%);
+            background-size: 200% 200%;
+            animation: ambientShift 12s ease infinite;
+        }
+        @keyframes ambientShift {
+            0%   { background-position: 0% 50%; }
+            50%  { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Typography */
+        h1, h2, h3, .hero-display-num { font-style: italic; letter-spacing: -1.5px; }
+        .kicker {
+            font-size: 0.82rem; font-weight: 800; text-transform: uppercase;
+            letter-spacing: 4px; color: var(--tg-telenor-blue); margin-bottom: 0.5rem;
+        }
+        .slide-header { margin-bottom: 2.5rem; align-self: flex-start; }
+        .slide-header h2 { font-size: clamp(2rem, 3.5vw, 3rem); font-weight: 900; line-height: 1.15; }
+        .governing-thought {
+            font-size: 1.25rem; font-weight: 700; color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 1.5rem; max-width: 800px; line-height: 1.45;
+        }
+
+        /* Entry Animations */
+        .anim {
+            opacity: 0; transform: translateY(24px);
+            transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .anim.visible { opacity: 1; transform: translateY(0) scale(1); }
+        .anim-fade { transform: none; }
+        .anim-scale { transform: translateY(16px) scale(0.96); }
+        .anim-d1 { transition-delay: 0.12s; }
+        .anim-d2 { transition-delay: 0.24s; }
+        .anim-d3 { transition-delay: 0.36s; }
+        .anim-d4 { transition-delay: 0.48s; }
+        .anim-d5 { transition-delay: 0.60s; }
+        .anim-d6 { transition-delay: 0.72s; }
+
+        @keyframes slamIn {
+            0%   { opacity: 0; transform: scale(0.6) translateY(30px); }
+            60%  { opacity: 1; transform: scale(1.04) translateY(-4px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        @keyframes revealUp {
+            from { opacity: 0; transform: translateY(40px); filter: blur(4px); }
+            to   { opacity: 1; transform: translateY(0);    filter: blur(0); }
+        }
+        .am-slam { opacity: 0; }
+        .am-reveal { opacity: 0; }
+        .slide-active .am-slam { animation: slamIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) both; }
+        .slide-active .am-reveal { animation: revealUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) both; }
+        .am-slam-d1 { animation-delay: 0.18s; }
+        .am-slam-d2 { animation-delay: 0.38s; }
+
+        /* ===== SLIDE 1: Title Split ===== */
+        .slide-title-split {
+            display: grid !important; grid-template-columns: 65% 35%;
+            padding: 0; background: var(--tg-mid-blue);
+        }
+        .title-content {
+            display: flex; flex-direction: column; justify-content: center;
+            padding: 8vh 6vw; color: var(--tg-white); position: relative;
+        }
+        .badge-pill {
+            display: inline-flex; align-self: flex-start;
+            background: rgba(0, 200, 255, 0.12); border: 1px solid rgba(0, 200, 255, 0.3);
+            color: var(--tg-telenor-blue); padding: 6px 16px; border-radius: 20px;
+            font-size: 0.75rem; font-weight: 800; letter-spacing: 2px;
+            text-transform: uppercase; margin-bottom: 2rem;
+        }
+        .title-content h1 {
+            font-size: clamp(4.5rem, 9vw, 8rem); font-weight: 900;
+            line-height: 1.05; margin-bottom: 0.75rem; color: var(--tg-white);
+        }
+        .title-content h1 span { color: var(--tg-telenor-blue); }
+        .title-subtitle {
+            font-size: 1.15rem; font-weight: 500; opacity: 0.7;
+            line-height: 1.55; margin-bottom: 3rem; max-width: 520px;
+        }
+        .title-logo-area {
+            display: flex; align-items: center; gap: 10px; opacity: 0.65;
+            font-weight: 700; font-size: 0.9rem; letter-spacing: 1px;
+            text-transform: uppercase; margin-top: 3rem;
+        }
+        .title-logo-area img { width: 24px; height: 24px; }
+        .title-visual { display: flex; height: 100%; width: 100%; }
+        .tg-band { height: 100%; }
+        .tg-band-1 { flex: 2; background: var(--tg-dark-blue); }
+        .tg-band-2 { flex: 3; background: var(--tg-telenor-blue); }
+        .tg-band-3 { flex: 1.5; background: var(--tg-light-blue); }
+        .tg-band-4 { flex: 0.5; background: var(--tg-white); }
+        .year-mark {
+            position: absolute; top: 20px; right: 40px;
+            font-size: 8rem; font-weight: 900; font-style: italic;
+            color: rgba(255, 255, 255, 0.06); pointer-events: none; user-select: none;
+        }
+
+        /* ===== SLIDE 2: Dual Stat ===== */
+        .am-stat-slide { align-items: center; justify-content: center; }
+        .stat-header { align-self: center; text-align: center; margin-bottom: 3.5rem; }
+        .stat-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr);
+            gap: 3rem; width: 100%; max-width: 1100px; margin: 0 auto;
+        }
+        .stat-card {
+            background: none; border: none; padding: 2rem;
+            display: flex; flex-direction: column; align-items: center; text-align: center;
+        }
+        .stat-card-num-container { position: relative; margin-bottom: 1.5rem; }
+        .stat-card-number {
+            font-size: clamp(6rem, 10vw, 8.5rem); font-weight: 900; font-style: italic;
+            color: var(--tg-white); line-height: 0.85; letter-spacing: -3px;
+        }
+        .stat-card-label {
+            font-size: 1.15rem; font-weight: 700;
+            color: var(--tg-telenor-blue); letter-spacing: 0.5px; margin-top: 0.5rem;
+        }
+        .stat-card-desc {
+            font-size: 1rem; line-height: 1.5; color: var(--tg-white);
+            font-weight: 500; max-width: 380px; margin-top: 1rem;
+        }
+        .stat-quote {
+            text-align: center; width: 100%; margin-top: 3rem;
+        }
+        .stat-quote h2 {
+            font-size: 1.5rem; opacity: 0.95; font-weight: 700;
+            color: var(--tg-telenor-blue); font-style: italic;
+        }
+        .stat-quote cite {
+            display: block; font-size: 0.75rem; font-style: normal; font-weight: 700;
+            color: rgba(255, 255, 255, 0.4); margin-top: 0.5rem;
+            text-transform: uppercase; letter-spacing: 2px;
+        }
+
+        /* ===== SLIDE 3: Problem Triptych ===== */
+        .s3-triptych {
+            padding: 0 !important; flex-direction: row !important; align-items: stretch;
+        }
+        .s3-title-bar {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            padding: 3.5vh 5vw; z-index: 10; pointer-events: none; text-align: center;
+        }
+        .s3-title-bar h2 {
+            font-size: clamp(2rem, 3.2vw, 3rem); font-weight: 900;
+            color: var(--tg-white); letter-spacing: -1.5px; display: inline;
+            background: var(--red-pain); padding: 0.08em 0.35em;
+            box-decoration-break: clone; -webkit-box-decoration-break: clone;
+        }
+        .s3-panel {
+            flex: 1; display: flex; flex-direction: column; align-items: center;
+            text-align: center; padding: 10vh 4vw 14vh;
+            position: relative; overflow: hidden;
+        }
+        .s3-panel-inner {
+            display: flex; flex-direction: column; align-items: center;
+            justify-content: center; flex: 1; width: 100%;
+        }
+        .s3-panel + .s3-panel::before {
+            content: ''; position: absolute; top: 0; left: 0;
+            width: 1px; height: 100%; background: rgba(255,255,255,0.08);
+        }
+        .s3-q1 { background: #070452; }
+        .s3-q2 { background: #0a0870; }
+        .s3-q3 { background: #0e0a7f; }
+        .s3-icon {
+            width: 140px; height: 140px; margin-bottom: 2rem;
+        }
+        .s3-name {
+            font-size: clamp(2.2rem, 3.5vw, 3.2rem); font-weight: 900; font-style: italic;
+            letter-spacing: -2px; color: var(--red-pain); line-height: 1;
+            margin-bottom: 1.5rem; height: 2.2em;
+            display: flex; align-items: flex-end; justify-content: center;
+        }
+        .s3-accent {
+            width: 64px; height: 4px; background: var(--red-pain);
+            margin-bottom: 1.25rem; border-radius: 2px;
+        }
+        .s3-sub {
+            font-size: 0.95rem; font-weight: 500; color: rgba(255,255,255,0.85);
+            line-height: 1.55; max-width: 30ch;
+        }
+
+        /* ===== SLIDE 6: Zoom-in Layers ===== */
+        .slide-zoom-in {
+            background: var(--tg-mid-blue); color: var(--tg-white);
+            padding: 8vh 8vw 12vh !important;
+            display: flex !important; flex-direction: column;
+            justify-content: center; align-items: center;
+        }
+        .zoom-stack {
+            display: flex; flex-direction: column; gap: 1.25rem;
+            width: 100%; max-width: 1000px;
+        }
+        .zoom-layer {
+            display: grid; grid-template-columns: 80px 1fr;
+            align-items: center; gap: 2.5rem;
+            padding: 2rem 2.5rem; border-radius: 20px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+        }
+        .zoom-layer:hover { transform: translateX(8px); }
+        .zoom-layer--base {
+            background: var(--tg-dark-blue);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        .zoom-layer--engine {
+            background: var(--tg-dark-blue);
+            border: 1px solid rgba(0, 200, 255, 0.2);
+        }
+        .zoom-layer--result {
+            background: var(--tg-accent-green);
+            border: 1px solid rgba(176, 251, 184, 0.6);
+            box-shadow: 0 10px 40px rgba(176, 251, 184, 0.15);
+        }
+        .zoom-layer--result .zoom-title,
+        .zoom-layer--result .zoom-desc,
+        .zoom-layer--result .zoom-tag { color: var(--tg-dark-blue); }
+        .zoom-layer--result .zoom-desc { opacity: 0.7; }
+        .zoom-icon { width: 80px; height: 80px; }
+        .zoom-text { display: flex; flex-direction: column; gap: 0.25rem; }
+        .zoom-tag {
+            font-size: 0.7rem; font-weight: 800; text-transform: uppercase;
+            letter-spacing: 3px; color: var(--tg-accent-green); opacity: 0.7;
+        }
+        .zoom-title {
+            font-size: 1.8rem; font-weight: 900; font-style: italic;
+            letter-spacing: -1px; color: var(--tg-white);
+        }
+        .zoom-desc {
+            font-size: 1rem; font-weight: 500;
+            color: rgba(255,255,255,0.6); line-height: 1.5;
+        }
+        .zoom-title-bar {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            padding: 3vh 5vw; z-index: 10; pointer-events: none; text-align: center;
+        }
+        .zoom-step {
+            opacity: 0; transform: translateY(24px);
+            transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .zoom-step.zoom-visible {
+            opacity: 1; transform: translateY(0);
+        }
+        .zoom-title-bar h2 {
+            font-size: clamp(1.8rem, 3vw, 2.8rem); font-weight: 900; font-style: italic;
+            letter-spacing: -1.5px; color: var(--tg-white); display: inline;
+            background: var(--tg-dark-blue); padding: 0.08em 0.35em;
+            box-decoration-break: clone; -webkit-box-decoration-break: clone;
+        }
+
+        /* ===== SLIDE 5: Before/After Hero ===== */
+        .slide-hybrid-teams {
+            padding: 8vh 8vw 14vh;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center; gap: 2vh;
+        }
+        .ht-hero {
+            display: grid; grid-template-columns: 1fr auto 1fr;
+            align-items: center; gap: 2.5rem; width: 100%;
+            max-width: 1100px; margin: 1.5vh 0;
+        }
+        .ht-side {
+            padding: 2.5rem; display: flex; flex-direction: column;
+            align-items: center; text-align: center;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); position: relative;
+        }
+        .ht-side-old { background: transparent; }
+        .ht-side-old:hover { transform: translateY(-4px); }
+        .ht-side-new {
+            background: linear-gradient(135deg, var(--tg-white) 0%, #f3fcff 100%);
+            color: var(--tg-dark-blue); border-radius: 32px;
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.25), 0 0 50px rgba(0, 200, 255, 0.12);
+        }
+        .ht-side-new:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 40px 85px rgba(0, 0, 0, 0.35), 0 0 60px rgba(0, 200, 255, 0.2);
+        }
+        .ht-icon-stage {
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 1.5rem; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .ht-side-old .ht-icon-stage { background: none; border: none; }
+        .ht-side-old:hover .ht-icon-stage { transform: scale(1.08); }
+        .ht-side-new .ht-icon-stage { background: none; box-shadow: none; }
+        .ht-side-new:hover .ht-icon-stage { transform: scale(1.08); }
+        .ht-icon { width: 96px; height: 96px; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        .ht-side h3 { font-size: 1.45rem; font-weight: 800; margin-bottom: 0.75rem; letter-spacing: -0.5px; }
+        .ht-side-old h3 { color: var(--tg-white); }
+        .ht-side-new h3 { color: var(--tg-dark-blue); }
+        .ht-side p { font-size: 0.95rem; line-height: 1.5; max-width: 32ch; }
+        .ht-side-old p { color: rgba(255, 255, 255, 0.6); }
+        .ht-side-new p { color: var(--tg-dark-blue); opacity: 0.9; }
+        .ht-arrow-flow {
+            width: 56px; height: 56px; background: var(--tg-telenor-blue);
+            color: var(--tg-dark-blue); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; box-shadow: 0 10px 30px rgba(0, 200, 255, 0.4);
+            font-weight: 900; z-index: 2; animation: htArrowFloat 3s ease-in-out infinite;
+        }
+        @keyframes htArrowFloat {
+            0%, 100% { transform: translateX(0); box-shadow: 0 10px 30px rgba(0, 200, 255, 0.4); }
+            50% { transform: translateX(8px); box-shadow: 0 15px 35px rgba(0, 200, 255, 0.6); }
+        }
+        .ht-changes-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 3rem; width: 100%; max-width: 1100px; margin-top: 3.5vh;
+            border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 3vh;
+        }
+        .ht-change-card { background: transparent; padding: 0.5rem 0; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+        .ht-change-card:hover { transform: translateY(-4px); }
+        .ht-change-num {
+            font-size: 2.2rem; font-weight: 900; font-style: italic;
+            color: var(--tg-telenor-blue); line-height: 1; margin-bottom: 0.75rem; letter-spacing: -1px;
+        }
+        .ht-change-card h4 {
+            font-size: 1.15rem; font-weight: 800; color: var(--tg-white);
+            margin-bottom: 0.5rem; letter-spacing: -0.3px; transition: color 0.3s ease;
+        }
+        .ht-change-card:hover h4 { color: var(--tg-telenor-blue); }
+        .ht-change-card p { font-size: 0.9rem; line-height: 1.6; color: rgba(255, 255, 255, 0.7); }
+        .ht-title-bar {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            padding: 3.5vh 5vw; z-index: 10; pointer-events: none; text-align: center;
+        }
+        .ht-title-bar h2 {
+            font-size: clamp(1.8rem, 3vw, 2.8rem); font-weight: 900; font-style: italic;
+            letter-spacing: -1.5px; color: var(--tg-white); display: inline;
+            background: var(--tg-dark-blue); padding: 0.08em 0.35em;
+            box-decoration-break: clone; -webkit-box-decoration-break: clone;
+        }
+        .ht-title-bar h2 span { color: var(--tg-telenor-blue); }
+
+        /* ===== SLIDE 7: How it works (simplified) ===== */
+        .slide-how {
+            background: var(--tg-mid-blue); color: var(--tg-white);
+            padding: 8vh 8vw 12vh !important;
+            display: flex !important; flex-direction: column;
+            align-items: center; justify-content: center; gap: 5vh;
+        }
+        .how-statement {
+            text-align: center; max-width: 900px;
+        }
+        .how-statement h2 {
+            font-size: clamp(2rem, 3.5vw, 3rem); font-weight: 900;
+            font-style: italic; letter-spacing: -1.5px; line-height: 1.15;
+        }
+        .how-statement h2 span { color: var(--tg-telenor-blue); }
+        .how-statement p {
+            font-size: 1.1rem; font-weight: 500; color: rgba(255,255,255,0.55);
+            margin-top: 1rem; line-height: 1.6;
+        }
+        .how-flow {
+            display: flex; align-items: stretch; gap: 0;
+            width: 100%; max-width: 1100px;
+        }
+        .how-flow { flex-wrap: nowrap; }
+        .how-arrow { align-self: center; }
+        .how-step {
+            flex: 1 1 0; min-width: 0;
+            display: flex; flex-direction: column; align-items: center;
+            text-align: center; padding: 2rem 1.25rem;
+            background: var(--tg-dark-blue); border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.08);
+            transition: all 0.3s ease;
+        }
+        .how-step:hover {
+            transform: translateY(-4px);
+            border-color: rgba(0, 200, 255, 0.2);
+        }
+        .how-step-num {
+            font-size: 2rem; font-weight: 900; font-style: italic;
+            color: var(--tg-telenor-blue); margin-bottom: 0.75rem;
+        }
+        .how-step h4 {
+            font-size: 1.15rem; font-weight: 800; color: var(--tg-white);
+            margin-bottom: 0.5rem; letter-spacing: -0.3px;
+        }
+        .how-step p {
+            font-size: 0.88rem; color: rgba(255,255,255,0.55); line-height: 1.5;
+        }
+        .how-arrow {
+            font-size: 1.5rem; color: var(--tg-telenor-blue); font-weight: 900;
+            padding: 0 0.75rem; flex-shrink: 0;
+        }
+        .how-title-bar {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            padding: 3vh 5vw; z-index: 10; pointer-events: none; text-align: center;
+        }
+        .how-title-bar h2 {
+            font-size: clamp(1.8rem, 3vw, 2.8rem); font-weight: 900; font-style: italic;
+            letter-spacing: -1.5px; color: var(--tg-white); display: inline;
+            background: var(--tg-dark-blue); padding: 0.08em 0.35em;
+            box-decoration-break: clone; -webkit-box-decoration-break: clone;
+        }
+
+        /* ===== Strategy Chain ===== */
+        .slide-chain {
+            padding: 0 !important; justify-content: stretch !important;
+        }
+        .slide-chain .slide-header {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            padding: 3vh 5vw; z-index: 10; text-align: center;
+        }
+        .slide-chain .slide-header h2 {
+            display: inline; background: var(--tg-dark-blue); color: var(--tg-white);
+            padding: 0.08em 0.35em;
+            box-decoration-break: clone; -webkit-box-decoration-break: clone;
+        }
+        .chain-container {
+            display: flex; flex-direction: row; width: 100%; height: 100%; position: relative;
+        }
+        .chain-col {
+            flex: 1; display: flex; flex-direction: column; align-items: center;
+            text-align: center; padding: 38vh 1.5vw 12vh; position: relative;
+            justify-content: flex-start;
+            opacity: 0 !important; transform: translateY(24px) !important;
+            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            transition-delay: 0s !important; pointer-events: none;
+        }
+        .chain-col.col-visible {
+            opacity: 1 !important; transform: translateY(0) !important; pointer-events: auto;
+        }
+        .chain-col + .chain-col::before {
+            content: ''; position: absolute; top: 0; left: 0;
+            width: 1px; height: 100%; background: rgba(255,255,255,0.06);
+        }
+        .chain-col-1 { background: #030228; }
+        .chain-col-2 { background: #050340; }
+        .chain-col-3 { background: #070452; }
+        .chain-col-4 { background: var(--tg-accent-green); }
+        .chain-col-5 { background: var(--tg-mid-blue); }
+        .chain-col-6 { background: var(--tg-blue); }
+        .chain-col-7 { background: #4a6fff; }
+        .chain-col-title {
+            font-size: clamp(1.6rem, 2.5vw, 2.2rem); font-weight: 900; font-style: italic;
+            color: var(--tg-white); line-height: 1.1; margin-bottom: 1.5rem; letter-spacing: -1px;
+        }
+        .chain-col-hero .chain-col-title {
+            color: var(--tg-dark-blue); font-size: clamp(1.8rem, 3vw, 2.5rem);
+        }
+        .chain-col-desc {
+            font-size: 0.95rem; font-weight: 500; color: rgba(255,255,255,0.9);
+            line-height: 1.5; max-width: 22ch;
+        }
+        .chain-col-hero { border: none; box-shadow: 0 0 40px rgba(176, 251, 184, 0.2); }
+        .chain-col-hero .chain-col-desc { color: rgba(7, 4, 82, 0.6); }
+        .chain-col-num {
+            font-size: 0.7rem; font-weight: 800; letter-spacing: 3px;
+            color: rgba(255,255,255,0.35); margin-bottom: 1rem; text-transform: uppercase;
+        }
+        .chain-col-hero .chain-col-num { color: rgba(7, 4, 82, 0.4); }
+        .chain-badge {
+            position: absolute; top: -15px; right: 2rem;
+            background: var(--tg-telenor-blue); color: var(--tg-dark-blue);
+            padding: 5px 14px; border-radius: 20px; font-size: 0.75rem;
+            font-weight: 800; letter-spacing: 1px;
+            box-shadow: 0 4px 12px rgba(0, 200, 255, 0.25);
+            cursor: pointer;
+            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .chain-badge:hover {
+            transform: scale(1.05);
+            background-color: var(--tg-white);
+            box-shadow: 0 6px 16px rgba(0, 200, 255, 0.4);
+        }
+        .chain-container::before {
+            content: ''; position: absolute; top: 9vh; left: 0;
+            width: var(--arrow-width, 100%); height: 20vh;
+            clip-path: polygon(0 20%, calc(100% - 80px) 20%, calc(100% - 80px) 0, 100% 50%, calc(100% - 80px) 100%, calc(100% - 80px) 80%, 0 80%);
+            background: linear-gradient(90deg, rgba(255,255,255,0.12), rgba(0,200,255,0.35));
+            z-index: 2; pointer-events: none;
+            transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Chain Popup Overlays */
+        .chain-popup-overlay {
+            position: fixed; inset: 0;
+            background: rgba(3, 2, 40, 0.92); backdrop-filter: blur(12px);
+            z-index: 200; display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
+        }
+        .chain-popup-overlay.popup-visible { opacity: 1; pointer-events: all; }
+        .chain-popup-close {
+            position: absolute; top: 3vh; right: 4vw;
+            width: 48px; height: 48px; border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.2); background: rgba(7, 4, 82, 0.6);
+            color: var(--tg-white); font-size: 1.4rem; font-weight: 700; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: border-color 0.3s ease, background 0.3s ease; z-index: 210;
+        }
+        .chain-popup-close:hover { border-color: var(--tg-telenor-blue); background: rgba(0, 200, 255, 0.15); }
+
+        .mission-popup-content {
+            text-align: center; max-width: 1100px; padding: 4rem; position: relative;
+            animation: revealUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+        .mission-popup-tag {
+            font-size: 0.82rem; font-weight: 800; text-transform: uppercase;
+            letter-spacing: 4px; color: var(--tg-telenor-blue); margin-bottom: 2.5rem;
+        }
+        .mission-popup-text {
+            font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 900; font-style: italic;
+            color: var(--tg-white); line-height: 1.35; letter-spacing: -1.5px;
+        }
+        .mission-popup-text .mp-hl {
+            display: inline; background: var(--tg-dark-blue);
+            padding: 0.04em 0.25em; box-decoration-break: clone; -webkit-box-decoration-break: clone;
+        }
+        .mission-popup-text .mp-accent { color: var(--tg-telenor-blue); }
+
+        .pillars-popup-content {
+            max-width: 1300px; width: 100%; padding: 3rem 4rem;
+            animation: revealUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+        .pillars-popup-header { margin-bottom: 2.5rem; }
+        .pillars-popup-year { font-size: 0.85rem; font-weight: 700; color: rgba(255,255,255,0.5); margin-bottom: 0.25rem; }
+        .pillars-popup-title {
+            font-size: clamp(1.8rem, 3vw, 2.5rem); font-weight: 900;
+            color: var(--tg-white); letter-spacing: -1px;
+        }
+        .pillars-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.25rem; }
+        .pillar-card {
+            background: var(--tg-dark-blue); border-radius: 16px; padding: 2rem 1.5rem;
+            display: flex; flex-direction: column; align-items: center; text-align: center;
+            border: 1px solid rgba(255,255,255,0.08);
+            transition: border-color 0.3s ease, transform 0.3s ease;
+        }
+        .pillar-card:hover { border-color: rgba(0, 200, 255, 0.25); transform: translateY(-4px); }
+        .pillar-card-icon { width: 122px; height: 122px; margin-bottom: 1.5rem; }
+        .pillar-card-icon img { width: 100%; height: 100%; }
+        .pillar-card-desc {
+            font-size: 0.95rem; font-weight: 600; color: var(--tg-white);
+            line-height: 1.5; margin-bottom: 1.5rem; flex-grow: 1;
+        }
+        .pillar-card-desc strong { color: var(--tg-telenor-blue); font-weight: 800; font-style: italic; }
+        .pillar-card-kpi {
+            font-size: 0.78rem; font-weight: 500; color: rgba(255,255,255,0.45);
+            line-height: 1.5; border-top: 1px solid rgba(255,255,255,0.08);
+            padding-top: 1rem; width: 100%;
+        }
+
+        /* ===== SLIDE 8: Photo Divider ===== */
+        .slide-photo { padding: 0; justify-content: center; align-items: center; }
+        .photo-bg {
+            position: absolute; inset: 0; width: 100%; height: 100%;
+            object-fit: cover; opacity: 1; transform: scale(1.06);
+            transition: transform 1.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .slide-active .photo-bg { transform: scale(1); }
+        .photo-overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(transparent 30%, rgba(7, 4, 82, 0.75) 100%);
+            z-index: 0; pointer-events: none;
+        }
+        .photo-content {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            z-index: 1; text-align: center; padding: 3.5vh 5vw;
+        }
+        .photo-content h2 {
+            font-size: clamp(2.5rem, 5vw, 4.5rem); font-weight: 900;
+            font-style: italic; letter-spacing: -2px; line-height: 1.25; color: var(--tg-white);
+        }
+        .photo-content h2 .hl {
+            display: inline; background: var(--tg-dark-blue); color: var(--tg-white);
+            padding: 0.08em 0.35em; box-decoration-break: clone; -webkit-box-decoration-break: clone;
+        }
+        .photo-content h2 .hl .accent { color: var(--tg-telenor-blue); }
+
+        /* ===== SLIDE 9: Capacity Chart ===== */
+        .slide-capacity {
+            background: var(--tg-mid-blue); color: var(--tg-white);
+            padding: 10vh 8vw 12vh !important;
+        }
+        .cap-chart-wrap {
+            background: transparent; width: 100%; position: relative;
+            height: 420px; margin-top: 2vh;
+        }
+        .cap-summary-bar {
+            display: flex; width: 100%; margin-top: 1.25rem;
+            border-radius: 12px; overflow: hidden; height: 48px;
+        }
+        .cap-summary-seg {
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.78rem; font-weight: 800; letter-spacing: 0.5px;
+        }
+        .cap-legend {
+            display: flex; justify-content: center; gap: 2rem; margin-top: 1rem;
+        }
+        .cap-legend-item {
+            display: flex; align-items: center; gap: 0.5rem;
+            font-size: 0.78rem; font-weight: 700; opacity: 0.8;
+        }
+        .cap-legend-dot { width: 14px; height: 14px; border-radius: 4px; }
+        .cap-title-bar {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            padding: 3vh 5vw; z-index: 10; pointer-events: none; text-align: center;
+        }
+        .cap-title-bar h2 {
+            font-size: clamp(1.8rem, 3vw, 2.8rem); font-weight: 900; font-style: italic;
+            letter-spacing: -1.5px; color: var(--tg-white); display: inline;
+            background: var(--tg-dark-blue); padding: 0.08em 0.35em;
+            box-decoration-break: clone; -webkit-box-decoration-break: clone;
+        }
+
+        /* ===== SLIDE 10: Collaboration Triangle ===== */
+        .slide-collab {
+            padding: 3vh 5vw 10vh !important; display: flex !important;
+            flex-direction: column; align-items: center; justify-content: center;
+            color: var(--tg-white);
+        }
+        .collab-canvas {
+            position: relative; width: 100%; max-width: 1200px; height: 620px;
+        }
+        .collab-svg {
+            position: absolute; inset: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 1;
+        }
+        @keyframes collabFlow { to { stroke-dashoffset: 32; } }
+        .collab-flow-left, .collab-flow-right { animation: collabFlow 1.2s linear infinite; }
+        .collab-center-node {
+            position: absolute; width: 180px; height: 180px; border-radius: 50%;
+            z-index: 10; display: flex; align-items: center; justify-content: center;
+        }
+        .center-node-glow {
+            position: absolute; inset: -12px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 200, 255, 0.35) 0%, transparent 70%);
+            animation: pulseGlow 3s ease-in-out infinite alternate; z-index: -1;
+        }
+        @keyframes pulseGlow {
+            0% { transform: scale(0.92); opacity: 0.5; }
+            100% { transform: scale(1.08); opacity: 0.9; }
+        }
+        .center-node-inner {
+            width: 100%; height: 100%; background: rgba(7, 4, 82, 0.85);
+            border: 2px solid var(--tg-telenor-blue); border-radius: 50%;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; padding: 1.5rem;
+            box-shadow: 0 0 25px rgba(0, 200, 255, 0.3), inset 0 0 15px rgba(0, 200, 255, 0.15);
+            backdrop-filter: blur(8px);
+        }
+        .cn-tag {
+            font-size: 0.62rem; font-weight: 800; color: var(--tg-accent-green);
+            letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px;
+        }
+        .cn-title {
+            font-size: 1.8rem; font-weight: 900; font-style: italic;
+            color: var(--tg-white); line-height: 1; letter-spacing: -0.5px; margin-bottom: 4px;
+        }
+        .cn-desc { font-size: 0.75rem; font-weight: 500; color: rgba(255, 255, 255, 0.7); line-height: 1.2; }
+        .collab-card {
+            position: absolute; width: 360px; border-radius: 18px;
+            padding: 1.8rem 2rem; z-index: 5; display: flex; flex-direction: column;
+            backdrop-filter: blur(8px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+        .collab-card:hover { transform: translateY(-5px); }
+        .collab-card-header { display: flex; align-items: center; gap: 14px; margin-bottom: 1rem; }
+        .collab-card-icon { width: 64px; height: 64px; flex-shrink: 0; }
+        .collab-card-titles { display: flex; flex-direction: column; }
+        .collab-card-tag {
+            font-size: 0.72rem; font-weight: 800; text-transform: uppercase;
+            letter-spacing: 2px; margin-bottom: 2px;
+        }
+        .collab-card-name {
+            font-size: 1.6rem; font-weight: 900; font-style: italic;
+            letter-spacing: -1px; line-height: 1.1;
+        }
+        .collab-card-list { list-style: none; font-size: 0.88rem; font-weight: 500; line-height: 1.6; }
+        .collab-card-list li { margin-bottom: 0.4rem; position: relative; padding-left: 1.2rem; }
+        .collab-card-list li::before { content: "\2192"; position: absolute; left: 0; font-weight: 700; }
+        .collab-c1 {
+            background: var(--tg-accent-green); border: 1px solid rgba(176, 251, 184, 0.6);
+            box-shadow: 0 10px 30px rgba(176, 251, 184, 0.15);
+        }
+        .collab-c1 .collab-card-tag { color: var(--tg-dark-blue); opacity: 0.7; }
+        .collab-c1 .collab-card-name { color: var(--tg-dark-blue); }
+        .collab-c1 .collab-card-list { color: var(--tg-dark-blue); }
+        .collab-c1 .collab-card-list li::before { color: var(--tg-dark-blue); }
+        .collab-c1:hover { box-shadow: 0 15px 40px rgba(176, 251, 184, 0.25); }
+        .collab-c2 {
+            background: var(--tg-dark-blue); border: 1px solid rgba(0, 200, 255, 0.25);
+            box-shadow: 0 10px 30px rgba(0, 200, 255, 0.04);
+        }
+        .collab-c2 .collab-card-tag { color: var(--tg-telenor-blue); }
+        .collab-c2 .collab-card-name { color: var(--tg-white); }
+        .collab-c2 .collab-card-list { color: rgba(255, 255, 255, 0.9); }
+        .collab-c2 .collab-card-list li::before { color: var(--tg-telenor-blue); }
+        .collab-c2:hover { border-color: var(--tg-telenor-blue); box-shadow: 0 15px 35px rgba(0, 200, 255, 0.15); }
+        .collab-c3 {
+            background: var(--tg-dark-blue); border: 1px solid rgba(255, 184, 215, 0.25);
+            box-shadow: 0 10px 30px rgba(255, 184, 215, 0.04);
+        }
+        .collab-c3 .collab-card-tag { color: var(--tg-accent-pink); }
+        .collab-c3 .collab-card-name { color: var(--tg-white); }
+        .collab-c3 .collab-card-list { color: rgba(255, 255, 255, 0.9); }
+        .collab-c3 .collab-card-list li::before { color: var(--tg-accent-pink); }
+        .collab-c3:hover { border-color: var(--tg-accent-pink); box-shadow: 0 15px 35px rgba(255, 184, 215, 0.12); }
+        .collab-edge-pill {
+            position: absolute; background: rgba(28, 22, 197, 0.7);
+            border: 1px solid rgba(0, 200, 255, 0.3); border-radius: 30px;
+            padding: 0.6rem 1.2rem; z-index: 12;
+            display: flex; flex-direction: column; align-items: center; text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 200, 255, 0.1);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .collab-edge-pill:hover { border-color: var(--tg-telenor-blue); box-shadow: 0 6px 20px rgba(0, 200, 255, 0.25); }
+        .collab-edge-pill .edge-title {
+            font-size: 0.72rem; font-weight: 800; color: var(--tg-telenor-blue);
+            text-transform: uppercase; letter-spacing: 1.5px; line-height: 1.2; margin-bottom: 2px;
+        }
+        .collab-edge-pill .edge-text {
+            font-size: 0.72rem; font-weight: 500; color: rgba(255, 255, 255, 0.8);
+            line-height: 1.2; white-space: nowrap;
+        }
+        @keyframes dashMove { to { background-position: 32px 0; } }
+        .collab-bottom-line {
+            position: absolute; height: 2px; z-index: 6; pointer-events: none;
+            background: repeating-linear-gradient(90deg,
+                rgba(0, 200, 255, 0.4) 0px, rgba(0, 200, 255, 0.4) 10px,
+                transparent 10px, transparent 16px);
+            background-size: 32px 2px; animation: dashMove 1.2s linear infinite reverse;
+        }
+        .collab-title-bar {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            padding: 3vh 5vw; z-index: 10; pointer-events: none; text-align: center;
+        }
+        .collab-title-bar h2 {
+            font-size: clamp(1.8rem, 3vw, 2.8rem); font-weight: 900; font-style: italic;
+            letter-spacing: -1.5px; color: var(--tg-white); display: inline;
+            background: var(--tg-dark-blue); padding: 0.08em 0.35em;
+            box-decoration-break: clone; -webkit-box-decoration-break: clone;
+        }
+
+        /* ===== SLIDE 11: Statement ===== */
+        .slide-statement {
+            align-items: center; justify-content: center; text-align: center;
+            padding: 8vh 10vw;
+        }
+        .slide-statement h2 {
+            font-size: clamp(2.2rem, 4.5vw, 4rem); font-weight: 900;
+            line-height: 1.15; max-width: 90%; margin-bottom: 2rem;
+        }
+        .slide-statement h2 span { color: var(--tg-telenor-blue); }
+        .statement-divider {
+            width: 80px; height: 4px; background: var(--tg-telenor-blue);
+            border-radius: 2px; margin-bottom: 2rem;
+        }
+        .statement-sub {
+            font-size: 1.15rem; font-weight: 600; color: rgba(255,255,255,0.7);
+            max-width: 650px; line-height: 1.6;
+        }
+
+        /* ===== SLIDE 12: Closing Charge ===== */
+        .closing-layout {
+            align-items: center; justify-content: center; text-align: center;
+            padding: 8vh 10vw;
+        }
+        .closing-layout h2 {
+            font-size: clamp(3rem, 6vw, 5.5rem); font-weight: 900;
+            line-height: 1.08; max-width: 90%; margin-bottom: 2.5rem;
+        }
+        .closing-layout h2 span { color: var(--tg-telenor-blue); }
+        .closing-divider {
+            width: 80px; height: 4px; background: var(--tg-telenor-blue);
+            border-radius: 2px; margin-bottom: 2.5rem;
+        }
+        .closing-sub {
+            font-size: 1.3rem; font-weight: 600; color: var(--tg-telenor-blue);
+            max-width: 650px; line-height: 1.6;
+        }
+        .closing-commitments {
+            display: flex; gap: 4rem; margin: 2.5rem 0;
+            align-items: center; justify-content: center;
+        }
+        .closing-commit {
+            display: flex; flex-direction: column; align-items: center; gap: 0.75rem;
+        }
+        .closing-commit img {
+            width: 48px; height: 48px; filter: brightness(0) invert(1); opacity: 0.6;
+        }
+        .closing-commit span {
+            font-size: 0.85rem; font-weight: 800; text-transform: uppercase;
+            letter-spacing: 3px; color: rgba(255, 255, 255, 0.5);
+        }
+        .closing-cta {
+            font-size: 1rem; font-weight: 600; color: rgba(255, 255, 255, 0.5);
+            margin-top: 1.5rem;
+        }
+        .closing-logo { margin-top: 2rem; opacity: 0.4; }
+        .closing-logo img { width: 48px; height: 48px; }
+
+        /* ===== Transformation Engine Slide ===== */
+        .slide-engine {
+            background: var(--tg-mid-blue); color: var(--tg-white);
+            padding: 0 !important;
+            flex-direction: row !important; align-items: stretch;
+        }
+        .engine-panel {
+            flex: 1; display: flex; flex-direction: column;
+            align-items: center; text-align: center;
+            padding: 10vh 3.5vw 14vh; position: relative; overflow: hidden;
+            transition: background 0.6s ease, opacity 0.6s ease;
+        }
+        .engine-panel-inner {
+            display: flex; flex-direction: column; align-items: center;
+            justify-content: center; flex: 1; width: 100%;
+        }
+        .engine-panel + .engine-panel::before {
+            content: ''; position: absolute; top: 0; left: 0;
+            width: 1px; height: 100%; background: rgba(255,255,255,0.08);
+        }
+        .ep-1 { background: #070452; }
+        .ep-2 { background: var(--tg-mid-blue); }
+        .ep-3 .ep-name, .ep-3 .ep-sub, .ep-3 .ep-accent { opacity: 1; }
+        .ep-2.ep-active {
+            background: var(--tg-accent-green);
+            box-shadow: 0 0 60px rgba(176, 251, 184, 0.2);
+        }
+        .ep-2 .ep-icon-dark { display: none; }
+        .ep-2.ep-active .ep-icon-light { display: none; }
+        .ep-2.ep-active .ep-icon-dark { display: block; }
+        .ep-2.ep-active .ep-name { color: var(--tg-dark-blue); }
+        .ep-2.ep-active .ep-sub { color: rgba(7, 4, 82, 0.65); }
+        .ep-2.ep-active .ep-accent { background: var(--tg-dark-blue); }
+        .ep-2.ep-active .ep-badge--focus { background: var(--tg-dark-blue); color: var(--tg-accent-green); }
+        .ep-3 { background: #2954FF; opacity: 0.5; }
+        .engine-panel .ep-icon { width: 120px; height: 120px; margin-bottom: 1.5rem; }
+        .engine-panel .ep-name {
+            font-size: clamp(2.2rem, 3.5vw, 3.2rem); font-weight: 900; font-style: italic;
+            letter-spacing: -2px; color: var(--tg-white); line-height: 1;
+            margin-bottom: 1.5rem; height: 2.2em;
+            display: flex; align-items: flex-end; justify-content: center;
+            transition: color 0.6s ease;
+        }
+        .engine-panel .ep-accent {
+            width: 64px; height: 4px; background: var(--tg-telenor-blue);
+            margin-bottom: 1.25rem; border-radius: 2px;
+            transition: background 0.6s ease;
+        }
+        .engine-panel .ep-sub {
+            font-size: 1rem; font-weight: 600; color: rgba(255,255,255,0.7);
+            line-height: 1.5; max-width: 28ch;
+            transition: color 0.6s ease;
+        }
+        .engine-panel .ep-badge {
+            margin-top: 1.25rem; display: inline-block;
+            font-size: 0.72rem; font-weight: 800; text-transform: uppercase;
+            letter-spacing: 2px; padding: 0.35rem 0.85rem; border-radius: 100px;
+            transition: background 0.6s ease, color 0.6s ease;
+        }
+        .ep-badge--focus { background: var(--tg-telenor-blue); color: var(--tg-dark-blue); }
+        .ep-badge--later { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.4); }
+        .engine-title-bar {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            padding: 3.5vh 5vw; z-index: 10; pointer-events: none; text-align: center;
+        }
+        .engine-title-bar h2 {
+            font-size: clamp(2rem, 3.2vw, 3rem); font-weight: 900;
+            color: var(--tg-white); letter-spacing: -1.5px; display: inline;
+            background: var(--tg-dark-blue); padding: 0.08em 0.35em;
+            box-decoration-break: clone; -webkit-box-decoration-break: clone;
+        }
+
+        /* ===== Roadmap Slide ===== */
+        .slide-roadmap {
+            background: var(--tg-mid-blue); color: var(--tg-white);
+            padding: 8vh 6vw 12vh !important;
+            display: flex !important; flex-direction: column;
+            align-items: center; justify-content: center;
+        }
+        .roadmap-header { text-align: center; margin-bottom: 3rem; }
+        .roadmap-header h2 {
+            font-size: clamp(2rem, 3.5vw, 3rem); font-weight: 900;
+            font-style: italic; letter-spacing: -1.5px;
+        }
+        .roadmap-header h2 span { color: var(--tg-telenor-blue); }
+        .roadmap-tagline {
+            font-size: 1.1rem; font-style: italic; font-weight: 500;
+            color: rgba(255,255,255,0.5); margin-top: 0.75rem;
+            max-width: 700px; margin-left: auto; margin-right: auto;
+        }
+        .roadmap {
+            display: flex; gap: 1.5rem; width: 100%; max-width: 1200px;
+        }
+        .roadmap-phase {
+            flex: 1; background: rgba(7, 4, 82, 0.6);
+            border: 1px solid rgba(255,255,255,0.08); border-radius: 20px;
+            padding: 2.25rem 1.75rem; position: relative;
+            transition: box-shadow 0.3s ease, transform 0.3s cubic-bezier(0.2, 1, 0.2, 1), border-color 0.3s ease;
+            text-align: left;
+            display: flex; flex-direction: column;
+        }
+        .roadmap-phase:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(0, 200, 255, 0.08);
+        }
+        .roadmap-phase--active {
+            border-color: var(--tg-telenor-blue); border-width: 2px;
+            background: rgba(0, 200, 255, 0.06);
+        }
+        .roadmap-phase--active .phase-badge {
+            background: var(--tg-telenor-blue); color: var(--tg-dark-blue);
+        }
+        .phase-badge {
+            display: inline-block; align-self: flex-start;
+            font-size: 0.7rem; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 2px;
+            padding: 0.3rem 0.75rem; border-radius: 100px;
+            background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.5);
+            margin-bottom: 1.25rem;
+        }
+        .phase-title {
+            font-size: 1.3rem; font-weight: 900; font-style: italic;
+            color: var(--tg-white); margin-bottom: 0.75rem; letter-spacing: -0.5px;
+        }
+        .phase-desc {
+            font-size: 0.88rem; color: rgba(255,255,255,0.65); line-height: 1.55;
+        }
+        .phase-desc { flex: 1; }
+        .phase-status {
+            margin-top: 1.5rem; font-size: 0.75rem; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 1px;
+        }
+        .phase-status--live { color: var(--tg-accent-green); }
+        .phase-status--next { color: var(--tg-telenor-blue); }
+        .phase-status--future { color: rgba(255,255,255,0.4); }
+        .roadmap-title-bar {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            padding: 3vh 5vw; z-index: 10; pointer-events: none; text-align: center;
+        }
+        .roadmap-title-bar h2 {
+            font-size: clamp(1.8rem, 3vw, 2.8rem); font-weight: 900; font-style: italic;
+            letter-spacing: -1.5px; color: var(--tg-white); display: inline;
+            background: var(--tg-dark-blue); padding: 0.08em 0.35em;
+            box-decoration-break: clone; -webkit-box-decoration-break: clone;
+        }
+
+        /* ===== SLIDE 3b: Team Capacity Breakdown ===== */
+        .slide-legacy-learn {
+            background: var(--tg-mid-blue); color: var(--tg-white);
+            padding: 4vh 4vw 10vh !important;
+        }
+        .ll-header { text-align: center; margin-bottom: 1.5vh; }
+        .ll-header h2 {
+            font-size: clamp(2rem, 3.5vw, 3rem); font-weight: 900;
+            font-style: italic; letter-spacing: -1.5px;
+        }
+        .ll-header h2 span { color: var(--tg-telenor-blue); }
+        .ll-sub {
+            font-size: 0.92rem; opacity: 0.55; margin-top: 0.5rem; font-weight: 500;
+            max-width: 800px; margin-left: auto; margin-right: auto;
+            line-height: 1.6; text-align: center;
+        }
+        .ll-chart-wrap {
+            background: transparent; border: none; width: 100%;
+            position: relative; height: 340px; margin-top: 1.5vh;
+        }
+        .ll-summary-bar {
+            display: flex; width: 100%; margin-top: 1.25rem;
+            border-radius: 12px; overflow: hidden; height: 48px;
+        }
+        .ll-summary-seg {
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.78rem; font-weight: 800; letter-spacing: 0.5px;
+        }
+        .ll-legend {
+            display: flex; justify-content: center; gap: 2rem; margin-top: 1rem;
+        }
+        .ll-legend-item {
+            display: flex; align-items: center; gap: 0.5rem;
+            font-size: 0.78rem; font-weight: 700; opacity: 0.8;
+        }
+        .ll-legend-dot { width: 14px; height: 14px; border-radius: 4px; }
+        .ll-title-bar {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            padding: 3vh 5vw; z-index: 10; pointer-events: none; text-align: center;
+        }
+        .ll-title-bar h2 {
+            font-size: clamp(1.8rem, 3vw, 2.8rem); font-weight: 900; font-style: italic;
+            letter-spacing: -1.5px; color: var(--tg-white); display: inline;
+            background: var(--tg-dark-blue); padding: 0.08em 0.35em;
+            box-decoration-break: clone; -webkit-box-decoration-break: clone;
+        }
+    </style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress" style="width: 7%;"></div>
+<div class="nav-counter" id="counter"></div>
+<div class="nav-logo">
+    <!-- REPLACE: your-logo.svg -->
+    <svg width="36" height="36" viewBox="0 0 36 36"><circle cx="18" cy="18" r="16" fill="none" stroke="rgba(0,200,255,0.5)" stroke-width="2"/></svg>
+</div>
+
+<!-- ==================== SLIDE 1: Title Split ==================== -->
+<div class="slide slide-title-split">
+    <div class="title-content">
+        <span class="badge-pill anim">All-Hands — Q3 2026</span>
+        <h1 class="anim anim-d1">Content as <span>Code</span></h1>
+        <p class="title-subtitle anim anim-d2">
+            The story of how we transform our organization with AI agents, Content-as-Code, and agentic teams.
+        </p>
+        <div class="title-logo-area anim anim-d3">
+            <!-- REPLACE: your-logo.svg -->
+            <svg width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"/></svg>
+            <span>Strategy 2030 — Content-As-Code</span>
+        </div>
+    </div>
+    <div class="title-visual">
+        <div class="tg-band tg-band-1"></div>
+        <div class="tg-band tg-band-2"></div>
+        <div class="tg-band tg-band-3"></div>
+        <div class="tg-band tg-band-4"></div>
+    </div>
+    <div class="year-mark">2030</div>
+</div>
+
+<!-- ==================== SLIDE 2: GP Scenario Chart ==================== -->
+<div class="slide slide-dark" style="padding: 6vh 8vw 12vh !important;">
+    <div style="position:relative; width:100%; height:520px;" class="anim anim-d1">
+        <canvas id="gpChart"></canvas>
+    </div>
+    <div style="display:flex; justify-content:center; gap:2rem; margin-top:1.25rem;" class="anim anim-d2">
+        <div class="cap-legend-item"><div class="cap-legend-dot" style="background:#070452;"></div>Baseline</div>
+        <div class="cap-legend-item"><div class="cap-legend-dot" style="background:#2954FF;"></div>Growth gap (market expectation)</div>
+        <div class="cap-legend-item" id="gp-legend-line" style="opacity:0; transition: opacity 0.6s ease;"><div class="cap-legend-dot" style="background:none; border-top:3px dashed #ff6b6b; border-radius:0; height:0; width:14px;"></div>Without transformation</div>
+    </div>
+    <div id="gp-title-bar" style="position:absolute;bottom:0;left:0;right:0;padding:3vh 5vw;z-index:10;pointer-events:none;text-align:center;transition:opacity 0.6s ease;" class="anim anim-d2">
+        <h2 style="font-size:clamp(1.8rem,3vw,2.8rem);font-weight:900;font-style:italic;letter-spacing:-1.5px;color:var(--tg-white);display:inline;background:var(--tg-dark-blue);padding:0.08em 0.35em;box-decoration-break:clone;-webkit-box-decoration-break:clone;">Without change, growth stalls.</h2>
+    </div>
+</div>
+
+<!-- ==================== SLIDE 3: Problem Triptych (with icons) ==================== -->
+<div class="slide s3-triptych">
+    <div class="s3-title-bar anim">
+        <h2>Why?</h2>
+    </div>
+    <div class="s3-panel s3-q1 anim anim-d1">
+        <div class="s3-panel-inner">
+            <!-- REPLACE: your-icon.svg -->
+            <svg class="s3-icon" viewBox="0 0 140 140"><circle cx="70" cy="70" r="50" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="3"/><line x1="45" y1="95" x2="95" y2="45" stroke="rgba(255,255,255,0.4)" stroke-width="3"/></svg>
+            <div class="s3-name">Volume logic is&nbsp;dead</div>
+            <div class="s3-accent"></div>
+            <div class="s3-sub">The marginal value of units has collapsed. Enterprise ARPU: 12 EUR. Challengers capture 111% of net market growth on volume alone.</div>
+        </div>
+    </div>
+    <div class="s3-panel s3-q2 anim anim-d2">
+        <div class="s3-panel-inner">
+            <!-- REPLACE: your-icon.svg -->
+            <svg class="s3-icon" viewBox="0 0 140 140"><rect x="30" y="40" width="80" height="60" rx="8" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="3"/><line x1="30" y1="70" x2="110" y2="70" stroke="rgba(255,255,255,0.4)" stroke-width="2"/></svg>
+            <div class="s3-name">Too slow to&nbsp;shift</div>
+            <div class="s3-accent"></div>
+            <div class="s3-sub">We have the agenda, but silos and manual processes slow us from product to customer. What we build doesn't reach the market in time.</div>
+        </div>
+    </div>
+    <div class="s3-panel s3-q3 anim anim-d3">
+        <div class="s3-panel-inner">
+            <!-- REPLACE: your-icon.svg -->
+            <svg class="s3-icon" viewBox="0 0 140 140"><polygon points="70,30 110,100 30,100" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="3"/><text x="70" y="85" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-size="24" font-weight="700">!</text></svg>
+            <div class="s3-name">The 2027 cliff</div>
+            <div class="s3-accent"></div>
+            <div class="s3-sub">Without new services scaled by 2027, we have no growth engine when core connectivity flattens out.</div>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== SLIDE 3b: Team Capacity Breakdown ==================== -->
+<div class="slide slide-legacy-learn">
+    <div class="ll-chart-wrap anim anim-d1" style="height: 62vh; margin-top: 0;">
+        <canvas id="legacyChart"></canvas>
+    </div>
+    <div class="ll-summary-bar anim anim-d2">
+        <div class="ll-summary-seg" style="flex:40;background:#070452;color:rgba(255,255,255,0.9);">Run — 45 FTE (40%)</div>
+        <div class="ll-summary-seg" style="flex:26;background:#2954FF;color:rgba(255,255,255,0.9);">Modernization — 30 FTE (26%)</div>
+        <div class="ll-summary-seg" style="flex:26;background:#00C8FF;color:#070452;">Growth (legacy model) — 30 FTE (26%)</div>
+        <div class="ll-summary-seg" style="flex:8;background:#FFFFFF;color:#070452;">New model — 10 (8%)</div>
+    </div>
+    <div class="ll-legend">
+        <div class="ll-legend-item"><div class="ll-legend-dot" style="background:#070452;"></div>Run</div>
+        <div class="ll-legend-item"><div class="ll-legend-dot" style="background:#2954FF;"></div>Modernization</div>
+        <div class="ll-legend-item"><div class="ll-legend-dot" style="background:#00C8FF;"></div>Growth (legacy model)</div>
+        <div class="ll-legend-item"><div class="ll-legend-dot" style="background:#FFFFFF;"></div>New model</div>
+    </div>
+    <div class="ll-title-bar anim anim-d3">
+        <h2>115 people. 12 teams. This is how we spend our time.</h2>
+    </div>
+</div>
+
+<!-- ==================== SLIDE 5: Transformation Engine (Triptych) ==================== -->
+<div class="slide slide-engine">
+    <div class="engine-title-bar anim">
+        <h2>Three levers driving the change.</h2>
+    </div>
+    <div class="engine-panel ep-1 anim anim-d1">
+        <div class="engine-panel-inner">
+            <!-- REPLACE: your-icon.svg -->
+            <svg class="ep-icon" viewBox="0 0 120 120"><rect x="20" y="30" width="80" height="60" rx="10" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="3"/><circle cx="60" cy="60" r="15" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2"/></svg>
+            <div class="ep-name">Portfolio 2.0</div>
+            <div class="ep-accent"></div>
+            <div class="ep-sub">New portfolio and pricing model that simplifies and frees up 30% capacity.</div>
+        </div>
+    </div>
+    <div id="engine-focus" class="engine-panel ep-2 anim anim-d2">
+        <div class="engine-panel-inner">
+            <!-- REPLACE: your-icon.svg (light version) -->
+            <svg class="ep-icon ep-icon-light" viewBox="0 0 120 120"><rect x="25" y="25" width="70" height="70" rx="12" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="3"/><circle cx="50" cy="50" r="8" fill="rgba(255,255,255,0.5)"/><circle cx="70" cy="70" r="8" fill="rgba(255,255,255,0.5)"/></svg>
+            <!-- REPLACE: your-icon.svg (dark version — shown when panel is active/green) -->
+            <svg class="ep-icon ep-icon-dark" viewBox="0 0 120 120"><rect x="25" y="25" width="70" height="70" rx="12" fill="none" stroke="rgba(7,4,82,0.5)" stroke-width="3"/><circle cx="50" cy="50" r="8" fill="rgba(7,4,82,0.5)"/><circle cx="70" cy="70" r="8" fill="rgba(7,4,82,0.5)"/></svg>
+            <div class="ep-name">Agentic way of working</div>
+            <div class="ep-accent"></div>
+            <div class="ep-sub">AI agents as team members. Content as Code as the operating model.</div>
+        </div>
+    </div>
+    <div class="engine-panel ep-3 anim anim-d3">
+        <div class="engine-panel-inner">
+            <!-- REPLACE: your-icon.svg -->
+            <svg class="ep-icon" viewBox="0 0 120 120"><path d="M30 90 L60 30 L90 90 Z" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="3"/></svg>
+            <div class="ep-name">Sales transformation</div>
+            <div class="ep-accent" style="background: rgba(255,255,255,0.2);"></div>
+            <div class="ep-sub">CPQ and AI-assisted sales. Separate agenda with sales organization.</div>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== SLIDE 6: Zoom into Agentic Way of Working ==================== -->
+<div class="slide slide-zoom-in">
+    <div class="zoom-stack">
+        <div class="zoom-layer zoom-layer--base zoom-step" id="zoom-0">
+            <!-- REPLACE: your-icon.svg -->
+            <svg class="zoom-icon" viewBox="0 0 80 80"><rect x="10" y="10" width="60" height="60" rx="10" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2.5"/><circle cx="35" cy="35" r="6" fill="rgba(255,255,255,0.5)"/><circle cx="50" cy="50" r="6" fill="rgba(255,255,255,0.5)"/></svg>
+            <div class="zoom-text">
+                <div class="zoom-title">New processes, new skills</div>
+                <div class="zoom-desc">We must fundamentally change how we work. Learn to instruct agents, work in Git, and build new habits from scratch.</div>
+            </div>
+        </div>
+        <div class="zoom-layer zoom-layer--result zoom-step" id="zoom-1">
+            <!-- REPLACE: your-icon.svg -->
+            <svg class="zoom-icon" viewBox="0 0 80 80"><rect x="10" y="15" width="60" height="50" rx="6" fill="none" stroke="rgba(7,4,82,0.5)" stroke-width="2.5"/><line x1="20" y1="30" x2="60" y2="30" stroke="rgba(7,4,82,0.3)" stroke-width="2"/><line x1="20" y1="40" x2="50" y2="40" stroke="rgba(7,4,82,0.3)" stroke-width="2"/><line x1="20" y1="50" x2="55" y2="50" stroke="rgba(7,4,82,0.3)" stroke-width="2"/></svg>
+            <div class="zoom-text">
+                <div class="zoom-title">Content as Code</div>
+                <div class="zoom-desc">For agents to work, they need a shared source of truth. All strategy and governance in Markdown + Git, readable by both humans and machines.</div>
+            </div>
+        </div>
+        <div class="zoom-layer zoom-layer--engine zoom-step" id="zoom-2">
+            <!-- REPLACE: your-icon.svg -->
+            <svg class="zoom-icon" viewBox="0 0 80 80"><circle cx="25" cy="40" r="12" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2.5"/><circle cx="55" cy="40" r="12" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2.5"/><circle cx="40" cy="22" r="12" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2.5"/></svg>
+            <div class="zoom-text">
+                <div class="zoom-title">New team members</div>
+                <div class="zoom-desc">Our teams get AI agents as full colleagues, not a chatbot in the browser, but dedicated agents that work alongside us.</div>
+            </div>
+        </div>
+    </div>
+    <div class="zoom-title-bar zoom-step" id="zoom-3">
+        <h2>Three layers. One agentic way of working.</h2>
+    </div>
+</div>
+
+<!-- ==================== SLIDE 7: How it works (simplified) ==================== -->
+<div class="slide slide-how">
+    <div class="how-statement anim">
+        <h2>We work in <span>Git.</span><br>But you don't need to become a developer.</h2>
+        <p>We abstract away the complexity. You give instructions in plain language, agents do the rest. But we all need to learn some new habits.</p>
+    </div>
+    <div class="how-flow anim anim-d2">
+        <div class="how-step">
+            <div class="how-step-num">01</div>
+            <h4>You describe</h4>
+            <p>Write what you need in plain language. The agent understands the context.</p>
+        </div>
+        <div class="how-arrow">&rarr;</div>
+        <div class="how-step">
+            <div class="how-step-num">02</div>
+            <h4>Agent executes</h4>
+            <p>Finds documents, updates numbers, builds presentations.</p>
+        </div>
+        <div class="how-arrow">&rarr;</div>
+        <div class="how-step">
+            <div class="how-step-num">03</div>
+            <h4>System validates</h4>
+            <p>Automated checks on data, links, and consistency. Errors caught before publishing.</p>
+        </div>
+        <div class="how-arrow">&rarr;</div>
+        <div class="how-step">
+            <div class="how-step-num">04</div>
+            <h4>Result — live</h4>
+            <p>Updated strategy, presentation, or report — traceable and reversible.</p>
+        </div>
+    </div>
+    <div class="how-title-bar anim anim-d3">
+        <h2>From 10 hours to 10 minutes.</h2>
+    </div>
+</div>
+
+<!-- ==================== SLIDE 8: Photo Statement ==================== -->
+<div class="slide slide-photo">
+    <!-- REPLACE: your-photo.jpg — using CSS gradient placeholder instead -->
+    <div class="photo-bg" style="background: linear-gradient(135deg, #070452 0%, #1C16C5 40%, #2954FF 70%, #00C8FF 100%); transform: scale(1.06); transition: transform 1.8s cubic-bezier(0.16, 1, 0.3, 1);"></div>
+    <div style="position:absolute;inset:0;z-index:1;display:flex;align-items:center;justify-content:center;text-align:center;" class="anim anim-fade">
+        <h2 style="font-size:clamp(2.5rem,5.5vw,4.5rem);font-weight:900;font-style:italic;letter-spacing:-2px;line-height:1.3;color:var(--tg-white);">
+            <span style="display:inline;background:var(--tg-dark-blue);padding:0.08em 0.35em;box-decoration-break:clone;-webkit-box-decoration-break:clone;">Humans <span style="color:var(--tg-accent-green);">decide.</span></span><br>
+            <span style="display:inline;background:var(--tg-dark-blue);padding:0.08em 0.35em;box-decoration-break:clone;-webkit-box-decoration-break:clone;">Agents <span style="color:var(--tg-telenor-blue);">execute.</span></span><br>
+            <span style="display:inline;background:var(--tg-dark-blue);padding:0.08em 0.35em;box-decoration-break:clone;-webkit-box-decoration-break:clone;">The platform <span style="color:var(--tg-telenor-blue);">ensures.</span></span>
+        </h2>
+    </div>
+</div>
+
+<!-- ==================== SLIDE 9: Capacity Chart ==================== -->
+<div class="slide slide-capacity">
+    <div class="cap-chart-wrap anim" style="height: 72vh; margin-top: 0;">
+        <canvas id="capacityChart"></canvas>
+    </div>
+    <div class="cap-title-bar anim anim-d2">
+        <h2>Growth capacity: from 34% today to 64% by 2029.</h2>
+    </div>
+</div>
+
+<!-- ==================== SLIDE 10: Roadmap ==================== -->
+<div class="slide slide-roadmap">
+    <div class="roadmap anim" style="margin-top:0;">
+        <div class="roadmap-phase" style="border-color:var(--tg-accent-green);background:rgba(176,251,184,0.06);">
+            <span class="phase-badge" style="background:var(--tg-accent-green);color:var(--tg-dark-blue);">Phase 1</span>
+            <div class="phase-title">AI Analyst</div>
+            <div class="phase-desc">Conversational analysis across the entire data warehouse. Ask questions, get structured insights in seconds.</div>
+            <div class="phase-status phase-status--live">&#9679; Live in production</div>
+        </div>
+        <div class="roadmap-phase" style="background:var(--tg-accent-green);border:2px solid rgba(176,251,184,0.6);box-shadow:0 10px 40px rgba(176,251,184,0.15);">
+            <span class="phase-badge" style="background:var(--tg-dark-blue);color:var(--tg-accent-green);">Phase 2 — today</span>
+            <div class="phase-title" style="color:var(--tg-dark-blue);">Content as Code</div>
+            <div class="phase-desc" style="color:rgba(7,4,82,0.7);">All strategic content in one place, updated by agents, owned by people. This presentation was built this way. Demo afterwards.</div>
+            <div class="phase-status" style="color:var(--tg-dark-blue);font-size:0.75rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-top:1.5rem;">&#9679; Live in pilot — expanding now</div>
+        </div>
+        <div class="roadmap-phase" style="border-color:var(--tg-accent-green);background:rgba(176,251,184,0.06);">
+            <span class="phase-badge" style="background:var(--tg-accent-green);color:var(--tg-dark-blue);">Phase 3</span>
+            <div class="phase-title">Sales Ops assistant</div>
+            <div class="phase-desc">Proactive deal-matching, anomaly detection, and automated pricing recommendations directly in CRM.</div>
+            <div class="phase-status phase-status--live">&#9679; Live in pilot</div>
+        </div>
+        <div class="roadmap-phase">
+            <span class="phase-badge">Phase 4</span>
+            <div class="phase-title">Agentic operating model</div>
+            <div class="phase-desc">A fully optimized hybrid ecosystem where humans and autonomous agents work seamlessly in parallel.</div>
+            <div class="phase-status phase-status--future">North star &#11088;</div>
+        </div>
+    </div>
+    <div class="roadmap-title-bar anim anim-d1">
+        <h2>Three of four phases are already underway.</h2>
+    </div>
+</div>
+
+<!-- ==================== SLIDE 12: Statement ==================== -->
+<div class="slide slide-dark am-ambient slide-statement">
+    <h2 class="anim">
+        Strategy as <span>code</span><br>
+        means agents can read,<br>
+        validate, and act<br>
+        on it — <span>in real time.</span>
+    </h2>
+    <div class="statement-divider anim anim-d1"></div>
+    <p class="statement-sub anim anim-d2">
+        No presentations that expire. No silos between teams.<br>
+        One machine-readable source of truth driving both humans and AI.
+    </p>
+</div>
+
+
+<!-- ==================== SLIDE 12: Where We Are Now (Call to Action) ==================== -->
+<div class="slide slide-dark am-ambient am-stat-slide">
+    <div class="stat-grid">
+        <div class="stat-card anim anim-d1">
+            <div class="stat-card-num-container">
+                <div class="stat-card-number" id="animated-num-teams">0</div>
+            </div>
+            <span class="stat-card-label">People in the teams</span>
+            <p class="stat-card-desc">Talented people who know the customers, products, and systems.</p>
+        </div>
+        <div class="stat-card anim anim-d2">
+            <div class="stat-card-num-container">
+                <div class="stat-card-number" id="animated-num-pct">0%</div>
+            </div>
+            <span class="stat-card-label" style="color:var(--red-pain);">Tied up in operations</span>
+            <p class="stat-card-desc">Only 10 are building the future. That is not enough.</p>
+        </div>
+    </div>
+    <div class="stat-quote anim anim-d3">
+        <h2 style="font-size:1.8rem;">"That's why we must work differently — not harder."</h2>
+    </div>
+</div>
+
+<!-- ================= SCRIPTS ================= -->
+<script>
+    Chart.defaults.plugins.datalabels = { display: false };
+
+    const slides = document.querySelectorAll('.slide');
+    const counter = document.getElementById('counter');
+    const progress = document.getElementById('progress');
+    const total = slides.length;
+
+    function getCurrentSlide() {
+        let idx = 0;
+        slides.forEach((s, i) => {
+            const rect = s.getBoundingClientRect();
+            if (rect.top < window.innerHeight / 2 && rect.bottom > window.innerHeight / 2) idx = i;
+        });
+        return idx;
+    }
+
+    function scrollToSlide(i) {
+        i = Math.max(0, Math.min(i, total - 1));
+        slides[i].scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // --- Chain Slide Sub-stepping ---
+    const chainSlide = document.querySelector('.slide-chain');
+    const chainSlideIdx = Array.from(slides).indexOf(chainSlide);
+    const popupMission = document.getElementById('popup-mission');
+    const popupPillars = document.getElementById('popup-pillars');
+    const chainCols = document.querySelectorAll('.chain-col');
+    const chainContainer = document.querySelector('.chain-container');
+    let chainStep = 0;
+
+    function updateChainSlide() {
+        let visibleColsCount = chainStep + 1; // Ranging from 1 to 7
+
+        chainCols.forEach((col, idx) => {
+            col.classList.toggle('col-visible', idx < visibleColsCount);
+        });
+
+        const arrowWidth = (visibleColsCount / 7) * 100;
+        if (chainContainer) chainContainer.style.setProperty('--arrow-width', `${arrowWidth}%`);
+    }
+
+    function closeChainPopup() {
+        if (popupMission) popupMission.classList.remove('popup-visible');
+        if (popupPillars) popupPillars.classList.remove('popup-visible');
+    }
+
+    // Explicit click triggers for the badges
+    document.querySelectorAll('.chain-badge').forEach(badge => {
+        badge.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent advancing the slide
+            if (badge.textContent.includes('Mission') && popupMission) {
+                popupMission.classList.add('popup-visible');
+            } else if (badge.textContent.includes('Pillars') && popupPillars) {
+                popupPillars.classList.add('popup-visible');
+            }
+        });
+    });
+
+    updateChainSlide();
+
+    // --- Scroll & Navigation ---
+    let lastKnownSlideIdx = 0;
+    document.addEventListener('scroll', () => {
+        const idx = getCurrentSlide();
+        counter.textContent = `${idx + 1} / ${total}`;
+        progress.style.width = `${((idx + 1) / total) * 100}%`;
+
+        if (idx !== lastKnownSlideIdx) {
+            if (popupMission) popupMission.classList.remove('popup-visible');
+            if (popupPillars) popupPillars.classList.remove('popup-visible');
+
+            if (idx === zoomSlideIdx) {
+                if (lastKnownSlideIdx > zoomSlideIdx) {
+                    ['zoom-0','zoom-1','zoom-2','zoom-3'].forEach(function(id) { document.getElementById(id).classList.add('zoom-visible'); });
+                    zoomStep = 3;
+                } else {
+                    resetZoom();
+                    setTimeout(function() { zoomShow(0); zoomStep = 1; }, 300);
+                }
+            }
+            if (idx === gpSlideIdx) {
+                if (lastKnownSlideIdx > gpSlideIdx) { gpStep = 1; setTimeout(showGpLine, 300); }
+                else { gpStep = 0; }
+            }
+            if (idx === engineSlideIdx) {
+                engineStep = 0; engineFocus.classList.remove('ep-active');
+            }
+            if (idx === chainSlideIdx) {
+                chainStep = lastKnownSlideIdx < chainSlideIdx ? 0 : 6;
+                updateChainSlide();
+            }
+            lastKnownSlideIdx = idx;
+        }
+    });
+
+    document.addEventListener('click', (e) => {
+        if (e.target.closest('.chain-badge') || e.target.closest('button') || e.target.closest('a') || e.target.closest('.fw-node') || e.target.closest('.chain-popup-overlay')) return;
+
+        const idx = getCurrentSlide();
+        if (idx === zoomSlideIdx) {
+            if (zoomStep < 3) { zoomShow(zoomStep); zoomStep++; e.preventDefault(); }
+            else { scrollToSlide(idx + 1); e.preventDefault(); }
+        } else if (idx === gpSlideIdx) {
+            if (gpStep === 0) { gpStep = 1; showGpLine(); e.preventDefault(); }
+            else { scrollToSlide(idx + 1); e.preventDefault(); }
+        } else if (idx === engineSlideIdx) {
+            if (engineStep === 0) { engineStep = 1; engineFocus.classList.add('ep-active'); e.preventDefault(); }
+            else { scrollToSlide(idx + 1); e.preventDefault(); }
+        } else if (idx === chainSlideIdx) {
+            if (chainStep < 6) { chainStep++; updateChainSlide(); e.preventDefault(); }
+            else { scrollToSlide(idx + 1); e.preventDefault(); }
+        } else {
+            scrollToSlide(idx + 1);
+        }
+    });
+
+    document.addEventListener('keydown', (e) => {
+        const idx = getCurrentSlide();
+
+        if (idx === zoomSlideIdx) {
+            if (['ArrowDown', 'ArrowRight', ' ', 'PageDown'].includes(e.key)) {
+                if (zoomStep < 3) { zoomShow(zoomStep); zoomStep++; e.preventDefault(); return; }
+            }
+            if (['ArrowUp', 'ArrowLeft', 'PageUp'].includes(e.key)) {
+                if (zoomStep > 0) { zoomStep--; zoomHide(zoomStep); e.preventDefault(); return; }
+            }
+        }
+
+        if (idx === engineSlideIdx) {
+            if (['ArrowDown', 'ArrowRight', ' ', 'PageDown'].includes(e.key)) {
+                if (engineStep === 0) { engineStep = 1; engineFocus.classList.add('ep-active'); e.preventDefault(); return; }
+            }
+            if (['ArrowUp', 'ArrowLeft', 'PageUp'].includes(e.key)) {
+                if (engineStep === 1) { engineStep = 0; engineFocus.classList.remove('ep-active'); e.preventDefault(); return; }
+            }
+        }
+
+        if (idx === gpSlideIdx) {
+            if (['ArrowDown', 'ArrowRight', ' ', 'PageDown'].includes(e.key)) {
+                if (gpStep === 0) { gpStep = 1; showGpLine(); e.preventDefault(); return; }
+            }
+            if (['ArrowUp', 'ArrowLeft', 'PageUp'].includes(e.key)) {
+                if (gpStep === 1) {
+                    gpStep = 0;
+                    gpChartInstance.data.datasets[2].data = [null,null,null,null,null];
+                    gpChartInstance.update('default');
+                    document.getElementById('gp-legend-line').style.opacity = '0';
+                    e.preventDefault(); return;
+                }
+            }
+        }
+
+        if (idx === chainSlideIdx) {
+            if (popupMission && popupMission.classList.contains('popup-visible') || popupPillars && popupPillars.classList.contains('popup-visible')) {
+                if (e.key === 'Escape') { closeChainPopup(); e.preventDefault(); return; }
+            }
+            if (['ArrowDown', 'ArrowRight', ' ', 'PageDown'].includes(e.key)) {
+                if (chainStep < 6) { chainStep++; updateChainSlide(); e.preventDefault(); return; }
+            }
+            if (['ArrowUp', 'ArrowLeft', 'PageUp'].includes(e.key)) {
+                if (chainStep > 0) { chainStep--; updateChainSlide(); e.preventDefault(); return; }
+            }
+        }
+
+        if (['ArrowDown', 'ArrowRight', ' ', 'PageDown'].includes(e.key)) { scrollToSlide(idx + 1); e.preventDefault(); }
+        if (['ArrowUp', 'ArrowLeft', 'PageUp'].includes(e.key)) { scrollToSlide(idx - 1); e.preventDefault(); }
+        if (e.key === 'Home') { scrollToSlide(0); e.preventDefault(); }
+        if (e.key === 'End') { scrollToSlide(total - 1); e.preventDefault(); }
+        if (e.key === 'f' || e.key === 'F') {
+            if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+            else document.exitFullscreen();
+        }
+    });
+
+    // --- Intersection Observer ---
+    const slideObserver = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+            if (e.isIntersecting) {
+                e.target.classList.add('slide-active');
+                e.target.querySelectorAll('.anim').forEach(el => el.classList.add('visible'));
+            } else {
+                e.target.classList.remove('slide-active');
+            }
+        });
+    }, { threshold: 0.5 });
+
+    slides.forEach(s => slideObserver.observe(s));
+
+    window.addEventListener('load', () => {
+        counter.textContent = `1 / ${total}`;
+        slides[0].classList.add('slide-active');
+        slides[0].querySelectorAll('.anim').forEach(el => el.classList.add('visible'));
+    });
+
+    // --- GP Scenario Chart (Slide 2) — with click-to-reveal line ---
+    const gpCtx = document.getElementById('gpChart');
+    const slideGp = gpCtx ? gpCtx.closest('.slide') : null;
+    const gpSlideIdx = slideGp ? Array.from(slides).indexOf(slideGp) : -1;
+    let gpChartInstance = null;
+    let gpStep = 0;
+
+    var gpTotals = [1200,1280,1350,1420,1500];
+    var gpBaselines = [1200,1280,1240,1200,1160];
+    var gpGaps = [0,0,110,220,340];
+
+    var axisBreakPlugin = {
+        id: 'axisBreak',
+        afterDatasetsDraw: function(chart) {
+            var ctx = chart.ctx;
+            var yBar = chart.scales.yBar;
+            if (!yBar) return;
+            var barMeta = chart.getDatasetMeta(0);
+            var yBottom = yBar.getPixelForValue(yBar.min);
+            var gap = 7;
+            var slant = 8;
+            var breakY = yBottom - 50;
+            for (var i = 0; i < barMeta.data.length; i++) {
+                var bar = barMeta.data[i];
+                if (!bar) continue;
+                var barTop = bar.y;
+                if (barTop > breakY - gap) continue;
+                var dist = (breakY - gap) - barTop;
+                var opacity = Math.min(1, dist / 40);
+                var halfW = bar.width / 2;
+                var cx = bar.x;
+                ctx.save();
+                ctx.globalAlpha = opacity;
+                ctx.fillStyle = '#1C16C5';
+                ctx.beginPath();
+                ctx.moveTo(cx - halfW, breakY - gap + slant);
+                ctx.lineTo(cx + halfW, breakY - gap - slant);
+                ctx.lineTo(cx + halfW, breakY + gap - slant);
+                ctx.lineTo(cx - halfW, breakY + gap + slant);
+                ctx.closePath();
+                ctx.fill();
+                ctx.strokeStyle = 'rgba(255,255,255,0.7)';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(cx - halfW - 4, breakY - gap + slant);
+                ctx.lineTo(cx + halfW + 4, breakY - gap - slant);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(cx - halfW - 4, breakY + gap + slant);
+                ctx.lineTo(cx + halfW + 4, breakY + gap - slant);
+                ctx.stroke();
+                ctx.restore();
+            }
+        }
+    };
+
+    var totalLabelPlugin = {
+        id: 'totalLabels',
+        afterDatasetsDraw: function(chart) {
+            var ctx = chart.ctx;
+            var barMeta = chart.getDatasetMeta(1);
+            var yBar = chart.scales.yBar;
+            for (var i = 0; i < gpTotals.length; i++) {
+                var bar = barMeta.data[i];
+                if (!bar) continue;
+                var yTop = yBar.getPixelForValue(gpTotals[i]);
+                ctx.save();
+                ctx.textAlign = 'center';
+                ctx.font = "900 italic 16px 'DM Sans'";
+                ctx.fillStyle = '#fff';
+                ctx.fillText(gpTotals[i].toLocaleString('en-US'), bar.x, yTop - 10);
+                ctx.restore();
+            }
+        }
+    };
+
+    function initGpChart() {
+        if (gpChartInstance) return;
+        gpStep = 0;
+        gpChartInstance = new Chart(gpCtx, {
+            type: 'bar',
+            plugins: [totalLabelPlugin, axisBreakPlugin],
+            data: {
+                labels: ['2025', '2026', '2027', '2028', '2029'],
+                datasets: [
+                    { type: 'bar', label: 'Baseline',
+                      data: gpBaselines,
+                      backgroundColor: '#070452', hoverBackgroundColor: '#03022c',
+                      borderColor: '#1C16C5', borderWidth: 1, borderRadius: 4,
+                      stack: 'gp_stack', yAxisID: 'yBar', order: 5,
+                      datalabels: { display: false }
+                    },
+                    { type: 'bar', label: 'Growth gap',
+                      data: gpGaps,
+                      backgroundColor: '#2954FF', hoverBackgroundColor: '#1C16C5',
+                      borderRadius: 4, borderSkipped: false,
+                      stack: 'gp_stack', yAxisID: 'yBar', order: 6,
+                      datalabels: { display: false }
+                    },
+                    { type: 'line', label: 'Without transformation',
+                      data: [null, null, null, null, null],
+                      borderColor: '#ff6b6b', borderDash: [5,5], backgroundColor: 'transparent', borderWidth: 3,
+                      pointBackgroundColor: '#ff6b6b', pointBorderColor: '#fff', pointRadius: 5, pointHoverRadius: 7,
+                      tension: 0.15, fill: false, yAxisID: 'y', order: 1,
+                      datalabels: { display: false }
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                layout: { padding: { top: 30 } },
+                animation: {
+                    duration: 800,
+                    delay: function(ctx) { return ctx.dataIndex * 300 + (ctx.datasetIndex * 150); },
+                    easing: 'easeOutQuart'
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        bodyFont: { family: "'DM Sans'" },
+                        titleFont: { family: "'DM Sans'", weight: 700 },
+                        callbacks: {
+                            label: function(ctx) { return ctx.dataset.label + ': ' + Math.round(ctx.parsed.y).toLocaleString('en-US') + ' mUSD'; }
+                        }
+                    }
+                },
+                interaction: { mode: 'index', intersect: false },
+                scales: {
+                    x: {
+                        stacked: true,
+                        ticks: { color: '#cbd5e1', font: { family: "'DM Sans'", weight: 800, size: 14 } },
+                        grid: { display: false }
+                    },
+                    y: {
+                        stacked: false, display: false,
+                        min: 1000, max: 1600
+                    },
+                    yBar: {
+                        stacked: true, display: false,
+                        min: 1000, max: 1600
+                    }
+                }
+            }
+        });
+        document.getElementById('gp-legend-line').style.opacity = '0';
+    }
+
+    function showGpLine() {
+        if (!gpChartInstance) return;
+        gpChartInstance.data.datasets[2].data = [1200, 1280, 1310, 1250, 1210];
+        gpChartInstance.update('default');
+        document.getElementById('gp-legend-line').style.opacity = '1';
+    }
+
+    function destroyGpChart() {
+        if (gpChartInstance) { gpChartInstance.destroy(); gpChartInstance = null; }
+        gpStep = 0;
+    }
+
+    if (gpCtx && slideGp) {
+        const moGp = new MutationObserver(() => {
+            if (slideGp.classList.contains('slide-active')) initGpChart();
+            else destroyGpChart();
+        });
+        moGp.observe(slideGp, { attributes: true, attributeFilter: ['class'] });
+    }
+
+    // --- Zoom Slide Sub-stepping (click to reveal layers bottom-up) ---
+    const zoomSlide = document.querySelector('.slide-zoom-in');
+    const zoomSlideIdx = zoomSlide ? Array.from(slides).indexOf(zoomSlide) : -1;
+    const zoomOrder = ['zoom-2', 'zoom-1', ['zoom-0', 'zoom-3']];
+    let zoomStep = 0;
+
+    function zoomShow(step) {
+        var item = zoomOrder[step];
+        if (Array.isArray(item)) { item.forEach(function(id) { document.getElementById(id).classList.add('zoom-visible'); }); }
+        else { document.getElementById(item).classList.add('zoom-visible'); }
+    }
+    function zoomHide(step) {
+        var item = zoomOrder[step];
+        if (Array.isArray(item)) { item.forEach(function(id) { document.getElementById(id).classList.remove('zoom-visible'); }); }
+        else { document.getElementById(item).classList.remove('zoom-visible'); }
+    }
+    function resetZoom() {
+        zoomStep = 0;
+        ['zoom-0','zoom-1','zoom-2','zoom-3'].forEach(function(id) { document.getElementById(id).classList.remove('zoom-visible'); });
+    }
+
+    if (zoomSlide) {
+        const moZoom = new MutationObserver(() => {
+            if (zoomSlide.classList.contains('slide-active')) {
+                if (zoomStep === 0) { setTimeout(function() { zoomShow(0); zoomStep = 1; }, 300); }
+            } else {
+                resetZoom();
+            }
+        });
+        moZoom.observe(zoomSlide, { attributes: true, attributeFilter: ['class'] });
+    }
+
+    // --- Engine Slide Sub-stepping (click to activate green) ---
+    const engineFocus = document.getElementById('engine-focus');
+    const engineSlide = engineFocus ? engineFocus.closest('.slide') : null;
+    const engineSlideIdx = engineSlide ? Array.from(slides).indexOf(engineSlide) : -1;
+    let engineStep = 0;
+
+    // --- Team Capacity Chart (Slide 3b) ---
+    const lcCtx = document.getElementById('legacyChart');
+    const slideLegacy = lcCtx ? lcCtx.closest('.slide') : null;
+    let legacyChartInstance = null;
+
+    if (lcCtx && slideLegacy) {
+        const runData   = [1.0, 4, 5.5, 3.3, 0.0, 8.0, 4, 2.0, 1.2, 5.0, 3, 2.0];
+        const modData   = [0, 2, 2.2, 0, 0.4, 1.8, 5, 0.7, 1.6, 3.4, 0, 2.4];
+        const legData   = [0.4, 6, 3.3, 5.5, 0.8, 4.2, 0.0, 2.7, 0.8, 3.9, 3, 2.4];
+        const futData   = [5.6, 0.0, 0.0, 2.2, 2.8, 0.0, 0.0, 3.6, 0.4, 0.7, 0.0, 1.2];
+
+        function initLegacyChart() {
+            if (legacyChartInstance) return;
+            legacyChartInstance = new Chart(lcCtx, {
+                type: 'bar',
+                plugins: [ChartDataLabels],
+                data: {
+                    labels: ['Platform', 'Customer Growth', 'Enterprise', 'Security', 'Next Gen', 'Core Services', 'Delivery', 'IoT', 'Partners', 'Commerce', 'Employee Exp.', 'Operations'],
+                    datasets: [
+                        { label: 'Run', data: runData, backgroundColor: '#070452',
+                          borderRadius: { topLeft: 0, topRight: 0, bottomLeft: 4, bottomRight: 4 } },
+                        { label: 'Modernization', data: modData, backgroundColor: '#2954FF' },
+                        { label: 'Growth (legacy model)', data: legData, backgroundColor: '#00C8FF' },
+                        { label: 'New model', data: futData, backgroundColor: '#FFFFFF',
+                          borderRadius: { topLeft: 4, topRight: 4, bottomLeft: 0, bottomRight: 0 } }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    animation: { duration: 800, delay: function(ctx) { return ctx.dataIndex * 200 + (ctx.datasetIndex * 100); }, easing: 'easeOutQuart' },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            bodyFont: { family: "'DM Sans'" },
+                            titleFont: { family: "'DM Sans'", weight: 700 },
+                            callbacks: { afterBody: function(context) { var i = context[0].dataIndex; return 'Total: ' + (runData[i]+modData[i]+legData[i]+futData[i]).toFixed(1) + ' FTEs'; } }
+                        },
+                        datalabels: {
+                            display: function(ctx) { return ctx.datasetIndex === 3; },
+                            anchor: 'end', align: 'end',
+                            color: 'rgba(255,255,255,0.85)',
+                            font: { family: "'DM Sans'", weight: 900, size: 11 },
+                            formatter: function(_, ctx) { var i = ctx.dataIndex; return Math.round(runData[i]+modData[i]+legData[i]+futData[i]); },
+                            offset: 2,
+                        }
+                    },
+                    scales: {
+                        x: { stacked: true, ticks: { color: 'rgba(255,255,255,0.55)', font: { family: "'DM Sans'", weight: 600, size: 9 }, maxRotation: 55, minRotation: 45 }, grid: { display: false } },
+                        y: { stacked: true, ticks: { color: 'rgba(255,255,255,0.4)', font: { family: "'DM Sans'", size: 10 } }, grid: { color: 'rgba(255,255,255,0.06)' }, border: { display: false } }
+                    }
+                }
+            });
+        }
+        function destroyLegacyChart() { if (legacyChartInstance) { legacyChartInstance.destroy(); legacyChartInstance = null; } }
+        const moLc = new MutationObserver(() => {
+            if (slideLegacy.classList.contains('slide-active')) initLegacyChart();
+            else destroyLegacyChart();
+        });
+        moLc.observe(slideLegacy, { attributes: true, attributeFilter: ['class'] });
+    }
+
+    // --- Counter Animation (Stat Slide) ---
+    const animatedNumTeams = document.getElementById('animated-num-teams');
+    const animatedNumPct = document.getElementById('animated-num-pct');
+    const slideStats = document.querySelector('.am-stat-slide');
+    let counterTriggered = false;
+
+    function animateCounter(el, target, duration = 1500, suffix = '') {
+        const start = performance.now();
+        const update = (now) => {
+            const elapsed = now - start;
+            const prog = Math.min(elapsed / duration, 1);
+            const eased = 1 - Math.pow(1 - prog, 4);
+            el.textContent = Math.round(eased * target).toLocaleString('en-US') + suffix;
+            if (prog < 1) requestAnimationFrame(update);
+        };
+        requestAnimationFrame(update);
+    }
+
+    if (slideStats) {
+        const mo = new MutationObserver(() => {
+            if (slideStats.classList.contains('slide-active')) {
+                if (!counterTriggered) {
+                    animateCounter(animatedNumTeams, 115, 1200);
+                    animateCounter(animatedNumPct, 92, 1200, '%');
+                    counterTriggered = true;
+                }
+            } else {
+                if (animatedNumTeams) animatedNumTeams.textContent = '0';
+                if (animatedNumPct) animatedNumPct.textContent = '0%';
+                counterTriggered = false;
+            }
+        });
+        mo.observe(slideStats, { attributes: true, attributeFilter: ['class'] });
+    }
+
+    // --- Capacity Chart (Slide 9) ---
+    const capCtx = document.getElementById('capacityChart');
+    const slideCapacity = document.querySelector('.slide-capacity');
+    let capChartInstance = null;
+
+    if (capCtx && slideCapacity) {
+        function initCapChart() {
+            if (capChartInstance) return;
+            capChartInstance = new Chart(capCtx, {
+                type: 'bar',
+                plugins: [ChartDataLabels],
+                data: {
+                    labels: ['2026', '2027', '2028', '2029'],
+                    datasets: [
+                        {
+                            label: 'Run the Business',
+                            data: [40, 26, 24, 22],
+                            backgroundColor: '#070452',
+                            borderRadius: { topLeft: 0, topRight: 0, bottomLeft: 6, bottomRight: 6 },
+                        },
+                        {
+                            label: 'Transformation',
+                            data: [26, 31, 28, 14],
+                            backgroundColor: '#00C8FF',
+                        },
+                        {
+                            label: 'Growth',
+                            data: [34, 43, 48, 64],
+                            backgroundColor: '#B0FBB8',
+                            borderRadius: { topLeft: 6, topRight: 6, bottomLeft: 0, bottomRight: 0 },
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    layout: { padding: { top: 10 } },
+                    animation: {
+                        duration: 1200,
+                        delay: function(ctx) { return ctx.dataIndex * 400 + (ctx.datasetIndex * 200); },
+                        easing: 'easeOutQuart'
+                    },
+                    plugins: {
+                        legend: {
+                            display: true, position: 'bottom',
+                            labels: {
+                                color: 'rgba(255,255,255,0.7)',
+                                font: { family: "'DM Sans'", weight: 700, size: 12 },
+                                padding: 24, boxWidth: 16, boxHeight: 16,
+                                useBorderRadius: true, borderRadius: 4
+                            }
+                        },
+                        tooltip: {
+                            bodyFont: { family: "'DM Sans'" },
+                            titleFont: { family: "'DM Sans'", weight: 700 },
+                            callbacks: {
+                                label: function(context) { return context.dataset.label + ': ' + context.parsed.y + ' %'; }
+                            }
+                        },
+                        datalabels: {
+                            display: function(ctx) { return ctx.dataset.data[ctx.dataIndex] >= 14; },
+                            anchor: 'center', align: 'center',
+                            color: function(ctx) {
+                                return ctx.datasetIndex === 2 ? '#070452' : ctx.datasetIndex === 1 ? '#070452' : 'rgba(255,255,255,0.85)';
+                            },
+                            font: { family: "'DM Sans'", weight: 900, size: 16 },
+                            formatter: function(val) { return val + ' %'; },
+                        }
+                    },
+                    scales: {
+                        x: {
+                            stacked: true,
+                            ticks: { color: 'rgba(255,255,255,0.8)', font: { family: "'DM Sans'", weight: 800, size: 16 } },
+                            grid: { display: false }
+                        },
+                        y: {
+                            stacked: true, max: 100, display: false
+                        }
+                    }
+                }
+            });
+        }
+
+        function destroyCapChart() {
+            if (capChartInstance) { capChartInstance.destroy(); capChartInstance = null; }
+        }
+
+        const moC = new MutationObserver(() => {
+            if (slideCapacity.classList.contains('slide-active')) initCapChart();
+            else destroyCapChart();
+        });
+        moC.observe(slideCapacity, { attributes: true, attributeFilter: ['class'] });
+    }
+</script>
+</body>
+</html>
