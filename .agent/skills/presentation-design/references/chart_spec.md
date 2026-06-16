@@ -56,7 +56,7 @@ Inline chart YAML definition format and macro reference for data visualization.
 
 The annotation callout box is positioned at top-right of the chart container:
 
-- Semi-transparent background with Telenor Blue border
+- Semi-transparent background with Brand Blue (`#00C8FF`) border
 - Bold text at 0.85rem
 - Used to highlight the key insight (e.g., "+603 mNOK gap", "2x growth")
 
@@ -70,7 +70,7 @@ Default series color rotation (applied automatically when no `color` specified):
 
 | Order | Color            | Hex       | Use for                      |
 |:------|:-----------------|:----------|:-----------------------------|
-| 1     | Telenor Blue     | `#00C8FF` | Primary/highlight series     |
+| 1     | Brand Blue       | `#00C8FF` | Primary/highlight series     |
 | 2     | White            | `#FFFFFF` | Secondary comparison series  |
 | 3     | Blue             | `#2954FF` | Third series                 |
 | 4     | Accent Green     | `#B0FBB8` | Positive / growth indicators |

@@ -21,7 +21,7 @@ Text IS the design element. One idea fills the screen. Every slide creates a mom
 
 Accent and glow colors: `--tg-telenor-blue` (`#00C8FF`) for highlights, `--tg-accent-green` (`#B0FBB8`) for success/hero elements, `--tg-accent-pink` (`#FFB8D7`) for human/warm accents.
 
-This is the standard established by `BO_Governance_NorgeULF.html` — the canonical AllMøte reference.
+This is the standard established by `reference_allmote.html` — the canonical AllMøte reference.
 
 ---
 
@@ -254,7 +254,7 @@ The `big-number` layout presents a single metric that creates an emotional react
   layout: big-number
 -->
 
-**Headline:** *58.1%*
+**Headline:** *XX%*
 
 Revenue Market Share -- built on clarity, ownership, and commercial spirit.
 ```
@@ -358,7 +358,7 @@ Hero comparison layout for showing paradigm shifts:
 
 Two-panel BO presentation with sub-stepping:
 
-- **Left card** (`.bo-kick-top`): Dark blue, rounded left corners. Shows BO name, customer outcome, value for Telenor, GP targets.
+- **Left card** (`.bo-kick-top`): Dark blue, rounded left corners. Shows BO name, customer outcome, value for the organization, GP targets.
 - **Right card** (`.bo-kick-bottom`): Semi-transparent glass effect, hidden initially. Shows detailed customer outcomes, milestones, leading indicators.
 - Click/arrow reveals the right card via `.card-visible` class.
 

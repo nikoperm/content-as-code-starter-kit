@@ -34,6 +34,7 @@ related: []
 | Document | Path | Status | Purpose |
 |:---------|:-----|:-------|:--------|
 | Market Position | [market_position.md](strategy/current_state/market_position.md) | draft | Overview of current market position, competitive landscape, and key metrics |
+| Service Catalog | [service_catalog.md](strategy/current_state/service_catalog.md) | draft | Central registry of all customer-facing products and platforms — the definitive source for what each product is and is not |
 | Strategic Foundation | [strategic_foundation.md](strategy/current_state/strategic_foundation.md) | draft | Defines mission, vision, strategic pillars, and success factors |
 | Team Architecture | [team_architecture.md](strategy/current_state/team_architecture.md) | draft | Overview of team structure, strategic areas, and how teams are organized around value streams |
 | Value Stream Snapshot | [value_stream_snapshot.md](strategy/current_state/value_stream_snapshot.md) | draft | Overview of all active Business Opportunities across strategic areas |
@@ -74,6 +75,7 @@ related: []
 | Changelog Generator | [.agent/skills/changelog-generator/SKILL.md](.agent/skills/changelog-generator/SKILL.md) | Generates a human-readable changelog from git history, grouped by strategic domain and change type |
 | Decision Log | [.agent/skills/decision-log/SKILL.md](.agent/skills/decision-log/SKILL.md) | Tracks strategic decisions with context, rationale, alternatives considered, and impact |
 | Document Lifecycle | [.agent/skills/document-lifecycle/SKILL.md](.agent/skills/document-lifecycle/SKILL.md) | Governs how AI agents create, modify, archive, and maintain documents in the Content-as-Code workspace |
+| BO Builder | [.agent/skills/bo-builder/SKILL.md](.agent/skills/bo-builder/SKILL.md) | Creates, validates, and places Business Opportunities with all 6 required fields |
 | Presentation Design | [.agent/skills/presentation-design/SKILL.md](.agent/skills/presentation-design/SKILL.md) | Creates premium interactive HTML presentations by writing custom slide HTML directly |
 | Quality Gate | [.agent/skills/quality-gate/SKILL.md](.agent/skills/quality-gate/SKILL.md) | Enforces the draft-to-active promotion process |
 | Source Extractor | [.agent/skills/source-extractor/SKILL.md](.agent/skills/source-extractor/SKILL.md) | Extracts structured insights from PDF source documents in reference/pdf/ and produces machine-readable markdown files in strategy/insights/ |

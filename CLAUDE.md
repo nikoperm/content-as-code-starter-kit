@@ -26,10 +26,12 @@ It is the living registry of every document in this workspace — your map.
 | What is this workspace? | `strategy/overview/executive_summary.md` |
 | Strategic pillars & mission | `strategy/current_state/strategic_foundation.md` |
 | Market data & position | `strategy/current_state/market_position.md` |
+| Products & services (what they are) | `strategy/current_state/service_catalog.md` (create this for your own products) |
 | Team structure & people | `strategy/current_state/team_architecture.md` |
+| Business Opportunities (all) | `strategy/current_state/value_stream_snapshot.md` |
 | Operating model | `strategy/transformation/operating_model.md` |
 | Growth areas & roadmaps | `strategy/roadmap/` |
-| Presentation materials | `strategy/presentation/` |
+| Presentation materials | `presentations/INDEX.md` |
 | How we execute | `strategy/overview/execution_framework.md` |
 | How Content-as-Code works | `docs/how_cac_works.md` |
 
@@ -87,6 +89,7 @@ When modifying any document:
 2. If purpose or scope changed → run `make catalog` to update CATALOG.md
 3. If new version → increment `version:` in front-matter
 4. **Never delete content without archiving** — move superseded docs to an `_archive/` subfolder and set `status: archived`
+5. If a presentation is created, renamed, or deleted → update `presentations/INDEX.md`
 
 ### Anti-Bloat Rules
 
@@ -105,25 +108,50 @@ When modifying any document:
 
 ---
 
-## 5. Domain Knowledge (Quick Reference)
+## 5. Strategic Grounding — Mandatory Before Creating Content
 
-These are demo values for learning purposes:
+> **Every proposal, BO, roadmap item, or presentation you create must be grounded
+> in the actual strategy.** Never generate generic business content. Never invent
+> market data. Never propose initiatives that contradict the strategic direction.
 
-### Market Position (Demo Data)
-- Revenue Market Share (RMS): **XX%**
-- Subscription Market Share: **XX%**
-- Total market: **X.X million** subscriptions
-- ARPU: XXX NOK (example values)
+### Before You Create Anything Strategic
 
-### Strategic Direction
-- Core challenge: Volume-based growth is slowing → shift to service-led value
-- Service areas: **Security**, **Customer Solutions**, **Efficient Admin**, **Access**
-- Transformation method: AI-first "Content as Code" + agentic teams
+Read these documents first — they are the source of truth:
 
-### Execution Model
-- All initiatives are structured as **Business Opportunities (BOs)**
-- BOs require: Customer Outcome, Value Proposition, Financial Targets, Milestones, Leading Indicators
-- Success measured through: Customer Outcomes, Key Milestones, Leading Indicators
+| What you need | Read this |
+|:--------------|:----------|
+| The strategic direction and why | `strategy/overview/executive_summary.md` |
+| The strategic pillars and mission | `strategy/current_state/strategic_foundation.md` |
+| Market data, ARPU, base numbers | `strategy/current_state/market_position.md` |
+| What each product/service is (and is not) | `strategy/current_state/service_catalog.md` |
+| All existing BOs and their targets | `strategy/current_state/value_stream_snapshot.md` |
+| How we execute (BO framework) | `strategy/overview/execution_framework.md` |
+| Financial calculation rules | `strategy/roadmap/bo_calculation_guide.md` |
+
+**Do not skip this step.** The quick reference below is a memory aid — not a substitute for reading the documents.
+
+### Strategic Principles You Must Follow
+
+1. **Volume-based growth is dead.** Shift to service-led value. Never propose initiatives that compete on price or volume alone.
+2. **Value for the organization = new revenue streams.** SaaS upsell, platform fees, high-margin services. Never frame value as "cutting the customer's costs" — that cannibalizes your own ARPU.
+3. **All initiatives are BOs.** Every strategic proposal must be structured as a Business Opportunity with all 6 fields filled (see `/bo-builder` skill).
+4. **Use real numbers first — and verify your understanding.** If the repo states a total, use that — do not add up sub-components to derive your own. If you need a number that does not exist in the repo, you may calculate it, but you must **stop and ask the user**: explain how you arrived at the number, ask if you understood the data correctly, and get confirmation before using it in any document or presentation.
+5. **Separate internal facts from external benchmarks.** Numbers from your repo are facts. Numbers from internet research are benchmarks. Never present a benchmark as an internal metric. Always label the source: "According to [competitor]..." or "Industry benchmark:".
+6. **Respect what exists.** Before proposing something new, check `value_stream_snapshot.md` — does a similar BO already exist? If yes, build on it.
+
+### Quick Reference (memory aid — verify against source docs)
+
+These are **placeholder values** for the starter kit. Replace them with your organization's real data:
+
+| Fact | Value | Source |
+|:-----|:------|:-------|
+| Revenue Market Share (RMS) | XX% | `market_position.md` |
+| Subscription Market Share | XX% (XXX,XXX subscriptions) | `market_position.md` |
+| Total market | X.X million subscriptions | `market_position.md` |
+| ARPU | XXX NOK | `market_position.md` |
+| Service areas | Your defined pillars (e.g., Security, Solutions, Access) | `strategic_foundation.md` |
+| Transformation method | AI-first Content-as-Code + agentic teams | `executive_summary.md` |
+| Execution model | Business Opportunities (BOs) with 6 required fields | `execution_framework.md` |
 
 ---
 
@@ -134,6 +162,7 @@ These are demo values for learning purposes:
 | `strategy-review` | Reviewing, scoring, or critiquing strategy documents | `.agent/skills/strategy-review/SKILL.md` |
 | `document-lifecycle` | Creating, updating, or archiving documents | `.agent/skills/document-lifecycle/SKILL.md` |
 | `presentation-design` | Creating or modifying presentation materials | `.agent/skills/presentation-design/SKILL.md` |
+| `bo-builder` | Creating and validating Business Opportunities | `.agent/skills/bo-builder/SKILL.md` |
 | `workspace-health` | Validating workspace integrity (front-matter, catalog, links) | `.agent/skills/workspace-health/SKILL.md` |
 | `quality-gate` | Promoting documents from draft to active status | `.agent/skills/quality-gate/SKILL.md` |
 | `source-extractor` | Extracting insights from PDF reference documents | `.agent/skills/source-extractor/SKILL.md` |
@@ -149,14 +178,26 @@ These are demo values for learning purposes:
 - Do not duplicate information that exists in another document
 - Do not use absolute file paths (`/Users/...`)
 - Do not modify documents with `status: archived`
-- Do not create files outside the defined folder structure
+- Do not create files outside the defined folder structure (exception: `temp/` for demos)
 - Do not forget to update CATALOG.md after creating/modifying documents
 - Do not overwrite without archiving the previous version first
 - Do not leave front-matter fields empty or missing
 
 ---
 
-## 8. Git Workflow
+## 8. Demo Mode (`temp/`)
+
+When creating demo or prototype content (live demos, proof-of-concepts, mockups):
+
+- **Output to `temp/`** — this folder is in `.gitignore` and will not pollute the repo
+- **Use real data from the repo** — read `market_position.md`, `value_stream_snapshot.md`, etc. Never invent baseline numbers
+- **Follow the same skills as production** — use `/bo-builder` for BOs, `/presentation-design` for presentations
+- **Never use `build_presentation.py` for premium demos** — write custom self-contained HTML directly (see presentation-design skill)
+- **BO documents must follow the exact 6-field template** from the bo-builder skill — this is the whole point of demonstrating Content-as-Code
+
+---
+
+## 9. Git Workflow
 
 This is a **local-only** workspace. Git serves as your audit trail and undo mechanism.
 

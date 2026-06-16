@@ -1,6 +1,6 @@
 ---
 name: presentation-design
-description: "Creates premium interactive HTML presentations with custom slide HTML. Uses the Telegrafen design system, Telenor brand assets, and Google I/O-level visual quality."
+description: "Creates premium interactive HTML presentations with custom slide HTML. Uses the Telegrafen design system and Google I/O-level visual quality."
 ---
 
 # Presentation Design Skill
@@ -18,6 +18,7 @@ CSS per slide. Each slide is a unique visual composition tailored to its content
 | **Narrative** | `presentations/internal/Strategy_2030_Narrative.html` | Study patterns, adapt structure |
 | **AllMøte (governance)** | `.agent/skills/presentation-design/reference_allmote.html` | **Start from this file** for governance/BO decks. Full architecture with strategy chain, flywheel, popup overlays, and BO showcase cards. |
 | **AllMøte (storytelling)** | `.agent/skills/presentation-design/reference_allmote_storytelling.html` | **Start from this file** for transformation/change narratives. Leaner structure with Chart.js axis breaks, click-to-reveal engine panels, zoom-in layers, photo statements, and roadmap cards. |
+| **BO Mini (3 slides)** | See `references/narrative_patterns.md` section "BO Mini-Presentation" | Write a 3-slide BO pitch following the pattern described there. Copy the structure, swap in your content. Do not change the design. |
 
 **AllMøte is architecturally different from Narrative** — it uses full-bleed triptychs, sub-stepping, cinematic dark mode, and interactive elements. You cannot "adapt" a Narrative into AllMøte; you must start from one of the AllMøte references above. Pick the one closest to your story.
 
@@ -67,6 +68,16 @@ Title → Credibility → Problem → Customer Reality → Financial Truth →
 Deep Dives (3-5 pillars) → Financial Breakdown → Solution → Operating Model →
 Before/After → Timeline → [Photo Divider] → Closing Call to Action
 
+**BO Mini-Presentation (3 slides):**
+When the user asks for a 3-slide BO presentation:
+1. Write a self-contained HTML file following the pattern in `references/narrative_patterns.md` section "BO Mini-Presentation"
+2. Slide 1: Strategic context (market trend or customer pain creating the opportunity)
+3. Slide 2: Complete BO card with all 6 fields (left panel always visible, right panel click-to-reveal)
+4. Slide 3: Growth trajectory chart (accumulated GP over 3 years + milestones timeline)
+5. Do not change the design, colors, animations, or navigation -- they are finalized
+6. Update image paths relative to where the file is saved
+7. See `references/narrative_patterns.md` for the full structure specification
+
 **Executive preread:** Executive Summary → Situation → Complication → Resolution → Evidence → Recommendation
 
 **AllMøte (8-12 slides):** Use the AllMøte workflow below — do NOT use the generic Step 4.
@@ -105,7 +116,7 @@ Before/After → Timeline → [Photo Divider] → Closing Call to Action
 | Light Cyan `#EBFFFF` | Default content bg | **NEVER** |
 | Mid Blue `#1C16C5` | Title + statement slides | Primary bg + `.am-ambient` |
 | Dark Blue `#070452` | Dramatic/legacy slides | Primary bg |
-| Telenor Blue `#00C8FF` | Accent text, numbers | Accent, glowing highlights |
+| Brand Blue `#00C8FF` | Accent text, numbers | Accent, glowing highlights |
 | Off-white `#E8FDFF` | Icon stages | Icon stages |
 
 ---
@@ -129,7 +140,7 @@ Before/After → Timeline → [Photo Divider] → Closing Call to Action
 <body>
 <div class="progress-bar" id="progress" style="width:5%"></div>
 <div class="nav-counter" id="counter">1 / N</div>
-<div class="nav-logo"><img src="../../reference/images/telenor_symbol_blue_RGB_Refresh.svg" alt="Telenor"></div>
+<div class="nav-logo"><img src="../../reference/images/brand_logo.svg" alt="Logo"></div>
 <!-- Slides -->
 <script>/* Navigation + Animation observer */</script>
 </body>
@@ -193,7 +204,7 @@ Never use icons smaller than 36px. Always use `var(--tg-off-white)` for icon sta
 
 ### Brand photos
 
-Read `reference/images/brand/INDEX.md` for full catalog. Key picks: DSCF5113 (hero landscape), Telenor.bedrift.70 (team culture), Telenor.bedrift.31 (customer interaction).
+Read `reference/images/brand/INDEX.md` for full catalog. Select images that match the presentation tone (hero landscapes, team culture, customer interaction).
 
 ---
 
@@ -237,7 +248,7 @@ Pick from these — each has full CSS/HTML in the reference file:
 | Problem triptych | `.s3-triptych` | 3 full-bleed panels (red accent) |
 | Principles triptych | `.s4-triptych` | 3 full-bleed panels with icons |
 | Strategy chain | `.slide-chain` | 7-column progressive reveal with sub-stepping + popups |
-| BO showcase | `.slide-bo-showcase` | 2-panel kick-off card with click-to-reveal |
+| BO showcase | `.slide-bo-showcase` | 2-panel kick-off card with click-to-reveal. **Use this whenever presenting a BO** — it maps 1:1 to the 6 BO fields from the bo-builder skill. See `reference_allmote.html` for the canonical HTML. |
 | Photo divider | `.slide-photo` | Full-bleed image with ken-burns + highlight-box text |
 | Ceremony flywheel | `.slide-rhythm` | Interactive 5-node circle with detail cards |
 | Capacity chart | `.slide-legacy-learn` | Chart.js stacked bar with summary bar |
@@ -262,8 +273,8 @@ Pick from these — each has full CSS/HTML in the reference file:
 ### AllMøte language rules
 
 - Write titles as spoken sentences: "Vi vokser fordi vi leverer mer verdi" (not "Strategisk vekst")
-- Numbers in Norwegian format: "58,1 %" not "58.1%"
-- Product names in original form: SafeZone, mPort, MBN
+- Numbers in Norwegian format: use comma decimal separator (e.g., "58,1 %" not "58.1%")
+- Product names in original form (use official product names from `service_catalog.md`)
 
 ### What AllMøte inherits
 
@@ -290,7 +301,7 @@ Pick from these — each has full CSS/HTML in the reference file:
 - [ ] Every slide has one clear focal point
 - [ ] Correct backgrounds: light cyan for Narrative, dark for AllMøte
 - [ ] Open layout preferred on light backgrounds (no unnecessary white cards)
-- [ ] Key words/numbers highlighted in Telenor Blue
+- [ ] Key words/numbers highlighted in Brand Blue
 - [ ] Icons large (min 56px) with correct stage backgrounds
 - [ ] Telegrafen bands on title slide only
 - [ ] No per-slide footers — only fixed nav counter + logo + progress bar
@@ -305,7 +316,7 @@ Pick from these — each has full CSS/HTML in the reference file:
 ## What NOT to Do
 
 - Do NOT use the template engine for premium presentations
-- Do NOT use emoji icons — use Telenor SVG icons
+- Do NOT use emoji icons — use SVG icons from `reference/icons/`
 - Do NOT use diagonal stripe elements — bands are straight vertical
 - Do NOT use light backgrounds in AllMøte — cinematic dark mode only
 - Do NOT skip animations — every slide needs entry animations
